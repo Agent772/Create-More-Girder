@@ -21,10 +21,11 @@ repositories {
     // Add here additional repositories if required by some of the dependencies below.
     maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
     maven { url = "https://maven.ithundxr.dev/snapshots" } // Registrate
+    maven { url = "https://cursemaven.com" } // CurseForge
 }
 
 base {
-    archivesName = "create-shufflefilter"
+    archivesName = "create-more-girder"
 }
 
 // Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.
@@ -121,6 +122,7 @@ dependencies {
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
+
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
@@ -154,6 +156,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             loader_version_range   : loader_version_range,
             create_version         : create_version,
             create_version_range   : create_version_range,
+            diesel_generators_version : diesel_generators_version,
             mod_id                 : mod_id,
             mod_name               : mod_name,
             mod_license            : mod_license,
