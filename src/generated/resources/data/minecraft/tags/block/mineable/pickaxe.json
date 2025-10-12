@@ -3,6 +3,8 @@
     "createmoregirder:andesite_girder",
     "createmoregirder:andesite_girder_encased_shaft",
     "createmoregirder:brass_girder",
-    "createmoregirder:brass_girder_encased_shaft"
+    "createmoregirder:brass_girder_encased_shaft",
+    "createmoregirder:copper_girder",
+    "createmoregirder:copper_girder_encased_shaft"
   ]
 }

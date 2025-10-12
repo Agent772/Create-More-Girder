@@ -2,6 +2,8 @@ package com.agent772.createmoregirder;
 
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderBlock;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.copper_girder.CopperGirderBlock;
+import com.agent772.createmoregirder.content.copper_girder.CopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.girder.GenericGirderGenerator;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.data.SharedProperties;
@@ -35,6 +37,27 @@ public class CMGBlocks {
                     .transform(pickaxeOnly())
                     .blockstate(GenericGirderGenerator::blockStateWithShaft)
                     .loot((p, b) -> p.add(b, p.createSingleItemTable(BRASS_GIRDER.get())
+                            .withPool(p.applyExplosionCondition(AllBlocks.SHAFT.get(), LootPool.lootPool()
+                                    .setRolls(ConstantValue.exactly(1.0F))
+                                    .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))))))
+                    .register();
+
+    public static final BlockEntry<CopperGirderBlock> COPPER_GIRDER =
+            REGISTRATE.block("copper_girder", CopperGirderBlock::new)
+                    .initialProperties(SharedProperties::softMetal)
+                    .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
+                    .transform(pickaxeOnly())
+                    .blockstate(GenericGirderGenerator::blockState)
+                    .item().model(GenericGirderGenerator::itemModel).build()
+                    .register();
+
+    public static final BlockEntry<CopperGirderEncasedShaftBlock> COPPER_GIRDER_ENCASED_SHAFT =
+            REGISTRATE.block("copper_girder_encased_shaft", CopperGirderEncasedShaftBlock::new)
+                    .initialProperties(SharedProperties::softMetal)
+                    .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
+                    .transform(pickaxeOnly())
+                    .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                    .loot((p, b) -> p.add(b, p.createSingleItemTable(COPPER_GIRDER.get())
                             .withPool(p.applyExplosionCondition(AllBlocks.SHAFT.get(), LootPool.lootPool()
                                     .setRolls(ConstantValue.exactly(1.0F))
                                     .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))))))

@@ -1,4 +1,4 @@
-package com.agent772.createmoregirder.content.brass_girder;
+package com.agent772.createmoregirder.content.copper_girder;
 
 import com.agent772.createmoregirder.CMGBlockEntityTypes;
 import com.agent772.createmoregirder.CMGBlocks;
@@ -14,14 +14,14 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class BrassGirderEncasedShaftBlock extends AndesiteGirderEncasedShaftBlock {
-    public BrassGirderEncasedShaftBlock(Properties properties) {
+public class CopperGirderEncasedShaftBlock extends AndesiteGirderEncasedShaftBlock {
+    public CopperGirderEncasedShaftBlock(Properties properties) {
         super(properties);
     }
 
     @Override
     public BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
-        return CMGBlocks.BRASS_GIRDER.getDefaultState()
+        return CMGBlocks.COPPER_GIRDER.getDefaultState()
                 .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
                 .setValue(GirderBlock.X, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.Z)
                 .setValue(GirderBlock.Z, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X)
@@ -33,11 +33,11 @@ public class BrassGirderEncasedShaftBlock extends AndesiteGirderEncasedShaftBloc
     @Override
     public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
         return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), be)
-                .union(ItemRequirement.of(CMGBlocks.BRASS_GIRDER.getDefaultState(), be));
+                .union(ItemRequirement.of(CMGBlocks.COPPER_GIRDER.getDefaultState(), be));
     }
 
     @Override
     public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
-        return CMGBlockEntityTypes.ENCASED_BRASS_GIRDER.get();
+        return CMGBlockEntityTypes.ENCASED_COPPER_GIRDER.get();
     }
 }

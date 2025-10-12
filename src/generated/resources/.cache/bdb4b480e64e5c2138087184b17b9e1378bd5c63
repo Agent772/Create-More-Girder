@@ -1,14 +1,19 @@
-// 1.21.1	2025-10-12T21:20:40.2062843	Registrate Provider for createmoregirder [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2025-10-12T22:20:28.250636	Registrate Provider for createmoregirder [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 8cf78e0ba1c6fce8a2e2ace10fead85a7807b274 assets/createmoregirder/blockstates/andesite_girder.json
 d40f45fdeb12e3b490e48229f33c77e07c9a4837 assets/createmoregirder/blockstates/andesite_girder_encased_shaft.json
 950a6549fb2193c6171eb74ae95a050df41a2195 assets/createmoregirder/blockstates/brass_girder.json
 6e050822c83587603b6c0a33d76fa5026b44acd3 assets/createmoregirder/blockstates/brass_girder_encased_shaft.json
-1d6a5e63427c24d099fbff96e7e9dcd0d39c8d89 assets/createmoregirder/lang/en_ud.json
-fa47d6c7ee3169b60944d01d3bdd6ee15a5be0d1 assets/createmoregirder/lang/en_us.json
+d32e8826d6f1c2864c2b8eccd87bac95c25a59a0 assets/createmoregirder/blockstates/copper_girder.json
+4bac6756a924ccd4d09412d50315c5125a7ccaa1 assets/createmoregirder/blockstates/copper_girder_encased_shaft.json
+6f816bfeb6de508055924a2ad5182934357a2a21 assets/createmoregirder/lang/en_ud.json
+93160be75ae78891984ab325826041bec83601ef assets/createmoregirder/lang/en_us.json
 03a544df7b549a1d2a2e685fd5c057fa48f1a88f assets/createmoregirder/models/item/andesite_girder.json
 cfe73f0fa4941e5e341f4a45561307f8b1c2b873 assets/createmoregirder/models/item/brass_girder.json
+f812b45962406d1828787b60d6778e2dd8b84977 assets/createmoregirder/models/item/copper_girder.json
 b77ec6b13fdd892844d83f788e02840a3a17f0b9 data/createmoregirder/loot_table/blocks/andesite_girder.json
 b8add3d1e80897ced0118a2a8b308193a601339b data/createmoregirder/loot_table/blocks/andesite_girder_encased_shaft.json
 1b498e2c166d6b544e32490eb4a8701946413bd8 data/createmoregirder/loot_table/blocks/brass_girder.json
 72658c6aacf1b1c3bc55998a7d4273f5eaf158d0 data/createmoregirder/loot_table/blocks/brass_girder_encased_shaft.json
-edcb5d2762db0b33e435de2b6d3a52eb095387df data/minecraft/tags/block/mineable/pickaxe.json
+17de11c90182ad508e24068a1ef9f54210a0b8d9 data/createmoregirder/loot_table/blocks/copper_girder.json
+d4a3b04edaa93f740c7be68440de858ef017d686 data/createmoregirder/loot_table/blocks/copper_girder_encased_shaft.json
+512de3d1c675fbe5688877cbf919c0bbc45cebac data/minecraft/tags/block/mineable/pickaxe.json
