@@ -23,6 +23,9 @@ public class CreateMoreGirder {
             .defaultCreativeTab(AllCreativeModeTabs.BASE_CREATIVE_TAB.getKey());
 
     public CreateMoreGirder(IEventBus modEventBus, ModContainer modContainer) {
+        // Register the registrate to the mod event bus FIRST before registering any blocks/entities
+        REGISTRATE.registerEventListeners(modEventBus);
+        
         // Only register CDG blocks if CDG mod is not installed
         if (!ModList.get().isLoaded("createdieselgenerators")) {
             com.jesz.createdieselgenerators.CDGBlocks.register();
@@ -34,9 +37,6 @@ public class CreateMoreGirder {
 
         CMGBlocks.register();
         CMGBlockEntityTypes.register();
-        
-        // Register the registrate to the mod event bus to ensure items are properly registered
-        REGISTRATE.registerEventListeners(modEventBus);
         
         LOGGER.info("Create: More Girder mod initialized!");
     }

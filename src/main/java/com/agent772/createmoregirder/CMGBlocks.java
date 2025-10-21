@@ -3,6 +3,8 @@ package com.agent772.createmoregirder;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderBlock;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderBlock;
+import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIronGirderBlock;
+import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIronGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.ExposedCopperGirderBlock;
 import com.agent772.createmoregirder.content.copper_girder.ExposedCopperGirderEncasedShaftBlock;
@@ -178,10 +180,27 @@ public class CMGBlocks {
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .register();
+        
+        // Industrial Iron Girder
+        public static final BlockEntry<IndustrialIronGirderBlock> INDUSTRIAL_IRON_GIRDER =
+                REGISTRATE.block("industrial_iron_girder", IndustrialIronGirderBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(GenericGirderGenerator::blockState)
+                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .register();
+
+        public static final BlockEntry<IndustrialIronGirderEncasedShaftBlock> INDUSTRIAL_IRON_GIRDER_ENCASED_SHAFT =
+                REGISTRATE.block("industrial_iron_girder_encased_shaft", IndustrialIronGirderEncasedShaftBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .register();
     
     public static void register() {
-        CreateMoreGirder.LOGGER.info("=== CMGBlocks.register() called ===");
-        CreateMoreGirder.LOGGER.info("COPPER_GIRDER registered: {}", COPPER_GIRDER.getId());
+
     }
 
 }
