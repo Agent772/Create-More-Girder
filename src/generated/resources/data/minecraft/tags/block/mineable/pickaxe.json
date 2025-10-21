@@ -5,6 +5,20 @@
     "createmoregirder:brass_girder",
     "createmoregirder:brass_girder_encased_shaft",
     "createmoregirder:copper_girder",
-    "createmoregirder:copper_girder_encased_shaft"
+    "createmoregirder:exposed_copper_girder",
+    "createmoregirder:weathered_copper_girder",
+    "createmoregirder:oxidized_copper_girder",
+    "createmoregirder:waxed_copper_girder",
+    "createmoregirder:copper_girder_encased_shaft",
+    "createmoregirder:waxed_exposed_copper_girder",
+    "createmoregirder:waxed_weathered_copper_girder",
+    "createmoregirder:waxed_oxidized_copper_girder",
+    "createmoregirder:exposed_copper_girder_encased_shaft",
+    "createmoregirder:weathered_copper_girder_encased_shaft",
+    "createmoregirder:oxidized_copper_girder_encased_shaft",
+    "createmoregirder:waxed_copper_girder_encased_shaft",
+    "createmoregirder:waxed_exposed_copper_girder_encased_shaft",
+    "createmoregirder:waxed_weathered_copper_girder_encased_shaft",
+    "createmoregirder:waxed_oxidized_copper_girder_encased_shaft"
   ]
 }

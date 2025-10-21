@@ -4,5 +4,19 @@
   "block.createmoregirder.brass_girder": "ɹǝpɹı⅁ ssɐɹᗺ",
   "block.createmoregirder.brass_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ssɐɹᗺ",
   "block.createmoregirder.copper_girder": "ɹǝpɹı⅁ ɹǝddoƆ",
-  "block.createmoregirder.copper_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ɹǝddoƆ"
+  "block.createmoregirder.copper_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ɹǝddoƆ",
+  "block.createmoregirder.exposed_copper_girder": "ɹǝpɹı⅁ ɹǝddoƆ pǝsodxƎ",
+  "block.createmoregirder.exposed_copper_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ɹǝddoƆ pǝsodxƎ",
+  "block.createmoregirder.oxidized_copper_girder": "ɹǝpɹı⅁ ɹǝddoƆ pǝzıpıxO",
+  "block.createmoregirder.oxidized_copper_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ɹǝddoƆ pǝzıpıxO",
+  "block.createmoregirder.waxed_copper_girder": "ɹǝpɹı⅁ ɹǝddoƆ pǝxɐM",
+  "block.createmoregirder.waxed_copper_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ɹǝddoƆ pǝxɐM",
+  "block.createmoregirder.waxed_exposed_copper_girder": "ɹǝpɹı⅁ ɹǝddoƆ pǝsodxƎ pǝxɐM",
+  "block.createmoregirder.waxed_exposed_copper_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ɹǝddoƆ pǝsodxƎ pǝxɐM",
+  "block.createmoregirder.waxed_oxidized_copper_girder": "ɹǝpɹı⅁ ɹǝddoƆ pǝzıpıxO pǝxɐM",
+  "block.createmoregirder.waxed_oxidized_copper_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ɹǝddoƆ pǝzıpıxO pǝxɐM",
+  "block.createmoregirder.waxed_weathered_copper_girder": "ɹǝpɹı⅁ ɹǝddoƆ pǝɹǝɥʇɐǝM pǝxɐM",
+  "block.createmoregirder.waxed_weathered_copper_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ɹǝddoƆ pǝɹǝɥʇɐǝM pǝxɐM",
+  "block.createmoregirder.weathered_copper_girder": "ɹǝpɹı⅁ ɹǝddoƆ pǝɹǝɥʇɐǝM",
+  "block.createmoregirder.weathered_copper_girder_encased_shaft": "ʇɟɐɥS pǝsɐɔuƎ ɹǝpɹı⅁ ɹǝddoƆ pǝɹǝɥʇɐǝM"
 }

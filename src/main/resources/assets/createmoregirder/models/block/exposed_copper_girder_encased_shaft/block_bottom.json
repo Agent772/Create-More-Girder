@@ -1,0 +1,8 @@
+{
+	"credit": "Copied from Create Diesel Generators",
+	"parent": "createmoregirder:block/andesite_girder_encased_shaft/block_bottom",
+	"textures": {
+		"0": "createmoregirder:block/exposed_copper_girder",
+		"particle": "create:block/industrial_iron_block"
+	}
+}

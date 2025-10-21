@@ -1,23 +1,7 @@
 {
-	"format_version": "1.21.6",
-	"parent": "create:block/metal_girder/block_x",
-	"credit": "Copied from Create Diesel Generators and modified",
+	"credit": "Copied from Create Diesel Generators",
+	"parent": "createmoregirder:block/andesite_girder/bracket_east",
 	"textures": {
 		"0": "createmoregirder:block/brass_girder"
-	},
-	"elements": [
-		{
-			"from": [15, 0.95, 2.95],
-			"to": [18, 15.05, 13.05],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
-			"faces": {
-				"north": {"uv": [6.5, 9, 5, 16], "texture": "#0"},
-				"east": {"uv": [8, 8, 15, 13], "rotation": 90, "texture": "#0"},
-				"south": {"uv": [5, 9, 6.5, 16], "texture": "#0"},
-				"west": {"uv": [0, 9, 5, 16], "texture": "#0"},
-				"up": {"uv": [6.5, 11, 8, 16], "texture": "#0"},
-				"down": {"uv": [6.5, 11, 8, 16], "texture": "#0"}
-			}
-		}
-	]
+	}
 }
