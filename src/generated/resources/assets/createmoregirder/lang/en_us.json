@@ -18,5 +18,9 @@
   "block.createmoregirder.waxed_weathered_copper_girder": "Waxed Weathered Copper Girder",
   "block.createmoregirder.waxed_weathered_copper_girder_encased_shaft": "Waxed Weathered Copper Girder Encased Shaft",
   "block.createmoregirder.weathered_copper_girder": "Weathered Copper Girder",
-  "block.createmoregirder.weathered_copper_girder_encased_shaft": "Weathered Copper Girder Encased Shaft"
+  "block.createmoregirder.weathered_copper_girder_encased_shaft": "Weathered Copper Girder Encased Shaft",
+  "block.createmoregirder.industrial_iron_girder": "Industrial Iron Girder",
+  "block.createmoregirder.industrial_iron_girder_encased_shaft": "Industrial Iron Girder Encased Shaft",
+  "block.createmoregirder.weathered_industrial_iron_girder": "Weathered Industrial Iron Girder",
+  "block.createmoregirder.weathered_industrial_iron_girder_encased_shaft": "Weathered Industrial Iron Girder Encased Shaft"
 }

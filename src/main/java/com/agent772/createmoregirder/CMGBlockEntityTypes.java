@@ -75,6 +75,13 @@ public class CMGBlockEntityTypes {
                 .visual(() -> ShaftVisual::new, false)
                 .validBlocks(CMGBlocks.INDUSTRIAL_IRON_GIRDER_ENCASED_SHAFT)
                 .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_WEATHERED_INDUSTRIAL_IRON_GIRDER = REGISTRATE
+                .blockEntity("encased_weathered_industrial_iron_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.WEATHERED_INDUSTRIAL_IRON_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
                 .register(); 
 
     public static void register() {

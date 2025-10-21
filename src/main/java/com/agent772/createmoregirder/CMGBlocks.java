@@ -5,6 +5,8 @@ import com.agent772.createmoregirder.content.brass_girder.BrassGirderEncasedShaf
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderBlock;
 import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIronGirderBlock;
 import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIronGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.weathered_industrial_iron_girder.WeatheredIndustrialIronGirderBlock;
+import com.agent772.createmoregirder.content.weathered_industrial_iron_girder.WeatheredIndustrialIronGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.ExposedCopperGirderBlock;
 import com.agent772.createmoregirder.content.copper_girder.ExposedCopperGirderEncasedShaftBlock;
@@ -193,6 +195,24 @@ public class CMGBlocks {
 
         public static final BlockEntry<IndustrialIronGirderEncasedShaftBlock> INDUSTRIAL_IRON_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("industrial_iron_girder_encased_shaft", IndustrialIronGirderEncasedShaftBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .register();
+        
+        // Weathered Industrial Iron Girder
+        public static final BlockEntry<WeatheredIndustrialIronGirderBlock> WEATHERED_INDUSTRIAL_IRON_GIRDER =
+                REGISTRATE.block("weathered_industrial_iron_girder", WeatheredIndustrialIronGirderBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(GenericGirderGenerator::blockState)
+                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .register();
+
+        public static final BlockEntry<WeatheredIndustrialIronGirderEncasedShaftBlock> WEATHERED_INDUSTRIAL_IRON_GIRDER_ENCASED_SHAFT =
+                REGISTRATE.block("weathered_industrial_iron_girder_encased_shaft", WeatheredIndustrialIronGirderEncasedShaftBlock::new)
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())

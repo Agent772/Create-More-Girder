@@ -1,0 +1,7 @@
+{
+	"credit": "Copied from Create Diesel Generators",
+	"parent": "createmoregirder:block/andesite_girder/item",
+	"textures": {
+		"0": "createmoregirder:block/weathered_industrial_iron_girder"
+	}
+}
