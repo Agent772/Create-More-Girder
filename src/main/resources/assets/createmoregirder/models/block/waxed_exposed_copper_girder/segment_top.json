@@ -1,4 +1,5 @@
 {
+	"credit": "Copied from Create Diesel Generators",
 	"parent": "createmoregirder:block/andesite_girder/segment_top",
 	"textures": {
 		"0": "create:block/girder",

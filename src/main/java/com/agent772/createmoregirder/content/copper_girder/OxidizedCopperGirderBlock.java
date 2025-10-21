@@ -124,4 +124,9 @@ public class OxidizedCopperGirderBlock extends CopperGirderBlock {
     protected boolean isRandomlyTicking(BlockState state) {
         return false; // Oxidized is the final stage, no further weathering
     }
+
+    @Override
+    public Optional<BlockState> getNext(BlockState state) {
+        return Optional.empty(); // Oxidized is the final stage
+    }
 }

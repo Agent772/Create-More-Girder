@@ -46,4 +46,14 @@ public class OxidizedCopperGirderEncasedShaftBlock extends CopperGirderEncasedSh
     public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
         return CMGBlockEntityTypes.ENCASED_OXIDIZED_COPPER_GIRDER.get();
     }
+
+    @Override
+    protected boolean isRandomlyTicking(BlockState state) {
+        return false; // Oxidized is the final stage, no further weathering
+    }
+
+    @Override
+    public java.util.Optional<BlockState> getNext(BlockState state) {
+        return java.util.Optional.empty(); // Oxidized is the final stage
+    }
 }

@@ -52,7 +52,19 @@ public class CopperGirderBlock extends AndesiteGirderBlock implements Weathering
 
     @Override
     protected boolean isRandomlyTicking(BlockState state) {
-        return WeatheringCopper.getNext(state.getBlock()).isPresent();
+        return WeatheringCopperGirders.getNext(state.getBlock()).isPresent();
+    }
+
+    @Override
+    public Optional<BlockState> getNext(BlockState state) {
+        return WeatheringCopperGirders.getNext(state.getBlock())
+                .map(block -> block.defaultBlockState()
+                        .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
+                        .setValue(TOP, state.getValue(TOP))
+                        .setValue(BOTTOM, state.getValue(BOTTOM))
+                        .setValue(X, state.getValue(X))
+                        .setValue(Z, state.getValue(Z))
+                        .setValue(AXIS, state.getValue(AXIS)));
     }
 
     @Override

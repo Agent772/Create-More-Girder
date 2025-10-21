@@ -1,7 +1,8 @@
 {
-    "parent": "createmoregirder:block/girder_base_pole",
-    "textures": {
-        "0": "createmoregirder:block/exposed_copper_girder",
-        "particle": "createmoregirder:block/exposed_copper_girder"
-    }
+	"credit": "Copied from Create Diesel Generators",
+	"parent": "createmoregirder:block/andesite_girder/block_pole",
+	"textures": {
+		"3": "createmoregirder:block/exposed_copper_girder",
+		"particle": "createmoregirder:block/exposed_copper_girder"
+	}
 }
