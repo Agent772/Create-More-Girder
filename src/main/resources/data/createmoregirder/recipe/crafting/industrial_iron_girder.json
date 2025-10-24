@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    " I ",
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "item": "create:industrial_iron_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "id": "createmoregirder:industrial_iron_girder",
+    "count": 6
+  }
+}

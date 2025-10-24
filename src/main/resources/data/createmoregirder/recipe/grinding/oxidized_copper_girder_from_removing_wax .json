@@ -1,0 +1,15 @@
+{
+  "type": "create_enchantment_industry:grinding",
+  "ingredients": [
+    {
+      "item": "createmoregirder:waxed_oxidized_copper_girder"
+    }
+  ],
+  "sound": "minecraft:book_page_turn",
+  "results": [
+    {
+      "amount": 1,
+      "id": "createmoregirder:oxidized_copper_girder"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "createmoregirder:waxed_oxidized_copper_girder"
+    },
+    {
+      "tag": "minecraft:axes"
+    }
+  ],
+  "keep_held_item": true,
+  "results": [
+    {
+      "id": "createmoregirder:oxidized_copper_girder"
+    }
+  ]
+}

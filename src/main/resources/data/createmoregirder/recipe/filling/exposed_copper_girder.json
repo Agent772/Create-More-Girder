@@ -1,0 +1,18 @@
+{
+        "type": "create:filling",
+        "ingredients": [
+            {
+            "item": "createmoregirder:copper_girder"
+            },
+            {
+            "type": "fluid_stack",
+            "amount": 250,
+            "fluid": "minecraft:water"
+            }
+        ],
+        "results": [
+            {
+            "id": "createmoregirder:exposed_copper_girder"
+            }
+        ]
+    }

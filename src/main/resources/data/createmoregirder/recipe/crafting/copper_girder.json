@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    " N ",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "create:copper_sheet"
+    },
+    "N": {
+      "item": "create:copper_nugget"
+    }
+  },
+  "result": {
+    "id": "createmoregirder:copper_girder",
+    "count": 6
+  }
+}

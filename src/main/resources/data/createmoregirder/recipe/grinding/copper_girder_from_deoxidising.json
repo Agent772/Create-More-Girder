@@ -1,0 +1,15 @@
+{
+  "type": "create_enchantment_industry:grinding",
+  "ingredients": [
+    {
+      "item": "createmoregirder:exposed_copper_girder"
+    }
+  ],
+  "sound": "minecraft:book_page_turn",
+  "results": [
+    {
+      "amount": 1,
+      "id": "createmoregirder:copper_girder"
+    }
+  ]
+}

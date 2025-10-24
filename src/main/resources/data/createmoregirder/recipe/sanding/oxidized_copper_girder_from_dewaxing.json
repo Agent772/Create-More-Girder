@@ -1,0 +1,13 @@
+{
+  "type": "create:sandpaper_polishing",
+  "ingredients": [
+    {
+      "item": "createmoregirder:waxed_oxidized_copper_girder"
+    }
+  ],
+  "results": [
+    {
+      "id": "createmoregirder:oxidized_copper_girder"
+    }
+  ]
+}
