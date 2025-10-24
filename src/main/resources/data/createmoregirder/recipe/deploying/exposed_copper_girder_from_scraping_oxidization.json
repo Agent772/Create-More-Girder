@@ -1,14 +1,16 @@
 {
-  "type": "create_enchantment_industry:grinding",
+  "type": "create:deploying",
   "ingredients": [
     {
       "item": "createmoregirder:weathered_copper_girder"
+    },
+    {
+      "tag": "minecraft:axes"
     }
   ],
-  "sound": "minecraft:book_page_turn",
+  "keep_held_item": true,
   "results": [
     {
-      "amount": 1,
       "id": "createmoregirder:exposed_copper_girder"
     }
   ]

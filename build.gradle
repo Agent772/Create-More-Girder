@@ -128,6 +128,9 @@ dependencies {
     localRuntime("maven.modrinth:jade:${jade_version}")
     // Create Diesel Generators - optional soft dependency
     localRuntime("maven.modrinth:create-diesel-generators:1.21.1-1.3.5")
+    //Enchantment industry - optional soft dependency
+    localRuntime("maven.modrinth:create-dragons-plus:1.8.1")
+    localRuntime("maven.modrinth:create-enchantment-industry:2.2.3")
 
 
     // Example optional mod dependency with JEI
