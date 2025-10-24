@@ -1,7 +1,7 @@
-package com.jesz.createdieselgenerators.content.andesite_girder;
+package com.agent772.createmoregirder.content.andesite_girder;
 
-import com.jesz.createdieselgenerators.CDGBlockEntityTypes;
-import com.jesz.createdieselgenerators.CDGBlocks;
+import com.agent772.createmoregirder.CMGBlockEntityTypes;
+import com.agent772.createmoregirder.CMGBlocks;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
@@ -21,7 +21,7 @@ public class AndesiteGirderEncasedShaftBlock extends GirderEncasedShaftBlock {
 
     @Override
     public BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
-        return CDGBlocks.ANDESITE_GIRDER.getDefaultState()
+        return CMGBlocks.ANDESITE_GIRDER.getDefaultState()
                 .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
                 .setValue(GirderBlock.X, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.Z)
                 .setValue(GirderBlock.Z, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X)
@@ -38,6 +38,6 @@ public class AndesiteGirderEncasedShaftBlock extends GirderEncasedShaftBlock {
 
     @Override
     public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
-        return CDGBlockEntityTypes.ENCASED_GIRDER.get();
+        return CMGBlockEntityTypes.ENCASED_ANDESITE_GIRDER.get();
     }
 }

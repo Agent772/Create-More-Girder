@@ -50,10 +50,13 @@ public class WeatheringCopperGirders {
         return NEXT_ENCASED_SHAFT.get().inverse();
     });
 
-    // Encased shaft waxing maps (only basic copper for now since others aren't registered)
+    // Encased shaft waxing maps
     public static final Supplier<BiMap<Block, Block>> WAXABLES_ENCASED_SHAFT = Suppliers.memoize(() -> {
         return ImmutableBiMap.<Block, Block>builder()
                 .put(CMGBlocks.COPPER_GIRDER_ENCASED_SHAFT.get(), CMGBlocks.WAXED_COPPER_GIRDER_ENCASED_SHAFT.get())
+                .put(CMGBlocks.EXPOSED_COPPER_GIRDER_ENCASED_SHAFT.get(), CMGBlocks.WAXED_EXPOSED_COPPER_GIRDER_ENCASED_SHAFT.get())
+                .put(CMGBlocks.WEATHERED_COPPER_GIRDER_ENCASED_SHAFT.get(), CMGBlocks.WAXED_WEATHERED_COPPER_GIRDER_ENCASED_SHAFT.get())
+                .put(CMGBlocks.OXIDIZED_COPPER_GIRDER_ENCASED_SHAFT.get(), CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER_ENCASED_SHAFT.get())
                 .build();
     });
 

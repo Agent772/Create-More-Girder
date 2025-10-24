@@ -1,6 +1,6 @@
-package com.jesz.createdieselgenerators.content.andesite_girder;
+package com.agent772.createmoregirder.content.andesite_girder;
 
-import com.jesz.createdieselgenerators.CDGBlocks;
+import com.agent772.createmoregirder.CMGBlocks;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
@@ -36,7 +36,7 @@ public class AndesiteGirderBlock extends GirderBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
         if (AllBlocks.SHAFT.isIn(stack)) {
-            KineticBlockEntity.switchToBlockState(level, pos, CDGBlocks.ANDESITE_GIRDER_ENCASED_SHAFT.getDefaultState()
+            KineticBlockEntity.switchToBlockState(level, pos, CMGBlocks.ANDESITE_GIRDER_ENCASED_SHAFT.getDefaultState()
                     .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
                     .setValue(TOP, state.getValue(TOP))
                     .setValue(BOTTOM, state.getValue(BOTTOM))

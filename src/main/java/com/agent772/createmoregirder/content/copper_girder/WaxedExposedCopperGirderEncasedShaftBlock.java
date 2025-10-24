@@ -1,6 +1,8 @@
 package com.agent772.createmoregirder.content.copper_girder;
 
+import com.agent772.createmoregirder.CMGBlockEntityTypes;
 import com.agent772.createmoregirder.CMGBlocks;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -13,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -61,6 +64,11 @@ public class WaxedExposedCopperGirderEncasedShaftBlock extends CopperGirderEncas
                 .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
                 .setValue(CopperGirderBlock.X, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X)
                 .setValue(CopperGirderBlock.Z, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.Z);
+    }
+
+    @Override
+    public BlockEntityType<? extends KineticBlockEntity> getBlockEntityType() {
+        return CMGBlockEntityTypes.ENCASED_WAXED_EXPOSED_COPPER_GIRDER.get();
     }
 
     @Override

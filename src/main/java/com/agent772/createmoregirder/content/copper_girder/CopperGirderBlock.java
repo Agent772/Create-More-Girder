@@ -1,8 +1,8 @@
 package com.agent772.createmoregirder.content.copper_girder;
 
 import com.agent772.createmoregirder.CMGBlocks;
-import com.jesz.createdieselgenerators.content.andesite_girder.AndesiteGirderBlock;
-import com.jesz.createdieselgenerators.content.andesite_girder.AndesiteGirderWrenchBehaviour;
+import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderBlock;
+import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderWrenchBehaviour;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;

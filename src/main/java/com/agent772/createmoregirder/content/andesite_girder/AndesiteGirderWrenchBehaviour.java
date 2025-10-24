@@ -1,6 +1,6 @@
-package com.jesz.createdieselgenerators.content.andesite_girder;
+package com.agent772.createmoregirder.content.andesite_girder;
 
-import com.jesz.createdieselgenerators.CDGBlocks;
+import com.agent772.createmoregirder.CMGBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import net.createmod.catnip.data.Iterate;
@@ -44,7 +44,7 @@ public class AndesiteGirderWrenchBehaviour {
         if (player.isSteppingCarefully())
             return;
 
-        if (!CDGBlocks.ANDESITE_GIRDER.has(world.getBlockState(pos)))
+        if (!CMGBlocks.ANDESITE_GIRDER.has(world.getBlockState(pos)))
             return;
 
         if (!AllItems.WRENCH.isIn(heldItem))
@@ -118,7 +118,7 @@ public class AndesiteGirderWrenchBehaviour {
     public static List<Pair<Direction, Action>> getValidDirections(BlockGetter level, BlockPos pos) {
         BlockState blockState = level.getBlockState(pos);
 
-        if (!CDGBlocks.ANDESITE_GIRDER.has(blockState))
+        if (!CMGBlocks.ANDESITE_GIRDER.has(blockState))
             return Collections.emptyList();
 
         return Arrays.stream(Iterate.directions)
@@ -131,7 +131,7 @@ public class AndesiteGirderWrenchBehaviour {
                     // up and down
                     if (direction.getAxis() == Direction.Axis.Y) {
                         // no other girder in target dir
-                        if (!CDGBlocks.ANDESITE_GIRDER.has(other)) {
+                        if (!CMGBlocks.ANDESITE_GIRDER.has(other)) {
                             if (!blockState.getValue(GirderBlock.X) ^ !blockState.getValue(GirderBlock.Z))
                                 consumer.accept(Pair.of(direction, Action.SINGLE));
                             return;
@@ -171,14 +171,14 @@ public class AndesiteGirderWrenchBehaviour {
 
         if (dir == Direction.UP) {
             level.setBlock(pos, postProcess(state.cycle(GirderBlock.TOP)), 2 | 16);
-            if (dirPair.getSecond() == Action.PAIR && CDGBlocks.ANDESITE_GIRDER.has(other))
+            if (dirPair.getSecond() == Action.PAIR && CMGBlocks.ANDESITE_GIRDER.has(other))
                 level.setBlock(otherPos, postProcess(other.cycle(GirderBlock.BOTTOM)), 2 | 16);
             return true;
         }
 
         if (dir == Direction.DOWN) {
             level.setBlock(pos, postProcess(state.cycle(GirderBlock.BOTTOM)), 2 | 16);
-            if (dirPair.getSecond() == Action.PAIR && CDGBlocks.ANDESITE_GIRDER.has(other))
+            if (dirPair.getSecond() == Action.PAIR && CMGBlocks.ANDESITE_GIRDER.has(other))
                 level.setBlock(otherPos, postProcess(other.cycle(GirderBlock.TOP)), 2 | 16);
             return true;
         }

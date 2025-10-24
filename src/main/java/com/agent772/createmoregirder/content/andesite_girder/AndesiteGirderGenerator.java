@@ -1,4 +1,4 @@
-package com.jesz.createdieselgenerators.content.andesite_girder;
+package com.agent772.createmoregirder.content.andesite_girder;
 
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;

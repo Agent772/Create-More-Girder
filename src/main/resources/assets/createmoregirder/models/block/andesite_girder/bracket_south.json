@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "create:block/metal_girder/block_x",
 	"textures": {
-		"0": "createdieselgenerators:block/andesite_girder"
+		"0": "createmoregirder:block/andesite_girder"
 	},
 	"elements": [
 		{

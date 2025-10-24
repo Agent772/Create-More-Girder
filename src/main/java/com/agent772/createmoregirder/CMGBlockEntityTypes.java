@@ -7,6 +7,14 @@ import static com.agent772.createmoregirder.CreateMoreGirder.REGISTRATE;
 
 public class CMGBlockEntityTypes {
 
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_ANDESITE_GIRDER = REGISTRATE
+                .blockEntity("encased_andesite_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.ANDESITE_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+
         public static final BlockEntityEntry<KineticBlockEntity> ENCASED_BRASS_GIRDER = REGISTRATE
                 .blockEntity("encased_brass_girder", KineticBlockEntity::new)
                 .visual(() -> ShaftVisual::new, false)

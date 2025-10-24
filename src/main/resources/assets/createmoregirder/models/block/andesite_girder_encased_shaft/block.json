@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "createdieselgenerators:block/andesite_girder",
+		"0": "createmoregirder:block/andesite_girder",
 		"particle": "create:block/industrial_iron_block"
 	},
 	"render_type": "cutout",

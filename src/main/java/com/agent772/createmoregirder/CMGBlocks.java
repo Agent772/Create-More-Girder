@@ -1,5 +1,8 @@
 package com.agent772.createmoregirder;
 
+import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderBlock;
+import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderGenerator;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderBlock;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderBlock;
@@ -29,11 +32,29 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.material.MapColor;
 
+
 import static com.agent772.createmoregirder.CreateMoreGirder.REGISTRATE;
 
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 public class CMGBlocks {
+
+        public static final BlockEntry<AndesiteGirderBlock> ANDESITE_GIRDER =
+                REGISTRATE.block("andesite_girder", AndesiteGirderBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(AndesiteGirderGenerator::blockState)
+                        .item().model((c, p) -> p.blockItem(c, "/item")).build()
+                        .register();
+
+        public static final BlockEntry<AndesiteGirderEncasedShaftBlock> ANDESITE_GIRDER_ENCASED_SHAFT =
+                REGISTRATE.block("andesite_girder_encased_shaft", AndesiteGirderEncasedShaftBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(AndesiteGirderGenerator::blockStateWithShaft)
+                        .register();
 
         // Brass Girder
         public static final BlockEntry<BrassGirderBlock> BRASS_GIRDER =

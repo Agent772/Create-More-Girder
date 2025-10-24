@@ -2,7 +2,7 @@ package com.agent772.createmoregirder.content.weathered_iron_girder;
 
 import com.agent772.createmoregirder.CMGBlockEntityTypes;
 import com.agent772.createmoregirder.CMGBlocks;
-import com.jesz.createdieselgenerators.content.andesite_girder.AndesiteGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderEncasedShaftBlock;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
