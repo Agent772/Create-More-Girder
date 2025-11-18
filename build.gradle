@@ -127,10 +127,10 @@ dependencies {
     localRuntime("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
     localRuntime("maven.modrinth:jade:${jade_version}")
     // Create Diesel Generators - optional soft dependency
-    localRuntime("maven.modrinth:create-diesel-generators:1.21.1-1.3.5")
+    localRuntime("maven.modrinth:create-diesel-generators:${diesel_generators_version}")
     //Enchantment industry - optional soft dependency
-    localRuntime("maven.modrinth:create-dragons-plus:1.8.1")
-    localRuntime("maven.modrinth:create-enchantment-industry:2.2.3")
+    localRuntime("maven.modrinth:create-dragons-plus:${create_dragons_plus_version}")
+    localRuntime("maven.modrinth:create-enchantment-industry:${create_enchantment_industry_version}")
 
 
     // Example optional mod dependency with JEI
