@@ -5,6 +5,7 @@ import com.agent772.createmoregirder.CMGBlocks;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderEncasedShaftBlock;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
+import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import net.minecraft.core.BlockPos;
@@ -108,13 +109,26 @@ public class CopperGirderEncasedShaftBlock extends AndesiteGirderEncasedShaftBlo
 
     @Override
     public BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
-        return CMGBlocks.COPPER_GIRDER.getDefaultState()
-                .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
-                .setValue(GirderBlock.X, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.Z)
-                .setValue(GirderBlock.Z, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X)
-                .setValue(GirderBlock.AXIS, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
-                .setValue(GirderBlock.BOTTOM, originalState.getValue(BOTTOM))
-                .setValue(GirderBlock.TOP, originalState.getValue(TOP));
+        boolean hasVerticalConnection = originalState.getValue(TOP) || originalState.getValue(BOTTOM);
+        if (hasVerticalConnection) {
+            // Return vertical girder if encased shaft has vertical connections
+            return CMGBlocks.COPPER_GIRDER.get().defaultBlockState()
+                    .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
+                    .setValue(GirderBlock.X, false)
+                    .setValue(GirderBlock.Z, false)
+                    .setValue(GirderBlock.AXIS, Direction.Axis.Y)
+                    .setValue(GirderBlock.BOTTOM, originalState.getValue(BOTTOM))
+                    .setValue(GirderBlock.TOP, originalState.getValue(TOP));
+        } else {
+            // Return horizontal girder based on shaft axis
+            return CMGBlocks.COPPER_GIRDER.get().defaultBlockState()
+                    .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
+                    .setValue(GirderBlock.X, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.Z)
+                    .setValue(GirderBlock.Z, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X)
+                    .setValue(GirderBlock.AXIS, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
+                    .setValue(GirderBlock.BOTTOM, false)
+                    .setValue(GirderBlock.TOP, false);
+        }
     }
 
     @Override

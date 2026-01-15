@@ -26,11 +26,17 @@ import com.agent772.createmoregirder.content.copper_girder.WaxedExposedCopperGir
 import com.agent772.createmoregirder.content.copper_girder.WaxedWeatheredCopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.WaxedOxidizedCopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.girder.GenericGirderGenerator;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 
 import static com.agent772.createmoregirder.CreateMoreGirder.REGISTRATE;
@@ -54,6 +60,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .blockstate(AndesiteGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(ANDESITE_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
         // Brass Girder
@@ -72,6 +85,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(BRASS_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
         // Copper Girder and its weathering stages
@@ -89,6 +109,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(COPPER_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
         public static final BlockEntry<ExposedCopperGirderBlock> EXPOSED_COPPER_GIRDER =
@@ -105,6 +132,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(EXPOSED_COPPER_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
         public static final BlockEntry<WeatheredCopperGirderBlock> WEATHERED_COPPER_GIRDER =
@@ -121,6 +155,13 @@ public class CMGBlocks {
                     .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                     .transform(pickaxeOnly())
                     .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                    .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                            .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                    .add(LootItem.lootTableItem(WEATHERED_COPPER_GIRDER.get()))
+                                    .when(ExplosionCondition.survivesExplosion()))
+                            .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                    .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                    .when(ExplosionCondition.survivesExplosion()))))
                     .register();
 
         public static final BlockEntry<OxidizedCopperGirderBlock> OXIDIZED_COPPER_GIRDER =
@@ -137,6 +178,13 @@ public class CMGBlocks {
                     .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                     .transform(pickaxeOnly())
                     .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                    .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                            .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                    .add(LootItem.lootTableItem(OXIDIZED_COPPER_GIRDER.get()))
+                                    .when(ExplosionCondition.survivesExplosion()))
+                            .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                    .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                    .when(ExplosionCondition.survivesExplosion()))))
                     .register();
 
         // Waxed Copper Girders
@@ -154,6 +202,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(WAXED_COPPER_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
         public static final BlockEntry<WaxedExposedCopperGirderBlock> WAXED_EXPOSED_COPPER_GIRDER =
@@ -170,6 +225,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(WAXED_EXPOSED_COPPER_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
         public static final BlockEntry<WaxedWeatheredCopperGirderBlock> WAXED_WEATHERED_COPPER_GIRDER =
@@ -186,6 +248,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(WAXED_WEATHERED_COPPER_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
         public static final BlockEntry<WaxedOxidizedCopperGirderBlock> WAXED_OXIDIZED_COPPER_GIRDER =
@@ -202,6 +271,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(WAXED_OXIDIZED_COPPER_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
         
         // Industrial Iron Girder
@@ -220,6 +296,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(INDUSTRIAL_IRON_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
         // Weathered Iron Girder
@@ -238,6 +321,13 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(WEATHERED_IRON_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
                         .register();
     
     public static void register() {
