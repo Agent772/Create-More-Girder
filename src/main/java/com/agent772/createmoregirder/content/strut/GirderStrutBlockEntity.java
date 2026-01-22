@@ -1,7 +1,10 @@
 package com.agent772.createmoregirder.content.strut;
 
+import com.simibubi.create.api.schematic.requirement.SpecialBlockEntityItemRequirement;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+
+import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -9,6 +12,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.block.Block;
 
 import java.util.HashSet;
 import java.util.List;
@@ -24,9 +29,10 @@ import java.util.Set;
  * Modifications:
  * - Adapted for Create: More Girder mod structure
  */
-public class GirderStrutBlockEntity extends SmartBlockEntity  {
+public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEntityRelighter, SpecialBlockEntityItemRequirement {
 
     private final Set<BlockPos> connections = new HashSet<>();
+    public @Nullable SuperByteBuffer connectionRenderBufferCache;
 
     public GirderStrutBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -36,6 +42,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity  {
         if (!other.equals(getBlockPos()) && connections.add(other.immutable().subtract(getBlockPos()))) {
             setChanged();
             sendData();
+            notifyModelChange();
         }
     }
 
@@ -43,6 +50,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity  {
         if (connections.remove(pos.subtract(getBlockPos()))) {
             setChanged();
             sendData();
+            notifyModelChange();
         }
     }
 
@@ -58,9 +66,9 @@ public class GirderStrutBlockEntity extends SmartBlockEntity  {
         return Set.copyOf(connections);
     }
 
-    public Set<BlockPos> getConnections() {
-        return connections;
-    }
+    // public Set<BlockPos> getConnections() {
+    //     return connections;
+    // }
 
     @Override
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
@@ -88,9 +96,21 @@ public class GirderStrutBlockEntity extends SmartBlockEntity  {
                 }
             }
         }
+        if (clientPacket) {
+            notifyModelChange();
+        }
     }
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+    }
+
+    private void notifyModelChange() {
+        if (level != null) {
+            if (level.isClientSide) {
+                requestModelDataUpdate();
+            }
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
     }
 }

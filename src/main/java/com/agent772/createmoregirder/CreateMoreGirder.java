@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -26,7 +27,7 @@ public class CreateMoreGirder {
         REGISTRATE.registerEventListeners(modEventBus);
         
         // Register data components
-        CMGDataComponents.DATA_COMPONENTS.register(modEventBus);
+        CMGDataComponents.register(modEventBus);
         
         // Register blocks and block entities
         CMGBlocks.register();
@@ -37,5 +38,9 @@ public class CreateMoreGirder {
         CMGPartialModels.init();
         
         LOGGER.info("Create: More Girder mod initialized!");
+    }
+
+    public static ResourceLocation asResource(final String s) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, s);
     }
 }

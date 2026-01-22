@@ -1,17 +1,15 @@
 package com.agent772.createmoregirder.content.strut;
 
 import com.agent772.createmoregirder.CMGShapes;
-import com.simibubi.create.AllTags;
-import com.simibubi.create.content.decoration.girder.GirderBlock;
-import com.simibubi.create.content.equipment.wrench.IWrenchable;
+import com.agent772.createmoregirder.CMGBlockEntityTypes;
 
+import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
-import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -19,29 +17,28 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.storage.loot.LootParams;
+
+import java.util.List;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 /**
  * Base Girder Strut Block implementation
  * 
@@ -52,17 +49,19 @@ import javax.annotation.Nullable;
  * Modifications:
  * - Adapted for Create: More Girder mod structure
  * - Added variant system for different girder types
- * - Simplified to use FAST rendering only
  */
 public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntity>, SimpleWaterloggedBlock, IWrenchable {
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final int MAX_SPAN = 8;
 
-    public GirderStrutBlock(Properties properties) {
+    private StrutModelType modelType;
+
+    public GirderStrutBlock(final Properties properties, final StrutModelType modelType) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP).setValue(WATERLOGGED, false));
+        this.modelType = modelType;
+
     }
 
     @Override
@@ -72,17 +71,16 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     public InteractionResult onSneakWrenched(final BlockState state, final UseOnContext context) {
-        final Player player = context.getPlayer();
         final Level level = context.getLevel();
         final BlockPos pos = context.getClickedPos();
         if (!level.isClientSide) {
-            final BlockState currentState = level.getBlockState(pos);
-            final ItemStack itemToReturn = new ItemStack(currentState.getBlock());
             destroyConnectedStrut(level, pos, false);
-            if (player != null && !player.hasInfiniteMaterials())
-                player.getInventory().placeItemBackInInventory(itemToReturn);
         }
         return IWrenchable.super.onSneakWrenched(state, context);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> andesite() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.ANDESITE);
     }
 
     @Override
@@ -104,14 +102,7 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
         super.createBlockStateDefinition(builder);
     }
 
-    // @Nullable
-    // @Override
-    // public BlockState getStateForPlacement(BlockPlaceContext context) {
-    //     FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
-    //     return defaultBlockState()
-    //             .setValue(FACING, context.getClickedFace())
-    //             .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
-    // }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(final BlockPlaceContext context) {
@@ -150,19 +141,17 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
         return super.playerWillDestroy(level, pos, state, player);
     }
 
-    // private void destroyConnectedStrut(final Level level, final BlockPos pos, final boolean dropBlock) {
-    //     withBlockEntityDo(level, pos, (gbe) -> {
-    //         for (BlockPos otherPos : gbe.getConnectionsCopy()) {
-    //             otherPos = otherPos.offset(pos);
-    //             if (level.getBlockEntity(otherPos) instanceof final GirderStrutBlockEntity other) {
-    //                 other.removeConnection(pos);
-    //                 if (other.connectionCount() == 0) {
-    //                     level.destroyBlock(otherPos, dropBlock);
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+        List<ItemStack> drops = super.getDrops(state, builder);
+        // If loot table didn't work, manually create the drops
+        if (drops.isEmpty()) {
+            ItemStack stack = new ItemStack(this, 2);
+            drops.add(stack);
+        }
+            drops.stream().mapToInt(ItemStack::getCount).sum();
+        return drops;
+    }
 
     private void destroyConnectedStrut(final Level level, final BlockPos pos, final boolean dropBlock) {
         withBlockEntityDo(level, pos, (gbe) -> {
@@ -183,19 +172,10 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             if (!level.isClientSide) {
-                // Only destroy connected struts without dropping items
                 destroyConnectedStrut(level, pos, true);
             }
         }
         super.onRemove(state, level, pos, newState, isMoving);
-    }
-
-    public String getTextureName() {
-        return "andesite_girder"; // Override in subclasses for different textures
-    }
-
-    public PartialModel getPartialModel() {
-        return com.agent772.createmoregirder.CMGPartialModels.ANDESITE_GIRDER_STRUT; // Override in subclasses
     }
 
     @Override
@@ -205,6 +185,14 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     public BlockEntityType<? extends GirderStrutBlockEntity> getBlockEntityType() {
-        return com.agent772.createmoregirder.CMGBlockEntityTypes.GIRDER_STRUT.get();
+        return CMGBlockEntityTypes.GIRDER_STRUT.get();
+    }
+
+    public StrutModelType getModelType() {
+        return modelType;
+    }
+
+    public void setModelType(final StrutModelType modelType) {
+        this.modelType = modelType;
     }
 }

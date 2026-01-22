@@ -1,39 +1,49 @@
 package com.agent772.createmoregirder;
 
+import java.util.function.UnaryOperator;
+
+import org.jetbrains.annotations.ApiStatus;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * Data Components for Girder Struts
+ * Girder Strut Block implementation
  * 
- * Stores anchor position and direction for 2-step placement
+ * Adapted from Bits-n-Bobs by Industrialists-Of-Create
+ * Original: https://github.com/Industrialists-Of-Create/Bits-n-Bobs
+ * Licensed under MIT License
+ * 
+ * Modifications:
+ * - Adapted for Create: More Girder mod structure
  */
+
 public class CMGDataComponents {
+    
+    private static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, CreateMoreGirder.MODID);
 
-    public static final DeferredRegister<DataComponentType<?>> DATA_COMPONENTS = 
-        DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, CreateMoreGirder.MODID);
+    public static final DataComponentType<BlockPos> GIRDER_STRUT_FROM = register(
+            "girder_strut_from",
+            builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC)
+    );
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockPos>> STRUT_ANCHOR_POS = 
-        DATA_COMPONENTS.register("strut_anchor_pos",
-            () -> DataComponentType.<BlockPos>builder()
-                .persistent(BlockPos.CODEC)
-                .networkSynchronized(BlockPos.STREAM_CODEC)
-                .build()
-        );
+    public static final DataComponentType<Direction> GIRDER_STRUT_FROM_FACE = register(
+            "girder_strut_from_face",
+            builder -> builder.persistent(Direction.CODEC).networkSynchronized(Direction.STREAM_CODEC)
+    );
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Direction>> STRUT_ANCHOR_DIR = 
-        DATA_COMPONENTS.register("strut_anchor_dir",
-            () -> DataComponentType.<Direction>builder()
-                .persistent(Direction.CODEC)
-                .networkSynchronized(Direction.STREAM_CODEC)
-                .build()
-        );
+    private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
+        DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();
+        DATA_COMPONENTS.register(name, () -> type);
+        return type;
+    }
 
-    public static void register() {
-        // Called to ensure static initialization
+    @ApiStatus.Internal
+    public static void register(IEventBus modEventBus) {
+        DATA_COMPONENTS.register(modEventBus);
     }
 }

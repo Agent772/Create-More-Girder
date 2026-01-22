@@ -1,5 +1,7 @@
 package com.agent772.createmoregirder;
 
+import com.simibubi.create.Create;
+
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.resources.ResourceLocation;
 
@@ -18,8 +20,15 @@ public class CMGPartialModels {
         return PartialModel.of(ResourceLocation.fromNamespaceAndPath(CreateMoreGirder.MODID, "block/" + path));
     }
 
+    private static PartialModel createBlock(String path) {
+        return PartialModel.of(Create.asResource("block/" + path));
+    }
+
     public static void init() {
         // Called to ensure static initialization
+    }
+    
+    public static void register() {
     }
 }
 

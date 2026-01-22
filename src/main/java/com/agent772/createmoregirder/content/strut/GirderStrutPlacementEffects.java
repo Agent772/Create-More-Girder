@@ -44,8 +44,8 @@ public class GirderStrutPlacementEffects {
         if (level == null) {
             return;
         }
-        final BlockPos fromPos = heldItem.get(CMGDataComponents.STRUT_ANCHOR_POS);
-        final Direction fromFace = heldItem.get(CMGDataComponents.STRUT_ANCHOR_DIR);
+        final BlockPos fromPos = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM);
+        final Direction fromFace = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
 
         if (fromPos == null) {
             return;
@@ -116,14 +116,12 @@ public class GirderStrutPlacementEffects {
     }
 
     private static BlockPos resolvePlacementPos(final ClientLevel level, final BlockPos clickedPos, final Direction face) {
-        final BlockState clickedState = level.getBlockState(clickedPos);
-        if (clickedState.getBlock() instanceof GirderStrutBlock) {
-            return clickedPos;
-        }
-        final BlockPos pos = clickedPos.relative(face);
-        final BlockState state = level.getBlockState(pos);
-        if (!state.canBeReplaced() && !(state.getBlock() instanceof GirderStrutBlock)) {
-            return null;
+        BlockPos pos = clickedPos;
+        if (!(level.getBlockState(pos).getBlock() instanceof GirderStrutBlock)) {
+            pos = pos.relative(face);
+            if (!(level.getBlockState(pos).canBeReplaced() || level.getBlockState(pos).getBlock() instanceof GirderStrutBlock)) {
+                return null;
+            }
         }
         return pos;
     }

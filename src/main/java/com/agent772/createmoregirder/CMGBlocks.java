@@ -3,7 +3,6 @@ package com.agent772.createmoregirder;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderBlock;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderGenerator;
-import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderStrutBlock;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderBlock;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderBlock;
@@ -11,7 +10,9 @@ import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIr
 import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIronGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.weathered_iron_girder.WeatheredIronGirderBlock;
 import com.agent772.createmoregirder.content.weathered_iron_girder.WeatheredIronGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.strut.GirderStrutBlock;
 import com.agent772.createmoregirder.content.strut.GirderStrutBlockItem;
+import com.agent772.createmoregirder.content.strut.GirderStrutModelBuilder;
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.ExposedCopperGirderBlock;
 import com.agent772.createmoregirder.content.copper_girder.ExposedCopperGirderEncasedShaftBlock;
@@ -74,16 +75,27 @@ public class CMGBlocks {
                         .register();
 
         // Andesite Girder Strut
-        public static final BlockEntry<AndesiteGirderStrutBlock> ANDESITE_GIRDER_STRUT =
-                REGISTRATE.block("andesite_girder_strut", AndesiteGirderStrutBlock::new)
-                        .initialProperties(() -> Blocks.IRON_BLOCK)
-                        .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK)
-                                .noOcclusion().destroyTime(2.0f).explosionResistance(6.0f))
+        public static final BlockEntry<GirderStrutBlock> ANDESITE_GIRDER_STRUT =
+                REGISTRATE.block("andesite_girder_strut", GirderStrutBlock.andesite())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
-                        .blockstate((c, p) -> p.simpleBlock(c.get(),
-                                p.models().getExistingFile(p.modLoc("block/girder_strut/andesite_girder_strut_attachment"))))
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/girder_strut/andesite_girder_strut_attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
-                        .simpleItem()
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block)
+                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/girder_strut/andesite_girder_item"))
+                        )
+                        .build()
                         .register();
 
         // Brass Girder

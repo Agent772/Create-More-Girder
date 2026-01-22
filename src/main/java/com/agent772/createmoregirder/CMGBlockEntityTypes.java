@@ -95,11 +95,10 @@ public class CMGBlockEntityTypes {
                 .register(); 
 
         // Girder Strut Block Entity
-        public static final BlockEntityEntry<GirderStrutBlockEntity> GIRDER_STRUT = REGISTRATE
-                .blockEntity("girder_strut", GirderStrutBlockEntity::new)
-                .validBlocks(CMGBlocks.ANDESITE_GIRDER_STRUT)
-                .renderer(() -> GirderStrutBlockEntityRenderer::new)
-                .register();
+       public static final BlockEntityEntry<GirderStrutBlockEntity> GIRDER_STRUT = REGISTRATE.blockEntity("girder_strut", GirderStrutBlockEntity::new)
+            .validBlocks(CMGBlocks.ANDESITE_GIRDER_STRUT)
+            .renderer(() -> GirderStrutBlockEntityRenderer::new)
+            .register();
 
     public static void register() {
     }

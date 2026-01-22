@@ -50,9 +50,9 @@ public class GirderStrutBlockItem extends BlockItem {
         final Direction face = context.getClickedFace();
 
         if (context.isSecondaryUseActive()) {
-            if (stack.has(CMGDataComponents.STRUT_ANCHOR_POS) || stack.has(CMGDataComponents.STRUT_ANCHOR_DIR)) {
-                stack.remove(CMGDataComponents.STRUT_ANCHOR_POS);
-                stack.remove(CMGDataComponents.STRUT_ANCHOR_DIR);
+            if (stack.has(CMGDataComponents.GIRDER_STRUT_FROM) || stack.has(CMGDataComponents.GIRDER_STRUT_FROM_FACE)) {
+                stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
+                stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
             return InteractionResult.PASS;
@@ -64,21 +64,21 @@ public class GirderStrutBlockItem extends BlockItem {
             targetFace = level.getBlockState(placementPos).getValue(GirderStrutBlock.FACING);
         }
 
-        if (!stack.has(CMGDataComponents.STRUT_ANCHOR_POS)) {
+        if (!stack.has(CMGDataComponents.GIRDER_STRUT_FROM)) {
             if (placementPos == null) {
                 return InteractionResult.FAIL;
             }
 
-            stack.set(CMGDataComponents.STRUT_ANCHOR_POS, placementPos);
-            stack.set(CMGDataComponents.STRUT_ANCHOR_DIR, targetFace);
+            stack.set(CMGDataComponents.GIRDER_STRUT_FROM, placementPos);
+            stack.set(CMGDataComponents.GIRDER_STRUT_FROM_FACE, targetFace);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        final BlockPos fromPos = stack.get(CMGDataComponents.STRUT_ANCHOR_POS);
-        Direction fromFace = stack.get(CMGDataComponents.STRUT_ANCHOR_DIR);
+        final BlockPos fromPos = stack.get(CMGDataComponents.GIRDER_STRUT_FROM);
+        Direction fromFace = stack.get(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
         if (fromPos == null) {
-            stack.remove(CMGDataComponents.STRUT_ANCHOR_POS);
-            stack.remove(CMGDataComponents.STRUT_ANCHOR_DIR);
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
             return InteractionResult.FAIL;
         }
 
@@ -99,22 +99,22 @@ public class GirderStrutBlockItem extends BlockItem {
             final ConnectionResult result = tryConnect(context, fromPos, fromFace, placementPos, targetFace);
             if (result != ConnectionResult.SUCCESS) {
                 if (result == ConnectionResult.INVALID) {
-                    stack.remove(CMGDataComponents.STRUT_ANCHOR_POS);
-                    stack.remove(CMGDataComponents.STRUT_ANCHOR_DIR);
+                    stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
+                    stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
                 }
                 return InteractionResult.FAIL;
             }
         }
 
-        stack.remove(CMGDataComponents.STRUT_ANCHOR_POS);
-        stack.remove(CMGDataComponents.STRUT_ANCHOR_DIR);
+        stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
+        stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
 
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
     public boolean isFoil(final ItemStack stack) {
-        return stack.has(CMGDataComponents.STRUT_ANCHOR_POS) || super.isFoil(stack);
+        return stack.has(CMGDataComponents.GIRDER_STRUT_FROM) || super.isFoil(stack);
     }
 
     public static boolean isValidConnection(final Level level, final BlockPos fromPos, final Direction fromFace, final BlockPos toPos, final Direction toFace) {
@@ -319,7 +319,7 @@ public class GirderStrutBlockItem extends BlockItem {
         if (missing <= 0) {
             return;
         }
-        final Component message = Component.literal("Need " + missing + " more Girder Struts")
+        final Component message = Component.translatable("message.createmoregirder.missing_girder_struts", missing)
                 .withStyle(ChatFormatting.RED);
         if (player instanceof final ServerPlayer serverPlayer) {
             serverPlayer.displayClientMessage(message, true);
