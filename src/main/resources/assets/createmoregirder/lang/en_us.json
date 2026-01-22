@@ -1,0 +1,33 @@
+{
+  "itemGroup.createmoregirder.main_tab": "Create: More Girder",
+  
+  "block.createmoregirder.andesite_girder": "Andesite Girder",
+  "block.createmoregirder.andesite_girder_encased_shaft": "Andesite Girder Encased Shaft",
+  "block.createmoregirder.andesite_girder_strut": "Andesite Girder Strut",
+  
+  "block.createmoregirder.brass_girder": "Brass Girder",
+  "block.createmoregirder.brass_girder_encased_shaft": "Brass Girder Encased Shaft",
+  
+  "block.createmoregirder.copper_girder": "Copper Girder",
+  "block.createmoregirder.copper_girder_encased_shaft": "Copper Girder Encased Shaft",
+  "block.createmoregirder.exposed_copper_girder": "Exposed Copper Girder",
+  "block.createmoregirder.exposed_copper_girder_encased_shaft": "Exposed Copper Girder Encased Shaft",
+  "block.createmoregirder.weathered_copper_girder": "Weathered Copper Girder",
+  "block.createmoregirder.weathered_copper_girder_encased_shaft": "Weathered Copper Girder Encased Shaft",
+  "block.createmoregirder.oxidized_copper_girder": "Oxidized Copper Girder",
+  "block.createmoregirder.oxidized_copper_girder_encased_shaft": "Oxidized Copper Girder Encased Shaft",
+  
+  "block.createmoregirder.waxed_copper_girder": "Waxed Copper Girder",
+  "block.createmoregirder.waxed_copper_girder_encased_shaft": "Waxed Copper Girder Encased Shaft",
+  "block.createmoregirder.waxed_exposed_copper_girder": "Waxed Exposed Copper Girder",
+  "block.createmoregirder.waxed_exposed_copper_girder_encased_shaft": "Waxed Exposed Copper Girder Encased Shaft",
+  "block.createmoregirder.waxed_weathered_copper_girder": "Waxed Weathered Copper Girder",
+  "block.createmoregirder.waxed_weathered_copper_girder_encased_shaft": "Waxed Weathered Copper Girder Encased Shaft",
+  "block.createmoregirder.waxed_oxidized_copper_girder": "Waxed Oxidized Copper Girder",
+  "block.createmoregirder.waxed_oxidized_copper_girder_encased_shaft": "Waxed Oxidized Copper Girder Encased Shaft",
+  
+  "block.createmoregirder.industrial_iron_girder": "Industrial Iron Girder",
+  "block.createmoregirder.industrial_iron_girder_encased_shaft": "Industrial Iron Girder Encased Shaft",
+  "block.createmoregirder.weathered_iron_girder": "Weathered Iron Girder",
+  "block.createmoregirder.weathered_iron_girder_encased_shaft": "Weathered Iron Girder Encased Shaft"
+}

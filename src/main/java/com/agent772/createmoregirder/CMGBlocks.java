@@ -3,6 +3,7 @@ package com.agent772.createmoregirder;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderBlock;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderGenerator;
+import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderStrutBlock;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderBlock;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderBlock;
@@ -10,6 +11,7 @@ import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIr
 import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIronGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.weathered_iron_girder.WeatheredIronGirderBlock;
 import com.agent772.createmoregirder.content.weathered_iron_girder.WeatheredIronGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.strut.GirderStrutBlockItem;
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.ExposedCopperGirderBlock;
 import com.agent772.createmoregirder.content.copper_girder.ExposedCopperGirderEncasedShaftBlock;
@@ -26,6 +28,8 @@ import com.agent772.createmoregirder.content.copper_girder.WaxedExposedCopperGir
 import com.agent772.createmoregirder.content.copper_girder.WaxedWeatheredCopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.WaxedOxidizedCopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.girder.GenericGirderGenerator;
+import com.simibubi.create.AllTags;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -67,6 +71,19 @@ public class CMGBlocks {
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                                         .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
                                         .when(ExplosionCondition.survivesExplosion()))))
+                        .register();
+
+        // Andesite Girder Strut
+        public static final BlockEntry<AndesiteGirderStrutBlock> ANDESITE_GIRDER_STRUT =
+                REGISTRATE.block("andesite_girder_strut", AndesiteGirderStrutBlock::new)
+                        .initialProperties(() -> Blocks.IRON_BLOCK)
+                        .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK)
+                                .noOcclusion().destroyTime(2.0f).explosionResistance(6.0f))
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.simpleBlock(c.get(),
+                                p.models().getExistingFile(p.modLoc("block/girder_strut/andesite_girder_strut_attachment"))))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .simpleItem()
                         .register();
 
         // Brass Girder

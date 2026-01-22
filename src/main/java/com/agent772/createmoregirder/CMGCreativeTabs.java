@@ -18,6 +18,7 @@ public class CMGCreativeTabs {
             .icon(() -> new ItemStack(CMGBlocks.BRASS_GIRDER.get()))
             .displayItems((pParameters, output) -> {
                 output.accept(CMGBlocks.ANDESITE_GIRDER.get());
+                output.accept(CMGBlocks.ANDESITE_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.BRASS_GIRDER.get());
                 output.accept(CMGBlocks.COPPER_GIRDER.get());
                 output.accept(CMGBlocks.EXPOSED_COPPER_GIRDER.get());

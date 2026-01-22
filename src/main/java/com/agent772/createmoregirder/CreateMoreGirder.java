@@ -25,10 +25,16 @@ public class CreateMoreGirder {
         REGISTRATE.defaultCreativeTab((ResourceKey<CreativeModeTab>) null);
         REGISTRATE.registerEventListeners(modEventBus);
         
+        // Register data components
+        CMGDataComponents.DATA_COMPONENTS.register(modEventBus);
+        
         // Register blocks and block entities
         CMGBlocks.register();
         CMGBlockEntityTypes.register();
         CMGCreativeTabs.register(modEventBus);
+        
+        // Initialize partial models
+        CMGPartialModels.init();
         
         LOGGER.info("Create: More Girder mod initialized!");
     }
