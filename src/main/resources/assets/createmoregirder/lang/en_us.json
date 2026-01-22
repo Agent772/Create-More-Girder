@@ -29,5 +29,7 @@
   "block.createmoregirder.industrial_iron_girder": "Industrial Iron Girder",
   "block.createmoregirder.industrial_iron_girder_encased_shaft": "Industrial Iron Girder Encased Shaft",
   "block.createmoregirder.weathered_iron_girder": "Weathered Iron Girder",
-  "block.createmoregirder.weathered_iron_girder_encased_shaft": "Weathered Iron Girder Encased Shaft"
+  "block.createmoregirder.weathered_iron_girder_encased_shaft": "Weathered Iron Girder Encased Shaft",
+  
+  "message.createmoregirder.missing_girder_struts": "Not enough Girder Struts! Need %s more."
 }

@@ -272,15 +272,26 @@ public class GirderStrutBlockItem extends BlockItem {
         }
 
         int remaining = amount;
-        remaining -= drainStack(heldStack, remaining);
-
+        
+        // Save the item type and slot BEFORE draining
         final Inventory inventory = player.getInventory();
+        final int heldSlot = inventory.selected;
+        final net.minecraft.world.item.Item itemType = heldStack.getItem();
+        
+        // First try to consume from the held stack
+        remaining -= drainStack(heldStack, remaining);
+        
+        if (remaining <= 0) {
+            return;
+        }
+
+        // Then consume from other matching stacks in the inventory
         for (int i = 0; i < inventory.getContainerSize() && remaining > 0; i++) {
-            final ItemStack slotStack = inventory.getItem(i);
-            if (slotStack == heldStack) {
-                continue;
+            if (i == heldSlot) {
+                continue; // Skip the held stack since we already consumed from it
             }
-            if (!isMatchingStrut(slotStack, heldStack)) {
+            final ItemStack slotStack = inventory.getItem(i);
+            if (slotStack.isEmpty() || slotStack.getItem() != itemType) {
                 continue;
             }
             remaining -= drainStack(slotStack, remaining);

@@ -1,6 +1,7 @@
 {
   "block.createmoregirder.andesite_girder": "Andesite Girder",
   "block.createmoregirder.andesite_girder_encased_shaft": "Andesite Girder Encased Shaft",
+  "block.createmoregirder.andesite_girder_strut": "Andesite Girder Strut",
   "block.createmoregirder.brass_girder": "Brass Girder",
   "block.createmoregirder.brass_girder_encased_shaft": "Brass Girder Encased Shaft",
   "block.createmoregirder.copper_girder": "Copper Girder",
@@ -22,5 +23,6 @@
   "block.createmoregirder.weathered_copper_girder": "Weathered Copper Girder",
   "block.createmoregirder.weathered_copper_girder_encased_shaft": "Weathered Copper Girder Encased Shaft",
   "block.createmoregirder.weathered_iron_girder": "Weathered Iron Girder",
-  "block.createmoregirder.weathered_iron_girder_encased_shaft": "Weathered Iron Girder Encased Shaft"
+  "block.createmoregirder.weathered_iron_girder_encased_shaft": "Weathered Iron Girder Encased Shaft",
+  "message.createmoregirder.missing_girder_struts": "Not enough Girder Struts! Need %s more."
 }

@@ -6,7 +6,7 @@ import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.resources.ResourceLocation;
 
 public enum StrutModelType {
-    ANDESITE(CMGPartialModels.ANDESITE_GIRDER_STRUT, CreateMoreGirder.asResource("block/weathered_industrial_iron_block"));
+    ANDESITE(CMGPartialModels.ANDESITE_GIRDER_STRUT, CreateMoreGirder.asResource("block/andesite_girder"));
 
     private final PartialModel segmentPartial;
     private final ResourceLocation capTexture;
