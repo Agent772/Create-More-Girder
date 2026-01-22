@@ -25,3 +25,7 @@ run-data
 
 repo
 .vscode
+
+# Bits-n-Bobs
+Bits-n-Bobs-Src/*
+Bits-n-Bobs-Src

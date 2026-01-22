@@ -18,17 +18,25 @@ public class CMGCreativeTabs {
             .icon(() -> new ItemStack(CMGBlocks.BRASS_GIRDER.get()))
             .displayItems((pParameters, output) -> {
                 output.accept(CMGBlocks.ANDESITE_GIRDER.get());
+                output.accept(CMGBlocks.ANDESITE_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.BRASS_GIRDER.get());
+                output.accept(CMGBlocks.BRASS_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.COPPER_GIRDER.get());
                 output.accept(CMGBlocks.EXPOSED_COPPER_GIRDER.get());
                 output.accept(CMGBlocks.WEATHERED_COPPER_GIRDER.get());
                 output.accept(CMGBlocks.OXIDIZED_COPPER_GIRDER.get());
                 output.accept(CMGBlocks.WAXED_COPPER_GIRDER.get());
+                output.accept(CMGBlocks.WAXED_COPPER_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.WAXED_EXPOSED_COPPER_GIRDER.get());
+                output.accept(CMGBlocks.WAXED_EXPOSED_COPPER_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.WAXED_WEATHERED_COPPER_GIRDER.get());
+                output.accept(CMGBlocks.WAXED_WEATHERED_COPPER_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER.get());
+                output.accept(CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.INDUSTRIAL_IRON_GIRDER.get());
+                output.accept(CMGBlocks.INDUSTRIAL_IRON_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.WEATHERED_IRON_GIRDER.get());
+                output.accept(CMGBlocks.WEATHERED_IRON_GIRDER_STRUT.get());
             })
             .build()
             

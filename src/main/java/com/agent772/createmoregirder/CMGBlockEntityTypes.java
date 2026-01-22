@@ -1,5 +1,7 @@
 package com.agent772.createmoregirder;
 
+import com.agent772.createmoregirder.content.strut.GirderStrutBlockEntity;
+import com.agent772.createmoregirder.content.strut.GirderStrutBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.base.*;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
@@ -91,6 +93,12 @@ public class CMGBlockEntityTypes {
                 .validBlocks(CMGBlocks.WEATHERED_IRON_GIRDER_ENCASED_SHAFT)
                 .renderer(() -> ShaftRenderer::new)
                 .register(); 
+
+        // Girder Strut Block Entity
+       public static final BlockEntityEntry<GirderStrutBlockEntity> GIRDER_STRUT = REGISTRATE.blockEntity("girder_strut", GirderStrutBlockEntity::new)
+            .validBlocks(CMGBlocks.ANDESITE_GIRDER_STRUT, CMGBlocks.BRASS_GIRDER_STRUT, CMGBlocks.WAXED_COPPER_GIRDER_STRUT, CMGBlocks.WAXED_EXPOSED_COPPER_GIRDER_STRUT, CMGBlocks.WAXED_WEATHERED_COPPER_GIRDER_STRUT, CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER_STRUT, CMGBlocks.INDUSTRIAL_IRON_GIRDER_STRUT, CMGBlocks.WEATHERED_IRON_GIRDER_STRUT)
+            .renderer(() -> GirderStrutBlockEntityRenderer::new)
+            .register();
 
     public static void register() {
     }

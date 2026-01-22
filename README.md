@@ -99,6 +99,7 @@ Create: More Girder seamlessly integrates into your Create builds. Simply craft 
 
 ### **Technical Foundation**
 - **⚙️ jesz** - Original andesite girder implementation (Create: Diesel Generators)
+- **🏗️ Industrialists-Of-Create** - Girder strut system adapted from [Bits-n-Bobs](https://github.com/Industrialists-Of-Create/Bits-n-Bobs) (MIT License)
 - **🏗️ Create Team** - Core mod framework and kinetic systems
 
 ---
@@ -107,7 +108,9 @@ Create: More Girder seamlessly integrates into your Create builds. Simply craft 
 
 This project is licensed under the **MIT License**, promoting open-source collaboration and modification.
 
-**Code Attribution**: Incorporates design patterns from Create: Diesel Generators (MIT Licensed) by jesz.
+**Code Attribution**: 
+- Incorporates girder design patterns from Create: Diesel Generators (MIT Licensed) by jesz
+- Girder strut system adapted from Bits-n-Bobs by Industrialists-Of-Create (MIT Licensed): https://github.com/Industrialists-Of-Create/Bits-n-Bobs
 
 ---
 
