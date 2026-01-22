@@ -74,7 +74,7 @@ public class CMGBlocks {
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
-        // Andesite Girder Strut
+        // Strut
         public static final BlockEntry<GirderStrutBlock> ANDESITE_GIRDER_STRUT =
                 REGISTRATE.block("andesite_girder_strut", GirderStrutBlock.andesite())
                         .initialProperties(SharedProperties::softMetal)
@@ -82,7 +82,7 @@ public class CMGBlocks {
                         .transform(pickaxeOnly())
                         .blockstate((c, p) -> p.directionalBlock(c.get(),
                                 (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
-                                        "block/girder_strut/andesite_girder_strut_attachment")
+                                        "block/andesite_girder_strut/attachment")
                                 )))
                         .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
@@ -93,7 +93,7 @@ public class CMGBlocks {
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
                         .model((c, p) ->
-                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/girder_strut/andesite_girder_item"))
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/andesite_girder_strut/item"))
                         )
                         .build()
                         .register();
@@ -121,6 +121,30 @@ public class CMGBlocks {
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                                         .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
                                         .when(ExplosionCondition.survivesExplosion()))))
+                        .register();
+
+        // Strut
+        public static final BlockEntry<GirderStrutBlock> BRASS_GIRDER_STRUT =
+                REGISTRATE.block("brass_girder_strut", GirderStrutBlock.brass())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/brass_girder_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block)
+                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/brass_girder_strut/item"))
+                        )
+                        .build()
                         .register();
 
         // Copper Girder and its weathering stages
@@ -239,6 +263,30 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .register();
+        
+        // Strut
+        public static final BlockEntry<GirderStrutBlock> WAXED_COPPER_GIRDER_STRUT =
+                REGISTRATE.block("waxed_copper_girder_strut", GirderStrutBlock.waxed_copper())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/waxed_copper_girder_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block)
+                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/waxed_copper_girder_strut/item"))
+                        )
+                        .build()
+                        .register();
 
         public static final BlockEntry<WaxedExposedCopperGirderBlock> WAXED_EXPOSED_COPPER_GIRDER =
                 REGISTRATE.block("waxed_exposed_copper_girder", WaxedExposedCopperGirderBlock::new)
@@ -262,6 +310,30 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .register();
+        // Strut
+        public static final BlockEntry<GirderStrutBlock> WAXED_EXPOSED_COPPER_GIRDER_STRUT =
+                REGISTRATE.block("waxed_exposed_copper_girder_strut", GirderStrutBlock.waxed_exposed_copper())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/waxed_exposed_copper_girder_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block)
+                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/waxed_exposed_copper_girder_strut/item"))
+                        )
+                        .build()
+                        .register();
+
 
         public static final BlockEntry<WaxedWeatheredCopperGirderBlock> WAXED_WEATHERED_COPPER_GIRDER =
                 REGISTRATE.block("waxed_weathered_copper_girder", WaxedWeatheredCopperGirderBlock::new)
@@ -286,6 +358,30 @@ public class CMGBlocks {
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .register();
 
+        // Strut
+        public static final BlockEntry<GirderStrutBlock> WAXED_WEATHERED_COPPER_GIRDER_STRUT =
+                REGISTRATE.block("waxed_weathered_copper_girder_strut", GirderStrutBlock.waxed_weathered_copper())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/waxed_weathered_copper_girder_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block)
+                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/waxed_weathered_copper_girder_strut/item"))
+                        )
+                        .build()
+                        .register();
+
         public static final BlockEntry<WaxedOxidizedCopperGirderBlock> WAXED_OXIDIZED_COPPER_GIRDER =
                 REGISTRATE.block("waxed_oxidized_copper_girder", WaxedOxidizedCopperGirderBlock::new)
                         .initialProperties(SharedProperties::softMetal)
@@ -307,6 +403,29 @@ public class CMGBlocks {
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                                         .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
                                         .when(ExplosionCondition.survivesExplosion()))))
+                        .register();
+        // Strut
+        public static final BlockEntry<GirderStrutBlock> WAXED_OXIDIZED_COPPER_GIRDER_STRUT =
+                REGISTRATE.block("waxed_oxidized_copper_girder_strut", GirderStrutBlock.waxed_oxidized_copper())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/waxed_oxidized_copper_girder_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block)
+                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/waxed_oxidized_copper_girder_strut/item"))
+                        )
+                        .build()
                         .register();
         
         // Industrial Iron Girder
@@ -333,6 +452,30 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .register();
+        
+        // Strut
+        public static final BlockEntry<GirderStrutBlock> INDUSTRIAL_IRON_GIRDER_STRUT =
+                REGISTRATE.block("industrial_iron_girder_strut", GirderStrutBlock.industrial_iron())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/industrial_iron_girder_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block)
+                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/industrial_iron_girder_strut/item"))
+                        )
+                        .build()
+                        .register();
 
         // Weathered Iron Girder
         public static final BlockEntry<WeatheredIronGirderBlock> WEATHERED_IRON_GIRDER =
@@ -357,6 +500,30 @@ public class CMGBlocks {
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
                                         .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
                                         .when(ExplosionCondition.survivesExplosion()))))
+                        .register();
+
+        // Strut
+        public static final BlockEntry<GirderStrutBlock> WEATHERED_IRON_GIRDER_STRUT =
+                REGISTRATE.block("weathered_iron_girder_strut", GirderStrutBlock.weathered_iron())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/weathered_iron_girder_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block)
+                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/weathered_iron_girder_strut/item"))
+                        )
+                        .build()
                         .register();
     
     public static void register() {

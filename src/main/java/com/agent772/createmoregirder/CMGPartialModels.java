@@ -14,7 +14,14 @@ import net.minecraft.resources.ResourceLocation;
  */
 public class CMGPartialModels {
 
-    public static final PartialModel ANDESITE_GIRDER_STRUT = block("girder_strut/andesite_girder_strut");
+    public static final PartialModel ANDESITE_GIRDER_STRUT = block("andesite_girder_strut/strut");
+    public static final PartialModel BRASS_GIRDER_STRUT = block("brass_girder_strut/strut");
+    public static final PartialModel WAXED_COPPER_GIRDER_STRUT = block("waxed_copper_girder_strut/strut");
+    public static final PartialModel WAXED_EXPOSED_COPPER_GIRDER_STRUT = block("waxed_exposed_copper_girder_strut/strut");
+    public static final PartialModel WAXED_WEATHERED_COPPER_GIRDER_STRUT = block("waxed_weathered_copper_girder_strut/strut");
+    public static final PartialModel WAXED_OXIDIZED_COPPER_GIRDER_STRUT = block("waxed_oxidized_copper_girder_strut/strut");
+    public static final PartialModel INDUSTRIAL_IRON_GIRDER_STRUT = block("industrial_iron_girder_strut/strut");
+    public static final PartialModel WEATHERED_IRON_GIRDER_STRUT = block("weathered_iron_girder_strut/strut");
 
     private static PartialModel block(String path) {
         return PartialModel.of(ResourceLocation.fromNamespaceAndPath(CreateMoreGirder.MODID, "block/" + path));
@@ -27,7 +34,7 @@ public class CMGPartialModels {
     public static void init() {
         // Called to ensure static initialization
     }
-    
+
     public static void register() {
     }
 }

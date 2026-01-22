@@ -3,8 +3,8 @@
 	"credit": "Adapted from Bits-n-Bobs by Industrialists-Of-Create (MIT License)",
 	"parent": "block/block",
 	"textures": {
-		"1": "createmoregirder:block/andesite_girder",
-		"particle": "createmoregirder:block/andesite_girder"
+		"1": "createmoregirder:block/weathered_iron_girder",
+		"particle": "createmoregirder:block/weathered_iron_girder"
 	},
 	"elements": [
 		{

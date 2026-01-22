@@ -79,9 +79,7 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
         return IWrenchable.super.onSneakWrenched(state, context);
     }
 
-    public static NonNullFunction<Properties, GirderStrutBlock> andesite() {
-        return properties -> new GirderStrutBlock(properties, StrutModelType.ANDESITE);
-    }
+    
 
     @Override
     public @NotNull BlockState updateShape(final BlockState state, final @NotNull Direction direction, final @NotNull BlockState neighbourState, final @NotNull LevelAccessor world,
@@ -194,5 +192,38 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     public void setModelType(final StrutModelType modelType) {
         this.modelType = modelType;
+    }
+
+    // Variant constructors
+    public static NonNullFunction<Properties, GirderStrutBlock> andesite() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.ANDESITE);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> brass() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.BRASS);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> waxed_copper() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WAXED_COPPER);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> waxed_exposed_copper() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WAXED_EXPOSED_COPPER);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> waxed_weathered_copper() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WAXED_WEATHERED_COPPER);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> waxed_oxidized_copper() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WAXED_OXIDIZED_COPPER);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> industrial_iron() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.INDUSTRIAL_IRON);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> weathered_iron() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WEATHERED_IRON);
     }
 }

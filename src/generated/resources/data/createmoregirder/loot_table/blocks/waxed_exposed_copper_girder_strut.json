@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": 2.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "createmoregirder:waxed_exposed_copper_girder_strut"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "createmoregirder:blocks/waxed_exposed_copper_girder_strut"
+}
