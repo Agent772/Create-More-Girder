@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "A": {
+      "item": "create:brass_ingot"
+    },
+    "G": {
+      "item": "createmoregirder:brass_girder"
+    }
+  },
+  "pattern": [
+    "A  ",
+    "GGG",
+    "  A"
+  ],
+  "result": {
+    "count": 6,
+    "id": "createmoregirder:brass_girder_strut"
+  }
+}

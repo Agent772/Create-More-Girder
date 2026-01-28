@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "A": {
+      "item": "minecraft:waxed_exposed_copper"
+    },
+    "G": {
+      "item": "createmoregirder:waxed_exposed_copper_girder"
+    }
+  },
+  "pattern": [
+    "A  ",
+    "GGG",
+    "  A"
+  ],
+  "result": {
+    "count": 6,
+    "id": "createmoregirder:waxed_exposed_copper_girder_strut"
+  }
+}

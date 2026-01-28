@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "A": {
+      "item": "create:industrial_iron_block"
+    },
+    "G": {
+      "item": "createmoregirder:industrial_iron_girder"
+    }
+  },
+  "pattern": [
+    "A  ",
+    "GGG",
+    "  A"
+  ],
+  "result": {
+    "count": 6,
+    "id": "createmoregirder:industrial_iron_girder_strut"
+  }
+}
