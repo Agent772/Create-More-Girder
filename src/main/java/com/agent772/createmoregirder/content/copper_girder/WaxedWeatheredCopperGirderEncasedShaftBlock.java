@@ -8,7 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
@@ -36,10 +36,8 @@ public class WaxedWeatheredCopperGirderEncasedShaftBlock extends CopperGirderEnc
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (player == null)
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        ItemStack stack = player.getItemInHand(hand);
         // Handle axe scraping (removes wax, converts back to unwaxed encased shaft)
         if (stack.getItem() instanceof AxeItem) {
             Optional<Block> unwaxedBlock = WeatheringCopperGirders.getUnwaxedEncasedShaft(state.getBlock());
@@ -51,11 +49,11 @@ public class WaxedWeatheredCopperGirderEncasedShaftBlock extends CopperGirderEnc
                     level.setBlock(pos, unwaxedState, 3);
                     level.playSound(null, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0f, 1.0f);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
 
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     @Override
@@ -72,7 +70,7 @@ public class WaxedWeatheredCopperGirderEncasedShaftBlock extends CopperGirderEnc
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return false; // Waxed blocks don't weather
     }
 }

@@ -48,7 +48,7 @@ public class OxidizedCopperGirderEncasedShaftBlock extends CopperGirderEncasedSh
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return false; // Oxidized is the final stage, no further weathering
     }
 

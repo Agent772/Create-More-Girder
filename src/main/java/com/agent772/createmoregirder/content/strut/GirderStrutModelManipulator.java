@@ -1,20 +1,19 @@
 package com.agent772.createmoregirder.content.strut;
 
+import com.agent772.createmoregirder.CMGBlocks;
 import com.agent772.createmoregirder.content.strut.cap.GirderCapAccumulator;
 import com.agent772.createmoregirder.content.strut.geometry.GirderGeometry;
 import com.agent772.createmoregirder.content.strut.mesh.GirderMeshQuad;
 import com.agent772.createmoregirder.content.strut.mesh.GirderSegmentMesh;
-import com.agent772.createmoregirder.CMGBlocks;
-
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.ModelData;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;

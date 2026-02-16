@@ -48,7 +48,7 @@ public class WaxedCopperGirderEncasedShaftBlock extends CopperGirderEncasedShaft
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return false; // Waxed blocks don't weather
     }
 }

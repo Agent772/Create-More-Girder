@@ -13,7 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
@@ -42,10 +42,8 @@ public class WaxedCopperGirderBlock extends CopperGirderBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (player == null)
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        ItemStack stack = player.getItemInHand(hand);
         // Handle axe scraping (removes wax)
         if (stack.getItem() instanceof AxeItem) {
             Optional<Block> unwaxedBlock = WeatheringCopperGirders.getUnwaxed(state.getBlock());
@@ -61,7 +59,7 @@ public class WaxedCopperGirderBlock extends CopperGirderBlock {
                     level.setBlock(pos, unwaxedState, 3);
                     level.playSound(null, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0f, 1.0f);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
 
@@ -80,13 +78,13 @@ public class WaxedCopperGirderBlock extends CopperGirderBlock {
                     player.setItemInHand(hand, ItemStack.EMPTY);
             }
 
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         if (AllItems.WRENCH.isIn(stack) && !player.isShiftKeyDown()) {
             if (AndesiteGirderWrenchBehaviour.handleClick(level, pos, state, hitResult))
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            return ItemInteractionResult.FAIL;
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.FAIL;
         }
 
         IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
@@ -94,11 +92,11 @@ public class WaxedCopperGirderBlock extends CopperGirderBlock {
             return helper.getOffset(player, level, state, pos, hitResult)
                     .placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return false; // Waxed blocks don't weather
     }
 }

@@ -50,9 +50,9 @@ public class GirderStrutBlockItem extends BlockItem {
         final Direction face = context.getClickedFace();
 
         if (context.isSecondaryUseActive()) {
-            if (stack.has(CMGDataComponents.GIRDER_STRUT_FROM) || stack.has(CMGDataComponents.GIRDER_STRUT_FROM_FACE)) {
-                stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
-                stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+            if (CMGDataComponents.getGirderStrutFrom(stack) != null
+                    || CMGDataComponents.getGirderStrutFromFace(stack) != null) {
+                CMGDataComponents.clear(stack);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
             return InteractionResult.PASS;
@@ -64,21 +64,20 @@ public class GirderStrutBlockItem extends BlockItem {
             targetFace = level.getBlockState(placementPos).getValue(GirderStrutBlock.FACING);
         }
 
-        if (!stack.has(CMGDataComponents.GIRDER_STRUT_FROM)) {
+        if (CMGDataComponents.getGirderStrutFrom(stack) == null) {
             if (placementPos == null) {
                 return InteractionResult.FAIL;
             }
 
-            stack.set(CMGDataComponents.GIRDER_STRUT_FROM, placementPos);
-            stack.set(CMGDataComponents.GIRDER_STRUT_FROM_FACE, targetFace);
+            CMGDataComponents.setGirderStrutFrom(stack, placementPos);
+            CMGDataComponents.setGirderStrutFromFace(stack, targetFace);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        final BlockPos fromPos = stack.get(CMGDataComponents.GIRDER_STRUT_FROM);
-        Direction fromFace = stack.get(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+        final BlockPos fromPos = CMGDataComponents.getGirderStrutFrom(stack);
+        Direction fromFace = CMGDataComponents.getGirderStrutFromFace(stack);
         if (fromPos == null) {
-            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
-            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+            CMGDataComponents.clear(stack);
             return InteractionResult.FAIL;
         }
 
@@ -99,22 +98,20 @@ public class GirderStrutBlockItem extends BlockItem {
             final ConnectionResult result = tryConnect(context, fromPos, fromFace, placementPos, targetFace);
             if (result != ConnectionResult.SUCCESS) {
                 if (result == ConnectionResult.INVALID) {
-                    stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
-                    stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+                    CMGDataComponents.clear(stack);
                 }
                 return InteractionResult.FAIL;
             }
         }
 
-        stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
-        stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+        CMGDataComponents.clear(stack);
 
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
     public boolean isFoil(final ItemStack stack) {
-        return stack.has(CMGDataComponents.GIRDER_STRUT_FROM) || super.isFoil(stack);
+        return CMGDataComponents.getGirderStrutFrom(stack) != null || super.isFoil(stack);
     }
 
     public static boolean isValidConnection(final Level level, final BlockPos fromPos, final Direction fromFace, final BlockPos toPos, final Direction toFace) {

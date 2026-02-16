@@ -13,7 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
@@ -43,10 +43,8 @@ public class OxidizedCopperGirderBlock extends CopperGirderBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (player == null)
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        ItemStack stack = player.getItemInHand(hand);
         // Handle honeycomb waxing
         if (stack.is(Items.HONEYCOMB)) {
             Optional<Block> waxedBlock = WeatheringCopperGirders.getWaxed(state.getBlock());
@@ -65,7 +63,7 @@ public class OxidizedCopperGirderBlock extends CopperGirderBlock {
                         stack.shrink(1);
                     }
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
 
@@ -84,7 +82,7 @@ public class OxidizedCopperGirderBlock extends CopperGirderBlock {
                     level.setBlock(pos, scrapedState, 3);
                     level.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0f, 1.0f);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
 
@@ -103,13 +101,13 @@ public class OxidizedCopperGirderBlock extends CopperGirderBlock {
                     player.setItemInHand(hand, ItemStack.EMPTY);
             }
 
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         if (AllItems.WRENCH.isIn(stack) && !player.isShiftKeyDown()) {
             if (AndesiteGirderWrenchBehaviour.handleClick(level, pos, state, hitResult))
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            return ItemInteractionResult.FAIL;
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.FAIL;
         }
 
         IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
@@ -117,11 +115,11 @@ public class OxidizedCopperGirderBlock extends CopperGirderBlock {
             return helper.getOffset(player, level, state, pos, hitResult)
                     .placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return false; // Oxidized is the final stage, no further weathering
     }
 

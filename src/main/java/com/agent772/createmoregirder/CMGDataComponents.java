@@ -1,49 +1,58 @@
 package com.agent772.createmoregirder;
 
-import java.util.function.UnaryOperator;
-
-import org.jetbrains.annotations.ApiStatus;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.Registries;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredRegister;
-
-/**
- * Girder Strut Block implementation
- * 
- * Adapted from Bits-n-Bobs by Industrialists-Of-Create
- * Original: https://github.com/Industrialists-Of-Create/Bits-n-Bobs
- * Licensed under MIT License
- * 
- * Modifications:
- * - Adapted for Create: More Girder mod structure
- */
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class CMGDataComponents {
-    
-    private static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, CreateMoreGirder.MODID);
 
-    public static final DataComponentType<BlockPos> GIRDER_STRUT_FROM = register(
-            "girder_strut_from",
-            builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC)
-    );
+    private static final String GIRDER_STRUT_FROM = "GirderStrutFrom";
+    private static final String GIRDER_STRUT_FROM_FACE = "GirderStrutFromFace";
 
-    public static final DataComponentType<Direction> GIRDER_STRUT_FROM_FACE = register(
-            "girder_strut_from_face",
-            builder -> builder.persistent(Direction.CODEC).networkSynchronized(Direction.STREAM_CODEC)
-    );
+    // =============================
+    // BlockPos
+    // =============================
 
-    private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
-        DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();
-        DATA_COMPONENTS.register(name, () -> type);
-        return type;
+    public static void setGirderStrutFrom(ItemStack stack, BlockPos pos) {
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putIntArray(GIRDER_STRUT_FROM, new int[]{pos.getX(), pos.getY(), pos.getZ()});
     }
 
-    @ApiStatus.Internal
-    public static void register(IEventBus modEventBus) {
-        DATA_COMPONENTS.register(modEventBus);
+    public static BlockPos getGirderStrutFrom(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null || !tag.contains(GIRDER_STRUT_FROM)) return null;
+
+        int[] data = tag.getIntArray(GIRDER_STRUT_FROM);
+        if (data.length != 3) return null;
+
+        return new BlockPos(data[0], data[1], data[2]);
+    }
+
+    // =============================
+    // Direction
+    // =============================
+
+    public static void setGirderStrutFromFace(ItemStack stack, Direction direction) {
+        stack.getOrCreateTag().putString(GIRDER_STRUT_FROM_FACE, direction.getName());
+    }
+
+    public static Direction getGirderStrutFromFace(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null || !tag.contains(GIRDER_STRUT_FROM_FACE)) return null;
+
+        return Direction.byName(tag.getString(GIRDER_STRUT_FROM_FACE));
+    }
+
+    // =============================
+    // Clear
+    // =============================
+
+    public static void clear(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null) return;
+
+        tag.remove(GIRDER_STRUT_FROM);
+        tag.remove(GIRDER_STRUT_FROM_FACE);
     }
 }

@@ -3,17 +3,16 @@ package com.agent772.createmoregirder.content.strut;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockEntityItemRequirement;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
-import net.minecraft.world.level.block.Block;
 
 import java.util.HashSet;
 import java.util.List;
@@ -71,8 +70,13 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
     // }
 
     @Override
-    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
-        super.write(tag, registries, clientPacket);
+    public AABB getRenderBoundingBox() {
+        return super.getRenderBoundingBox().inflate(10);
+    }
+
+    @Override
+    protected void write(CompoundTag tag, boolean clientPacket) {
+        super.write(tag, clientPacket);
         ListTag list = new ListTag();
         for (BlockPos p : connections) {
             CompoundTag ct = new CompoundTag();
@@ -85,8 +89,8 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
     }
 
     @Override
-    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
-        super.read(tag, registries, clientPacket);
+    protected void read(CompoundTag tag, boolean clientPacket) {
+        super.read(tag, clientPacket);
         connections.clear();
         if (tag.contains("Connections", Tag.TAG_LIST)) {
             ListTag list = tag.getList("Connections", Tag.TAG_COMPOUND);

@@ -24,7 +24,7 @@ public class CMGPartialModels {
     public static final PartialModel WEATHERED_IRON_GIRDER_STRUT = block("weathered_iron_girder_strut/strut");
 
     private static PartialModel block(String path) {
-        return PartialModel.of(ResourceLocation.fromNamespaceAndPath(CreateMoreGirder.MODID, "block/" + path));
+        return PartialModel.of(ResourceLocation.fromNamespaceAndPath(CreateMoreGirder.MOD_ID, "block/" + path));
     }
 
     private static PartialModel createBlock(String path) {

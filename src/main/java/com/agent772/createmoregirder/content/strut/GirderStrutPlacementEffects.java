@@ -44,8 +44,11 @@ public class GirderStrutPlacementEffects {
         if (level == null) {
             return;
         }
-        final BlockPos fromPos = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM);
-        final Direction fromFace = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+//        final BlockPos fromPos = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM);
+//        final Direction fromFace = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+
+        final BlockPos fromPos = CMGDataComponents.getGirderStrutFrom(heldItem);
+        final Direction fromFace = CMGDataComponents.getGirderStrutFromFace(heldItem);
 
         if (fromPos == null) {
             return;

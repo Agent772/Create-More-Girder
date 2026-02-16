@@ -1,17 +1,14 @@
 package com.agent772.createmoregirder.content.strut;
 
-import com.agent772.createmoregirder.CMGShapes;
 import com.agent772.createmoregirder.CMGBlockEntityTypes;
-
+import com.agent772.createmoregirder.CMGShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -26,9 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.storage.loot.LootParams;
-
-import java.util.List;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -36,7 +30,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 /**
@@ -129,26 +122,14 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     }
 
     @Override
-    public @NotNull BlockState playerWillDestroy(final @NotNull Level level, final @NotNull BlockPos pos, final @NotNull BlockState state, final Player player) {
-        final boolean shouldPreventDrops = player.hasInfiniteMaterials();
+    public @NotNull void playerWillDestroy(final @NotNull Level level, final @NotNull BlockPos pos, final @NotNull BlockState state, final Player player) {
+        final boolean shouldPreventDrops = player.isCreative();
 
         if (shouldPreventDrops && !level.isClientSide) {
             destroyConnectedStrut(level, pos, false);
         }
 
-        return super.playerWillDestroy(level, pos, state, player);
-    }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
-        List<ItemStack> drops = super.getDrops(state, builder);
-        // If loot table didn't work, manually create the drops
-        if (drops.isEmpty()) {
-            ItemStack stack = new ItemStack(this, 2);
-            drops.add(stack);
-        }
-            drops.stream().mapToInt(ItemStack::getCount).sum();
-        return drops;
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     private void destroyConnectedStrut(final Level level, final BlockPos pos, final boolean dropBlock) {
@@ -170,7 +151,7 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             if (!level.isClientSide) {
-                destroyConnectedStrut(level, pos, true);
+                destroyConnectedStrut(level, pos, false);
             }
         }
         super.onRemove(state, level, pos, newState, isMoving);

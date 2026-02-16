@@ -1,6 +1,9 @@
 package com.agent772.createmoregirder.content.strut;
 
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -15,9 +18,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -127,28 +128,41 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
                 }
                 ms.popPose();
             }
-        } else { //use GirderStrutModelManipulator
+        } else { // Forge 1.20.1 version
             if (blockEntity.connectionRenderBufferCache == null) {
-                try (final ByteBufferBuilder bufferBuilder = new ByteBufferBuilder(256)) {
-                    final GirderStrutModelBuilder.GirderStrutModelData connectionData = GirderStrutModelBuilder.GirderStrutModelData.collect(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity);
-                    final List<Consumer<BufferBuilder>> quads = connectionData.connections()
-                            .stream()
-                            .flatMap(c -> GirderStrutModelManipulator.bakeConnectionToConsumer(c, modelType, blockEntity.createLighter()).stream())
-                            .toList();
 
-                    final BufferBuilder builder = new BufferBuilder(bufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+                final GirderStrutModelBuilder.GirderStrutModelData connectionData =
+                        GirderStrutModelBuilder.GirderStrutModelData.collect(
+                                blockEntity.getLevel(),
+                                blockEntity.getBlockPos(),
+                                blockEntity.getBlockState(),
+                                blockEntity
+                        );
 
-                    for (final Consumer<BufferBuilder> quad : quads) {
-                        quad.accept(builder);
-                    }
-                    final MeshData meshData = builder.build();
+                final List<Consumer<BufferBuilder>> quads = connectionData.connections()
+                        .stream()
+                        .flatMap(c -> GirderStrutModelManipulator
+                                .bakeConnectionToConsumer(c, modelType, blockEntity.createLighter())
+                                .stream())
+                        .toList();
 
-                    if (meshData == null) return;
+                // 1.20.1 style BufferBuilder
+                BufferBuilder builder = new BufferBuilder(256);
+                builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 
-                    blockEntity.connectionRenderBufferCache = SuperBufferFactory.getInstance().create(meshData);
+                for (Consumer<BufferBuilder> quad : quads) {
+                    quad.accept(builder);
                 }
+
+                BufferBuilder.RenderedBuffer renderedBuffer = builder.end();
+
+                // Create SuperBuffer directly from builder
+                blockEntity.connectionRenderBufferCache =
+                        SuperBufferFactory.getInstance().create(renderedBuffer);
             }
-            blockEntity.connectionRenderBufferCache.renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+
+            blockEntity.connectionRenderBufferCache
+                    .renderInto(ms, buffer.getBuffer(RenderType.cutout()));
         }
     }
 
@@ -169,11 +183,6 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
      */
     protected int getRenderPriority(final Vec3i relative) {
         return relative.getY() * 10000 + relative.getX() * 100 + relative.getZ();
-    }
-
-    @Override
-    public @NotNull AABB getRenderBoundingBox(@NotNull final GirderStrutBlockEntity blockEntity) {
-        return super.getRenderBoundingBox(blockEntity).inflate(10);
     }
 
     @Override

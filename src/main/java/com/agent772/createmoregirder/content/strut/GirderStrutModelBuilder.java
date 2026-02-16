@@ -9,10 +9,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.BakedModelWrapper;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.common.util.TriState;
+import net.minecraftforge.client.model.BakedModelWrapper;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -63,8 +62,13 @@ public class GirderStrutModelBuilder extends BakedModelWrapper<BakedModel> {
     }
 
     @Override
-    public TriState useAmbientOcclusion(BlockState state, ModelData data, RenderType renderType) {
-        return TriState.FALSE;
+    public boolean useAmbientOcclusion(BlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean useAmbientOcclusion(BlockState state, RenderType renderType) {
+        return false;
     }
 
     @Override

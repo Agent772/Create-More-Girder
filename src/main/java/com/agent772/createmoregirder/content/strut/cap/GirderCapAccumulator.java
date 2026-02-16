@@ -3,6 +3,7 @@ package com.agent772.createmoregirder.content.strut.cap;
 import com.agent772.createmoregirder.content.strut.geometry.GirderGeometry;
 import com.agent772.createmoregirder.content.strut.geometry.GirderVertex;
 import com.agent772.createmoregirder.content.strut.mesh.GirderMeshQuad;
+import com.agent772.createmoregirder.utils.MathUtils;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -353,8 +354,8 @@ public final class GirderCapAccumulator {
         for (int index : loop) {
             CapVertex vertex = uniqueVertices.get(index);
             Vector3f toVertex = new Vector3f(vertex.position()).sub(uvOrigin);
-            float u = Math.clamp(toVertex.dot(uvRight), -0.5f, 0.5f);
-            float v = Math.clamp(toVertex.dot(uvUp), -0.5f, 0.5f);
+            float u = MathUtils.clamp(toVertex.dot(uvRight), -0.5f, 0.5f);
+            float v = MathUtils.clamp(toVertex.dot(uvUp), -0.5f, 0.5f);
             // Update vertex UVs
             uniqueVertices.set(index, new CapVertex(vertex.position(), uScale * u + uOffset, vScale * v + vOffset, vertex.color(), vertex.light(), vertex.sourceSprite()));
         }
