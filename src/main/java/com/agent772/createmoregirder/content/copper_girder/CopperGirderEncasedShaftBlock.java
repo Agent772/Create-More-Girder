@@ -41,47 +41,96 @@ public class CopperGirderEncasedShaftBlock extends AndesiteGirderEncasedShaftBlo
         return WeatherState.UNAFFECTED;
     }
 
+    /**
+     * Checks if this block is waxed (should handle axe unwaxing instead of scraping).
+     */
+    protected boolean isWaxed() {
+        return false;
+    }
+
+    /**
+     * Returns the girder block for this encased shaft variant.
+     * Override in subclasses to provide the correct variant-specific girder.
+     */
+    protected Block getGirderBlock() {
+        return CMGBlocks.COPPER_GIRDER.get();
+    }
+
+    /**
+     * Copies all encased shaft properties from one state to another.
+     */
+    protected BlockState copyEncasedShaftProperties(BlockState from, BlockState to) {
+        return to.setValue(WATERLOGGED, from.getValue(WATERLOGGED))
+                .setValue(TOP, from.getValue(TOP))
+                .setValue(BOTTOM, from.getValue(BOTTOM))
+                .setValue(HORIZONTAL_AXIS, from.getValue(HORIZONTAL_AXIS));
+    }
+
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemStack stack = player.getItemInHand(hand);
-        // Handle honeycomb waxing
-        if (stack.is(Items.HONEYCOMB)) {
-            Optional<Block> waxedBlock = WeatheringCopperGirders.getWaxedEncasedShaft(state.getBlock());
-            if (waxedBlock.isPresent()) {
-                if (!level.isClientSide) {
-                    BlockState waxedState = waxedBlock.get().defaultBlockState()
-                            .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
-                            .setValue(TOP, state.getValue(TOP))
-                            .setValue(BOTTOM, state.getValue(BOTTOM))
-                            .setValue(HORIZONTAL_AXIS, state.getValue(HORIZONTAL_AXIS));
-                    level.setBlock(pos, waxedState, 3);
-                    level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0f, 1.0f);
-                    if (!player.isCreative()) {
-                        stack.shrink(1);
-                    }
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide);
-            }
+
+        // Handle honeycomb waxing (for non-waxed blocks)
+        if (!isWaxed() && stack.is(Items.HONEYCOMB)) {
+            InteractionResult result = handleWaxing(state, level, pos, player, stack);
+            if (result != InteractionResult.PASS) return result;
         }
 
-        // Handle axe scraping
+        // Handle axe interactions (scraping for non-waxed, unwaxing for waxed)
         if (stack.getItem() instanceof AxeItem) {
-            Optional<Block> scrapedBlock = WeatheringCopperGirders.getPreviousEncasedShaft(state.getBlock());
-            if (scrapedBlock.isPresent()) {
-                if (!level.isClientSide) {
-                    BlockState scrapedState = scrapedBlock.get().defaultBlockState()
-                            .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
-                            .setValue(TOP, state.getValue(TOP))
-                            .setValue(BOTTOM, state.getValue(BOTTOM))
-                            .setValue(HORIZONTAL_AXIS, state.getValue(HORIZONTAL_AXIS));
-                    level.setBlock(pos, scrapedState, 3);
-                    level.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0f, 1.0f);
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide);
-            }
+            InteractionResult result = isWaxed() ? handleUnwaxing(state, level, pos) : handleScraping(state, level, pos);
+            if (result != InteractionResult.PASS) return result;
         }
 
         return super.use(state, level, pos, player, hand, hitResult);
+    }
+
+    /**
+     * Handles honeycomb waxing interaction.
+     */
+    protected InteractionResult handleWaxing(BlockState state, Level level, BlockPos pos, Player player, ItemStack stack) {
+        Optional<Block> waxedBlock = WeatheringCopperGirders.getWaxedEncasedShaft(state.getBlock());
+        if (waxedBlock.isPresent()) {
+            if (!level.isClientSide) {
+                level.setBlock(pos, copyEncasedShaftProperties(state, waxedBlock.get().defaultBlockState()), 3);
+                level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0f, 1.0f);
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return InteractionResult.PASS;
+    }
+
+    /**
+     * Handles axe scraping interaction (for weathered variants).
+     */
+    protected InteractionResult handleScraping(BlockState state, Level level, BlockPos pos) {
+        Optional<Block> scrapedBlock = WeatheringCopperGirders.getPreviousEncasedShaft(state.getBlock());
+        if (scrapedBlock.isPresent()) {
+            if (!level.isClientSide) {
+                level.setBlock(pos, copyEncasedShaftProperties(state, scrapedBlock.get().defaultBlockState()), 3);
+                level.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0f, 1.0f);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return InteractionResult.PASS;
+    }
+
+    /**
+     * Handles axe unwaxing interaction (for waxed variants).
+     */
+    protected InteractionResult handleUnwaxing(BlockState state, Level level, BlockPos pos) {
+        Optional<Block> unwaxedBlock = WeatheringCopperGirders.getUnwaxedEncasedShaft(state.getBlock());
+        if (unwaxedBlock.isPresent()) {
+            if (!level.isClientSide) {
+                level.setBlock(pos, copyEncasedShaftProperties(state, unwaxedBlock.get().defaultBlockState()), 3);
+                level.playSound(null, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0f, 1.0f);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -97,19 +146,16 @@ public class CopperGirderEncasedShaftBlock extends AndesiteGirderEncasedShaftBlo
     @Override
     public Optional<BlockState> getNext(BlockState state) {
         return WeatheringCopperGirders.getNextEncasedShaft(state.getBlock())
-                .map(block -> block.defaultBlockState()
-                        .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
-                        .setValue(TOP, state.getValue(TOP))
-                        .setValue(BOTTOM, state.getValue(BOTTOM))
-                        .setValue(HORIZONTAL_AXIS, state.getValue(HORIZONTAL_AXIS)));
+                .map(block -> copyEncasedShaftProperties(state, block.defaultBlockState()));
     }
 
     @Override
     public BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
+        Block girderBlock = getGirderBlock();
         boolean hasVerticalConnection = originalState.getValue(TOP) || originalState.getValue(BOTTOM);
         if (hasVerticalConnection) {
             // Return vertical girder if encased shaft has vertical connections
-            return CMGBlocks.COPPER_GIRDER.get().defaultBlockState()
+            return girderBlock.defaultBlockState()
                     .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
                     .setValue(GirderBlock.X, false)
                     .setValue(GirderBlock.Z, false)
@@ -118,7 +164,7 @@ public class CopperGirderEncasedShaftBlock extends AndesiteGirderEncasedShaftBlo
                     .setValue(GirderBlock.TOP, originalState.getValue(TOP));
         } else {
             // Return horizontal girder based on shaft axis
-            return CMGBlocks.COPPER_GIRDER.get().defaultBlockState()
+            return girderBlock.defaultBlockState()
                     .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
                     .setValue(GirderBlock.X, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.Z)
                     .setValue(GirderBlock.Z, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X)
@@ -131,7 +177,7 @@ public class CopperGirderEncasedShaftBlock extends AndesiteGirderEncasedShaftBlo
     @Override
     public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
         return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), be)
-                .union(ItemRequirement.of(CMGBlocks.COPPER_GIRDER.getDefaultState(), be));
+                .union(ItemRequirement.of(getGirderBlock().defaultBlockState(), be));
     }
 
     @Override
