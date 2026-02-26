@@ -270,7 +270,7 @@ curseforge {
                 main {
                     from(tasks.jar)
                     
-                    displayName = "${mod_name} ${version}-neo"
+                    displayName = "create-more-girder-${version}-neo"
                     releaseType = io.github.themrmilchmann.gradle.publish.curseforge.ReleaseType.RELEASE
                     
                     changelog {
@@ -296,7 +296,7 @@ modrinth {
     projectId = project.findProperty('modrinth_project_id')
     
     versionNumber = version
-    versionName = "${mod_name} ${version}-neo"
+    versionName = "create-more-girder-${version}-neo"
     versionType = 'release' // 'alpha', 'beta', or 'release'
     
     uploadFile = tasks.jar
