@@ -3,6 +3,8 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.110'
     id 'idea'
+    id 'io.github.themrmilchmann.curseforge-publish' version '0.8.0'
+    id 'com.modrinth.minotaur' version '2.+'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -29,7 +31,9 @@ repositories {
 base {
     archivesName = "create-more-girder"
 }
-
+tasks.named('jar', Jar) {
+    archiveClassifier = 'neo'
+}
 // Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
@@ -214,4 +218,114 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
+}
+
+// Helper function to get changelog from multiple sources (configuration-cache safe)
+def getChangelogProvider() {
+    return providers.provider {
+        // 1. Check for -Pchangelog property
+        if (project.hasProperty('changelog')) {
+            return project.property('changelog')
+        }
+        
+        // 2. Check for CHANGELOG.md file
+        def changelogFile = file('CHANGELOG.md')
+        if (changelogFile.exists()) {
+            return changelogFile.text
+        }
+        
+        // 3. Try to get latest git commit message
+        try {
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'log', '-1', '--pretty=%B'
+                standardOutput = stdout
+                ignoreExitValue = true
+            }
+            def message = stdout.toString().trim()
+            if (message && !message.isEmpty()) {
+                return message
+            }
+        } catch (Exception e) {
+            // Git not available or not a git repo
+        }
+        
+        // 4. Fallback to simple version string
+        return "Release ${version}"
+    }
+}
+
+// CurseForge Publishing Configuration
+curseforge {
+    // API token from user gradle.properties
+    apiToken = providers.gradleProperty('curseforge_api_key')
+    
+    publications {
+        // The plugin auto-creates a 'neoForge' publication when ModDevGradle is detected
+        // We configure it here
+        neoForge {
+            projectId = project.findProperty('curseforge_project_id')
+            
+            artifacts {
+                main {
+                    from(tasks.jar)
+                    
+                    displayName = "${mod_name} ${version}-neo"
+                    releaseType = io.github.themrmilchmann.gradle.publish.curseforge.ReleaseType.RELEASE
+                    
+                    changelog {
+                        format = io.github.themrmilchmann.gradle.publish.curseforge.ChangelogFormat.MARKDOWN
+                        content = getChangelogProvider()
+                    }
+                    
+                    // clientRequired = true
+                    // serverRequired = true
+                    
+                    relations {
+                        requiredDependency(project.findProperty('curseforge_create_mod_slug') ?: 'create')
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Modrinth Publishing Configuration
+modrinth {
+    token = providers.gradleProperty('modrinth_token')
+    projectId = project.findProperty('modrinth_project_id')
+    
+    versionNumber = version
+    versionName = "${mod_name} ${version}-neo"
+    versionType = 'release' // 'alpha', 'beta', or 'release'
+    
+    uploadFile = tasks.jar
+    
+    gameVersions = [minecraft_version]
+    loaders = ['neoforge']
+    
+    changelog = getChangelogProvider()
+    
+    dependencies {
+        required.project 'create'
+    }
+}
+
+// Convenience tasks for publishing
+tasks.register('releaseCurseForge') {
+    group = 'upload'
+    description = 'Builds and uploads the jar to CurseForge'
+    dependsOn 'publishNeoForgePublicationToCurseForge'
+}
+
+tasks.register('releaseModrinth') {
+    group = 'upload'
+    description = 'Builds and uploads the jar to Modrinth'
+    dependsOn 'modrinth'
+}
+
+tasks.register('release') {
+    group = 'upload'
+    description = 'Builds and uploads the jar to both CurseForge and Modrinth'
+    dependsOn 'releaseCurseForge', 'releaseModrinth'
 }
