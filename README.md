@@ -1,4 +1,3 @@
-
 <div align="center">
 
 ![Create: More Girder Logo](src/main/resources/assets/createmoregirder/logo.png)
@@ -8,6 +7,7 @@
 ### 🏗️ *Expand your Create builds with beautiful structural girders!* 🏗️
 
 [![NeoForge](https://img.shields.io/badge/NeoForge-21.1.209+-orange.svg)](https://neoforged.net/)
+[![NeoForge](https://img.shields.io/badge/Forge-47.4.13+-blue.svg)](https://files.minecraftforge.net/net/minecraftforge/forge/)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen.svg)](https://minecraft.net/)
 [![Create](https://img.shields.io/badge/Create-6.0.0+-blue.svg)](https://www.curseforge.com/minecraft/mc-mods/create)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
