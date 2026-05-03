@@ -26,18 +26,6 @@ repositories {
     maven { url = "https://cursemaven.com" } // CurseForge
     maven { url = "https://maven.blamejared.com" } // JEI, Vazkii's Mods
     maven { url = "https://api.modrinth.com/maven" } // Jade
-    exclusiveContent { // Sable Companion
-        forRepository {
-            maven {
-                url = "https://maven.ryanhcode.dev/releases"
-                name = "RyanHCode Maven"
-            }
-        }
-        filter {
-            includeGroup("dev.ryanhcode.sable")
-            includeGroup("dev.ryanhcode.sable-companion")
-        }
-    }
 }
 
 base {
@@ -145,13 +133,6 @@ dependencies {
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
-    // Sable Companion - embedded for Create Aeronautics sublevel compatibility
-    jarJar(api("dev.ryanhcode.sable-companion:sable-companion-common-${minecraft_version}:[${sable_companion_version},)")) {
-        version {
-            prefer project.sable_companion_version
-        }
-    }
-
     localRuntime("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
     localRuntime("maven.modrinth:jade:${jade_version}")
     // Create Diesel Generators - optional soft dependency
@@ -194,7 +175,6 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             loader_version_range   : loader_version_range,
             create_version         : create_version,
             create_version_range   : create_version_range,
-            sable_companion_version   : sable_companion_version,
             diesel_generators_version : diesel_generators_version,
             mod_id                 : mod_id,
             mod_name               : mod_name,
