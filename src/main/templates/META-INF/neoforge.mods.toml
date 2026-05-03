@@ -94,6 +94,15 @@ description='''${mod_description}'''
     ordering="NONE"
     side="BOTH"
 
+# Sable - optional dependency for Create Aeronautics sublevel compatibility
+[[dependencies.${mod_id}]]
+    modId="sable"
+    type="optional"
+    reason="Enables compatibility with Create Aeronautics sub-levels via Sable Companion"
+    versionRange="[0.0.0,)"
+    ordering="NONE"
+    side="BOTH"
+
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.
