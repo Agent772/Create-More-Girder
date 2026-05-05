@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.agent772.createmoregirder.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "createmoregirder.refmap.json",
+  "mixins": [
+    "BezierConnectionMixin",
+    "PlacementInfoAccessor",
+    "TrackBlockItemMixin",
+    "TrackPaverMixin"
+  ],
+  "client": [
+    "GirderVisualMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
