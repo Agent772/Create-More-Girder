@@ -36,6 +36,7 @@ import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -55,8 +56,9 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(AndesiteGirderGenerator::blockState)
-                        .item().model((c, p) -> p.blockItem(c, "/item")).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model((c, p) -> p.blockItem(c, "/item")).build()
                         .register();
 
         public static final BlockEntry<AndesiteGirderEncasedShaftBlock> ANDESITE_GIRDER_ENCASED_SHAFT =
@@ -64,6 +66,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(AndesiteGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -104,8 +107,9 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
 
         public static final BlockEntry<BrassGirderEncasedShaftBlock> BRASS_GIRDER_ENCASED_SHAFT =
@@ -113,6 +117,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -153,14 +158,16 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
         public static final BlockEntry<CopperGirderEncasedShaftBlock> COPPER_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("copper_girder_encased_shaft", CopperGirderEncasedShaftBlock::new)
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -176,14 +183,16 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
         public static final BlockEntry<ExposedCopperGirderEncasedShaftBlock> EXPOSED_COPPER_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("exposed_copper_girder_encased_shaft", ExposedCopperGirderEncasedShaftBlock::new)
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -199,14 +208,16 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
         public static final BlockEntry<WeatheredCopperGirderEncasedShaftBlock> WEATHERED_COPPER_GIRDER_ENCASED_SHAFT =
             REGISTRATE.block("weathered_copper_girder_encased_shaft", WeatheredCopperGirderEncasedShaftBlock::new)
                     .initialProperties(SharedProperties::softMetal)
                     .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                     .transform(pickaxeOnly())
+                    .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                     .blockstate(GenericGirderGenerator::blockStateWithShaft)
                     .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                             .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -222,14 +233,16 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
         public static final BlockEntry<OxidizedCopperGirderEncasedShaftBlock> OXIDIZED_COPPER_GIRDER_ENCASED_SHAFT =
             REGISTRATE.block("oxidized_copper_girder_encased_shaft", OxidizedCopperGirderEncasedShaftBlock::new)
                     .initialProperties(SharedProperties::softMetal)
                     .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                     .transform(pickaxeOnly())
+                    .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                     .blockstate(GenericGirderGenerator::blockStateWithShaft)
                     .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                             .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -246,14 +259,16 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
         public static final BlockEntry<WaxedCopperGirderEncasedShaftBlock> WAXED_COPPER_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("waxed_copper_girder_encased_shaft", WaxedCopperGirderEncasedShaftBlock::new)
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -293,14 +308,16 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
         public static final BlockEntry<WaxedExposedCopperGirderEncasedShaftBlock> WAXED_EXPOSED_COPPER_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("waxed_exposed_copper_girder_encased_shaft", WaxedExposedCopperGirderEncasedShaftBlock::new)
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -340,14 +357,16 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
         public static final BlockEntry<WaxedWeatheredCopperGirderEncasedShaftBlock> WAXED_WEATHERED_COPPER_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("waxed_weathered_copper_girder_encased_shaft", WaxedWeatheredCopperGirderEncasedShaftBlock::new)
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -387,14 +406,16 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
         public static final BlockEntry<WaxedOxidizedCopperGirderEncasedShaftBlock> WAXED_OXIDIZED_COPPER_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("waxed_oxidized_copper_girder_encased_shaft", WaxedOxidizedCopperGirderEncasedShaftBlock::new)
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -434,8 +455,9 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
 
         public static final BlockEntry<IndustrialIronGirderEncasedShaftBlock> INDUSTRIAL_IRON_GIRDER_ENCASED_SHAFT =
@@ -443,6 +465,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -483,8 +506,9 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
-                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
 
         public static final BlockEntry<WeatheredIronGirderEncasedShaftBlock> WEATHERED_IRON_GIRDER_ENCASED_SHAFT =
@@ -492,6 +516,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
                         .blockstate(GenericGirderGenerator::blockStateWithShaft)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
@@ -526,6 +551,61 @@ public class CMGBlocks {
                         .build()
                         .register();
     
+    private static volatile java.util.Set<Block> GIRDER_BLOCKS;
+    private static volatile java.util.Set<Block> GIRDER_ENCASED_SHAFT_BLOCKS;
+
+    private static java.util.Set<Block> girderBlocks() {
+        java.util.Set<Block> s = GIRDER_BLOCKS;
+        if (s == null) {
+            s = java.util.Set.of(
+                    ANDESITE_GIRDER.get(),
+                    BRASS_GIRDER.get(),
+                    COPPER_GIRDER.get(),
+                    EXPOSED_COPPER_GIRDER.get(),
+                    WEATHERED_COPPER_GIRDER.get(),
+                    OXIDIZED_COPPER_GIRDER.get(),
+                    WAXED_COPPER_GIRDER.get(),
+                    WAXED_EXPOSED_COPPER_GIRDER.get(),
+                    WAXED_WEATHERED_COPPER_GIRDER.get(),
+                    WAXED_OXIDIZED_COPPER_GIRDER.get(),
+                    INDUSTRIAL_IRON_GIRDER.get(),
+                    WEATHERED_IRON_GIRDER.get()
+            );
+            GIRDER_BLOCKS = s;
+        }
+        return s;
+    }
+
+    private static java.util.Set<Block> girderEncasedShaftBlocks() {
+        java.util.Set<Block> s = GIRDER_ENCASED_SHAFT_BLOCKS;
+        if (s == null) {
+            s = java.util.Set.of(
+                    ANDESITE_GIRDER_ENCASED_SHAFT.get(),
+                    BRASS_GIRDER_ENCASED_SHAFT.get(),
+                    COPPER_GIRDER_ENCASED_SHAFT.get(),
+                    EXPOSED_COPPER_GIRDER_ENCASED_SHAFT.get(),
+                    WEATHERED_COPPER_GIRDER_ENCASED_SHAFT.get(),
+                    OXIDIZED_COPPER_GIRDER_ENCASED_SHAFT.get(),
+                    WAXED_COPPER_GIRDER_ENCASED_SHAFT.get(),
+                    WAXED_EXPOSED_COPPER_GIRDER_ENCASED_SHAFT.get(),
+                    WAXED_WEATHERED_COPPER_GIRDER_ENCASED_SHAFT.get(),
+                    WAXED_OXIDIZED_COPPER_GIRDER_ENCASED_SHAFT.get(),
+                    INDUSTRIAL_IRON_GIRDER_ENCASED_SHAFT.get(),
+                    WEATHERED_IRON_GIRDER_ENCASED_SHAFT.get()
+            );
+            GIRDER_ENCASED_SHAFT_BLOCKS = s;
+        }
+        return s;
+    }
+
+    public static boolean isAnyCMGGirder(BlockState state) {
+        return girderBlocks().contains(state.getBlock());
+    }
+
+    public static boolean isAnyCMGGirderEncasedShaft(BlockState state) {
+        return girderEncasedShaftBlocks().contains(state.getBlock());
+    }
+
     public static void register() {
 
     }

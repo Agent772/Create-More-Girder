@@ -1,4 +1,4 @@
-package com.agent772.createmoregirder.content.andesite_girder;
+package com.agent772.createmoregirder.content.girder;
 
 import com.agent772.createmoregirder.CMGBlocks;
 import com.simibubi.create.AllItems;
@@ -18,6 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -29,7 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class AndesiteGirderWrenchBehaviour {
+public class CMGGirderWrenchBehaviour {
     @OnlyIn(Dist.CLIENT)
     public static void tick() {
         Minecraft mc = Minecraft.getInstance();
@@ -44,7 +46,8 @@ public class AndesiteGirderWrenchBehaviour {
         if (player.isSteppingCarefully())
             return;
 
-        if (!CMGBlocks.ANDESITE_GIRDER.has(world.getBlockState(pos)))
+        BlockState hovered = world.getBlockState(pos);
+        if (!CMGBlocks.isAnyCMGGirder(hovered) && !CMGBlocks.isAnyCMGGirderEncasedShaft(hovered))
             return;
 
         if (!AllItems.WRENCH.isIn(heldItem))
@@ -88,7 +91,7 @@ public class AndesiteGirderWrenchBehaviour {
                                 .getNormal())
                         .scale(0.1 * normalMultiplier));
 
-        Outliner.getInstance().showAABB("andesiteGirderWrench", new AABB(corner1, corner2))
+        Outliner.getInstance().showAABB("cmgGirderWrench", new AABB(corner1, corner2))
                 .lineWidth(1 / 32f)
                 .colored(new Color(95, 95, 255));
     }
@@ -118,35 +121,60 @@ public class AndesiteGirderWrenchBehaviour {
     public static List<Pair<Direction, Action>> getValidDirections(BlockGetter level, BlockPos pos) {
         BlockState blockState = level.getBlockState(pos);
 
-        if (!CMGBlocks.ANDESITE_GIRDER.has(blockState))
+        boolean isGirder = CMGBlocks.isAnyCMGGirder(blockState);
+        boolean isEncasedShaft = CMGBlocks.isAnyCMGGirderEncasedShaft(blockState);
+
+        if (!isGirder && !isEncasedShaft)
+            return Collections.emptyList();
+
+        // vertical girder (pole) does not expose horizontal helpers
+        if (isGirder && !blockState.getValue(GirderBlock.X) && !blockState.getValue(GirderBlock.Z))
             return Collections.emptyList();
 
         return Arrays.stream(Iterate.directions)
                 .<Pair<Direction, Action>>mapMulti((direction, consumer) -> {
-                    BlockState other = level.getBlockState(pos.relative(direction));
-
-                    if (!blockState.getValue(GirderBlock.X) && !blockState.getValue(GirderBlock.Z))
+                    if (direction.getAxis() != Direction.Axis.Y)
                         return;
 
-                    // up and down
-                    if (direction.getAxis() == Direction.Axis.Y) {
-                        // no other girder in target dir
-                        if (!CMGBlocks.ANDESITE_GIRDER.has(other)) {
-                            if (!blockState.getValue(GirderBlock.X) ^ !blockState.getValue(GirderBlock.Z))
-                                consumer.accept(Pair.of(direction, Action.SINGLE));
+                    BlockState other = level.getBlockState(pos.relative(direction));
+                    boolean otherIsGirder = CMGBlocks.isAnyCMGGirder(other);
+                    boolean otherIsEncasedShaft = CMGBlocks.isAnyCMGGirderEncasedShaft(other);
+                    boolean otherIsHorizontalGirder = otherIsGirder
+                            && other.getValue(GirderBlock.X) != other.getValue(GirderBlock.Z);
+
+                    if (isEncasedShaft) {
+                        // skip if neighbor is a CMG girder pole/cross (vertical orientation)
+                        if (otherIsGirder && !otherIsHorizontalGirder)
+                            return;
+                        // pair with another encased shaft or a horizontal girder
+                        if (otherIsEncasedShaft || otherIsHorizontalGirder) {
+                            consumer.accept(Pair.of(direction, Action.PAIR));
                             return;
                         }
-                        // this girder is a pole or cross
-                        if (blockState.getValue(GirderBlock.X) == blockState.getValue(GirderBlock.Z))
-                            return;
-                        // other girder is a pole or cross
-                        if (other.getValue(GirderBlock.X) == other.getValue(GirderBlock.Z))
-                            return;
-                        // toggle up/down connection for both
-                        consumer.accept(Pair.of(direction, Action.PAIR));
-
+                        consumer.accept(Pair.of(direction, Action.SINGLE));
                         return;
                     }
+
+                    // no other girder in target dir
+                    if (!otherIsGirder) {
+                        // pair with an encased shaft when this girder is horizontal (single-axis)
+                        if (otherIsEncasedShaft) {
+                            if (blockState.getValue(GirderBlock.X) != blockState.getValue(GirderBlock.Z))
+                                consumer.accept(Pair.of(direction, Action.PAIR));
+                            return;
+                        }
+                        if (!blockState.getValue(GirderBlock.X) ^ !blockState.getValue(GirderBlock.Z))
+                            consumer.accept(Pair.of(direction, Action.SINGLE));
+                        return;
+                    }
+                    // this girder is a pole or cross
+                    if (blockState.getValue(GirderBlock.X) == blockState.getValue(GirderBlock.Z))
+                        return;
+                    // other girder is a pole or cross
+                    if (other.getValue(GirderBlock.X) == other.getValue(GirderBlock.Z))
+                        return;
+                    // toggle up/down connection for both
+                    consumer.accept(Pair.of(direction, Action.PAIR));
 
 //					if (BlockRegistry.ANDESITE_GIRDER.has(other))
 //						consumer.accept(Pair.of(direction, Action.HORIZONTAL));
@@ -161,7 +189,11 @@ public class AndesiteGirderWrenchBehaviour {
             return false;
         if (level.isClientSide)
             return true;
-        if (!state.getValue(GirderBlock.X) && !state.getValue(GirderBlock.Z))
+
+        boolean isGirder = CMGBlocks.isAnyCMGGirder(state);
+        boolean isEncasedShaft = CMGBlocks.isAnyCMGGirderEncasedShaft(state);
+
+        if (isGirder && !state.getValue(GirderBlock.X) && !state.getValue(GirderBlock.Z))
             return false;
 
         Direction dir = dirPair.getFirst();
@@ -170,16 +202,18 @@ public class AndesiteGirderWrenchBehaviour {
         BlockState other = level.getBlockState(otherPos);
 
         if (dir == Direction.UP) {
-            level.setBlock(pos, postProcess(state.cycle(GirderBlock.TOP)), 2 | 16);
-            if (dirPair.getSecond() == Action.PAIR && CMGBlocks.ANDESITE_GIRDER.has(other))
-                level.setBlock(otherPos, postProcess(other.cycle(GirderBlock.BOTTOM)), 2 | 16);
+            level.setBlock(pos, cycleConnector(state, true), 2 | 16);
+            if (dirPair.getSecond() == Action.PAIR
+                    && (CMGBlocks.isAnyCMGGirder(other) || CMGBlocks.isAnyCMGGirderEncasedShaft(other)))
+                level.setBlock(otherPos, cycleConnector(other, false), 2 | 16);
             return true;
         }
 
         if (dir == Direction.DOWN) {
-            level.setBlock(pos, postProcess(state.cycle(GirderBlock.BOTTOM)), 2 | 16);
-            if (dirPair.getSecond() == Action.PAIR && CMGBlocks.ANDESITE_GIRDER.has(other))
-                level.setBlock(otherPos, postProcess(other.cycle(GirderBlock.TOP)), 2 | 16);
+            level.setBlock(pos, cycleConnector(state, false), 2 | 16);
+            if (dirPair.getSecond() == Action.PAIR
+                    && (CMGBlocks.isAnyCMGGirder(other) || CMGBlocks.isAnyCMGGirderEncasedShaft(other)))
+                level.setBlock(otherPos, cycleConnector(other, true), 2 | 16);
             return true;
         }
 
@@ -193,6 +227,19 @@ public class AndesiteGirderWrenchBehaviour {
         return true;
     }
 
+    private static BlockState cycleConnector(BlockState state, boolean top) {
+        if (CMGBlocks.isAnyCMGGirderEncasedShaft(state))
+            return cycleByName(state, top ? "top" : "bottom");
+        return postProcess(state.cycle(top ? GirderBlock.TOP : GirderBlock.BOTTOM));
+    }
+
+    private static BlockState cycleByName(BlockState state, String propertyName) {
+        Property<?> prop = state.getBlock().getStateDefinition().getProperty(propertyName);
+        if (prop instanceof BooleanProperty bp)
+            return state.cycle(bp);
+        return state;
+    }
+
     private static BlockState postProcess(BlockState newState) {
         if (newState.getValue(GirderBlock.TOP) && newState.getValue(GirderBlock.BOTTOM))
             return newState;
@@ -204,5 +251,5 @@ public class AndesiteGirderWrenchBehaviour {
     private enum Action {
         SINGLE, PAIR, HORIZONTAL
     }
-    
+
 }

@@ -1,6 +1,7 @@
 package com.agent772.createmoregirder.content.andesite_girder;
 
 import com.agent772.createmoregirder.CMGBlocks;
+import com.agent772.createmoregirder.content.girder.CMGGirderWrenchBehaviour;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
@@ -53,11 +54,9 @@ public class AndesiteGirderBlock extends GirderBlock {
             return ItemInteractionResult.SUCCESS;
         }
 
-        if (AllItems.WRENCH.isIn(stack) && !player.isShiftKeyDown()) {
-            if (AndesiteGirderWrenchBehaviour.handleClick(level, pos, state, hitResult))
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            return ItemInteractionResult.FAIL;
-        }
+        ItemInteractionResult wrenchResult = tryGirderWrenchInteraction(stack, state, level, pos, player, hitResult);
+        if (wrenchResult != null)
+            return wrenchResult;
 
         IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
         if (helper.matchesItem(stack))
@@ -67,6 +66,11 @@ public class AndesiteGirderBlock extends GirderBlock {
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-
-
+    protected static ItemInteractionResult tryGirderWrenchInteraction(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!AllItems.WRENCH.isIn(stack) || player.isShiftKeyDown())
+            return null;
+        if (CMGGirderWrenchBehaviour.handleClick(level, pos, state, hitResult))
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        return ItemInteractionResult.FAIL;
+    }
 }

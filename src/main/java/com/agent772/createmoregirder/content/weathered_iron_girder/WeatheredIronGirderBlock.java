@@ -2,9 +2,7 @@ package com.agent772.createmoregirder.content.weathered_iron_girder;
 
 import com.agent772.createmoregirder.CMGBlocks;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderBlock;
-import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderWrenchBehaviour;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import net.createmod.catnip.placement.IPlacementHelper;
@@ -55,11 +53,9 @@ public class WeatheredIronGirderBlock extends AndesiteGirderBlock {
             return ItemInteractionResult.SUCCESS;
         }
 
-        if (AllItems.WRENCH.isIn(stack) && !player.isShiftKeyDown()) {
-            if (AndesiteGirderWrenchBehaviour.handleClick(level, pos, state, hitResult))
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            return ItemInteractionResult.FAIL;
-        }
+        ItemInteractionResult wrenchResult = tryGirderWrenchInteraction(stack, state, level, pos, player, hitResult);
+        if (wrenchResult != null)
+            return wrenchResult;
 
         IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
         if (helper.matchesItem(stack))
