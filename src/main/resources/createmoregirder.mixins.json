@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "createmoregirder.refmap.json",
   "mixins": [
+    "BezierConnectionDropMixin",
     "BezierConnectionMixin",
     "PlacementInfoAccessor",
     "TrackBlockItemMixin",
