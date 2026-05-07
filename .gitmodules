@@ -1,3 +1,6 @@
 [submodule "Create-Bits-n-Bobs"]
 	path = Create-Bits-n-Bobs
 	url = https://github.com/Aztech-Modding/Create-Bits-n-Bobs
+[submodule "Create"]
+	path = Create
+	url = https://github.com/Creators-of-Create/Create
