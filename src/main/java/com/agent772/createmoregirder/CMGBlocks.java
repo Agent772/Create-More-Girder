@@ -28,6 +28,7 @@ import com.agent772.createmoregirder.content.copper_girder.WaxedCopperGirderEnca
 import com.agent772.createmoregirder.content.copper_girder.WaxedExposedCopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.WaxedWeatheredCopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.WaxedOxidizedCopperGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.girder.ConnectedGirderModel;
 import com.agent772.createmoregirder.content.girder.GenericGirderGenerator;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -56,6 +57,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(AndesiteGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model((c, p) -> p.blockItem(c, "/item")).build()
@@ -106,6 +108,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -156,6 +159,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -181,6 +185,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -206,6 +211,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -231,6 +237,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -257,6 +264,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -305,6 +313,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -353,6 +362,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -401,6 +411,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -449,6 +460,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
@@ -499,6 +511,7 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
                         .tag(CMGTags.GIRDER_BLOCK)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
