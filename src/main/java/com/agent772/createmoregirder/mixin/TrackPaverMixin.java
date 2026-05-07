@@ -17,7 +17,16 @@ public abstract class TrackPaverMixin {
         method = "paveCurve",
         at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;isWallLike(Lnet/minecraft/world/level/block/state/BlockState;)Z")
     )
-    private static boolean cmg$isWallLike(BlockState state) {
+    private static boolean cmg$isWallLikeCurve(BlockState state) {
+        if (state.getBlock() instanceof GirderBlock) return true;
+        return state.getBlock() instanceof WallBlock || AllBlocks.METAL_GIRDER.has(state);
+    }
+
+    @Redirect(
+        method = "paveStraight",
+        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;isWallLike(Lnet/minecraft/world/level/block/state/BlockState;)Z")
+    )
+    private static boolean cmg$isWallLikeStraight(BlockState state) {
         if (state.getBlock() instanceof GirderBlock) return true;
         return state.getBlock() instanceof WallBlock || AllBlocks.METAL_GIRDER.has(state);
     }
