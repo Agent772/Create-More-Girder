@@ -173,7 +173,7 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
 
     @Override
     public @NotNull AABB getRenderBoundingBox(@NotNull final GirderStrutBlockEntity blockEntity) {
-        return super.getRenderBoundingBox(blockEntity).inflate(10);
+        return super.getRenderBoundingBox(blockEntity).inflate(GirderStrutBlock.MAX_SPAN + 2);
     }
 
     @Override
