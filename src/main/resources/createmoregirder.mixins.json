@@ -12,7 +12,8 @@
     "TrackPaverMixin"
   ],
   "client": [
-    "GirderVisualMixin"
+    "GirderVisualMixin",
+    "TrackRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

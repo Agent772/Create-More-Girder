@@ -2,6 +2,7 @@ package com.agent772.createmoregirder.mixin;
 
 import com.agent772.createmoregirder.CMGBezierData;
 import com.agent772.createmoregirder.CMGPartialModels;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.foundation.render.SpecialModels;
 import dev.engine_room.flywheel.api.instance.InstanceType;
@@ -28,6 +29,10 @@ public class GirderVisualMixin {
     @Final
     private Couple<TransformedInstance[]> beams;
 
+    @Shadow
+    @Final
+    private Couple<Couple<TransformedInstance[]>> beamCaps;
+
     @Unique
     private BezierConnection cmg$bc;
 
@@ -48,10 +53,7 @@ public class GirderVisualMixin {
     }
 
     @Redirect(
-        method = {
-            "<init>(Lcom/simibubi/create/content/trains/track/TrackVisual$BezierTrackVisual;Lcom/simibubi/create/content/trains/track/BezierConnection;)V",
-            "lambda$new$3(Lnet/createmod/catnip/data/Couple;Ljava/lang/Boolean;)V"
-        },
+        method = "<init>(Lcom/simibubi/create/content/trains/track/TrackVisual$BezierTrackVisual;Lcom/simibubi/create/content/trains/track/BezierConnection;)V",
         at = @At(value = "INVOKE", target = "Lcom/simibubi/create/foundation/render/SpecialModels;flatChunk(Ldev/engine_room/flywheel/lib/model/baked/PartialModel;)Ldev/engine_room/flywheel/api/model/Model;")
     )
     private Model cmg$swapModel(PartialModel original) {
@@ -81,22 +83,59 @@ public class GirderVisualMixin {
         method = "<init>(Lcom/simibubi/create/content/trains/track/TrackVisual$BezierTrackVisual;Lcom/simibubi/create/content/trains/track/BezierConnection;)V",
         at = @At("RETURN")
     )
-    private void cmg$alternateBeamInstances(CallbackInfo ci) {
+    private void cmg$replaceBeamInstances(CallbackInfo ci) {
         if (cmg$bc == null || cmg$provider == null) return;
 
         Block girder = ((CMGBezierData) cmg$bc).cmg$getGirderBlock();
         if (girder == null) return;
 
+        PartialModel middle = CMGPartialModels.getSegmentModel(girder, AllPartialModels.GIRDER_SEGMENT_MIDDLE);
         PartialModel alt = CMGPartialModels.getAltMiddleModel(girder);
-        if (alt == null) return;
+        if (middle == null || alt == null) return;
 
+        Instancer<TransformedInstance> middleInstancer = cmg$provider.instancer(
+            cmg$instanceType, SpecialModels.flatChunk(middle));
         Instancer<TransformedInstance> altInstancer = cmg$provider.instancer(
             cmg$instanceType, SpecialModels.flatChunk(alt));
 
         beams.forEach(array -> {
-            for (int i = 1; i < array.length; i += 2) {
-                altInstancer.stealInstance(array[i]);
+            for (int i = 0; i < array.length; i++) {
+                Instancer<TransformedInstance> inst = (i % 2 == 0) ? middleInstancer : altInstancer;
+                array[i] = cmg$replaceInstance(array[i], inst);
             }
         });
+
+        PartialModel top = CMGPartialModels.getSegmentModel(girder, AllPartialModels.GIRDER_SEGMENT_TOP);
+        PartialModel bottom = CMGPartialModels.getSegmentModel(girder, AllPartialModels.GIRDER_SEGMENT_BOTTOM);
+        if (top == null || bottom == null) return;
+
+        Instancer<TransformedInstance> topInstancer = cmg$provider.instancer(
+            cmg$instanceType, SpecialModels.flatChunk(top));
+        Instancer<TransformedInstance> bottomInstancer = cmg$provider.instancer(
+            cmg$instanceType, SpecialModels.flatChunk(bottom));
+
+        beamCaps.forEachWithContext((couple, isTop) -> {
+            Instancer<TransformedInstance> instancer = isTop ? topInstancer : bottomInstancer;
+            couple.forEach(array -> {
+                for (int i = 0; i < array.length; i++) {
+                    array[i] = cmg$replaceInstance(array[i], instancer);
+                }
+            });
+        });
+    }
+
+    @Unique
+    private static TransformedInstance cmg$replaceInstance(TransformedInstance old, Instancer<TransformedInstance> instancer) {
+        TransformedInstance replacement = instancer.createInstance();
+        replacement.setTransform(old.pose);
+        replacement.red = old.red;
+        replacement.green = old.green;
+        replacement.blue = old.blue;
+        replacement.alpha = old.alpha;
+        replacement.light = old.light;
+        replacement.overlay = old.overlay;
+        replacement.setChanged();
+        old.delete();
+        return replacement;
     }
 }
