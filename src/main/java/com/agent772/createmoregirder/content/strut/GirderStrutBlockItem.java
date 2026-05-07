@@ -177,7 +177,7 @@ public class GirderStrutBlockItem extends BlockItem {
         final boolean fromNeedsPlacement = !(fromState.getBlock().equals(getBlock()));
         final boolean targetNeedsPlacement = !(targetState.getBlock().equals(getBlock()));
 
-        final int requiredAnchors = (fromNeedsPlacement ? 1 : 0) + (targetNeedsPlacement ? 1 : 0);
+        final int segmentCost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
 
         if (fromNeedsPlacement && !canOccupy(level, fromPos)) {
             return ConnectionResult.INVALID;
@@ -187,31 +187,26 @@ public class GirderStrutBlockItem extends BlockItem {
         }
 
         if (player != null && !player.getAbilities().instabuild) {
-            if (!hasRequiredAnchors(player, stack, requiredAnchors)) {
+            if (!hasRequiredAnchors(player, stack, segmentCost)) {
                 return ConnectionResult.MISSING_ITEMS;
             }
         }
-
-        int placedCount = 0;
 
         if (fromNeedsPlacement) {
             if (!placeAnchor(level, fromPos, fromFace, player, stack.copy())) {
                 return ConnectionResult.INVALID;
             }
-            placedCount++;
         } else if (fromState.getValue(GirderStrutBlock.FACING) != fromFace) {
             level.setBlock(fromPos, fromState.setValue(GirderStrutBlock.FACING, fromFace), Block.UPDATE_ALL);
         }
 
         if (targetNeedsPlacement) {
             if (!placeAnchor(level, targetPos, targetFace, player, stack.copy())) {
-                // rollback other placement if we placed it
                 if (fromNeedsPlacement) {
                     level.removeBlock(fromPos, false);
                 }
                 return ConnectionResult.INVALID;
             }
-            placedCount++;
         } else if (targetState.getValue(GirderStrutBlock.FACING) != targetFace) {
             level.setBlock(targetPos, targetState.setValue(GirderStrutBlock.FACING, targetFace), Block.UPDATE_ALL);
         }
@@ -223,26 +218,24 @@ public class GirderStrutBlockItem extends BlockItem {
             return ConnectionResult.INVALID;
         }
 
-        if (placedCount > 0) {
-            consumeAnchors(player, stack, placedCount);
-        }
+        consumeAnchors(player, stack, segmentCost);
 
         final SoundType soundType = getBlock().defaultBlockState().getSoundType(level, targetPos, context.getPlayer());
         level.playSound(null, targetPos, soundType.getPlaceSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 
-        connect(level, fromPos, targetPos);
+        connect(level, fromPos, targetPos, segmentCost);
         return ConnectionResult.SUCCESS;
     }
 
-    private void connect(final Level level, final BlockPos fromPos, final BlockPos targetPos) {
+    private void connect(final Level level, final BlockPos fromPos, final BlockPos targetPos, final int cost) {
         if (!(level.getBlockEntity(fromPos) instanceof final GirderStrutBlockEntity from)) {
             return;
         }
         if (!(level.getBlockEntity(targetPos) instanceof final GirderStrutBlockEntity target)) {
             return;
         }
-        from.addConnection(targetPos);
-        target.addConnection(fromPos);
+        from.addConnection(targetPos, cost);
+        target.addConnection(fromPos, cost);
 
         final BlockState updatedFromState = level.getBlockState(fromPos);
         final BlockState updatedTargetState = level.getBlockState(targetPos);
@@ -272,26 +265,23 @@ public class GirderStrutBlockItem extends BlockItem {
         }
 
         int remaining = amount;
-        
-        // Save the item type and slot BEFORE draining
+
         final Inventory inventory = player.getInventory();
         final int heldSlot = inventory.selected;
-        final net.minecraft.world.item.Item itemType = heldStack.getItem();
-        
-        // First try to consume from the held stack
+        final ItemStack referenceStack = heldStack.copy();
+
         remaining -= drainStack(heldStack, remaining);
-        
+
         if (remaining <= 0) {
             return;
         }
 
-        // Then consume from other matching stacks in the inventory
         for (int i = 0; i < inventory.getContainerSize() && remaining > 0; i++) {
             if (i == heldSlot) {
-                continue; // Skip the held stack since we already consumed from it
+                continue;
             }
             final ItemStack slotStack = inventory.getItem(i);
-            if (slotStack.isEmpty() || slotStack.getItem() != itemType) {
+            if (!ItemStack.isSameItem(slotStack, referenceStack)) {
                 continue;
             }
             remaining -= drainStack(slotStack, remaining);
@@ -323,7 +313,7 @@ public class GirderStrutBlockItem extends BlockItem {
     }
 
     private boolean isMatchingStrut(final ItemStack candidate, final ItemStack reference) {
-        return !candidate.isEmpty() && candidate.getItem() == reference.getItem();
+        return ItemStack.isSameItem(candidate, reference);
     }
 
     private void notifyMissingAnchors(final Player player, final int missing) {

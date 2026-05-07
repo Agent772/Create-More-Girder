@@ -3,12 +3,15 @@ package com.agent772.createmoregirder.content.strut;
 import com.agent772.createmoregirder.CMGDataComponents;
 import net.createmod.catnip.outliner.Outliner;
 import net.createmod.catnip.theme.Color;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -19,7 +22,7 @@ import org.joml.Vector3f;
 
 /**
  * Client-side visual effects for girder strut placement
- * 
+ *
  * Adapted from Bits-n-Bobs by Industrialists-Of-Create
  * Original: https://github.com/Industrialists-Of-Create/Bits-n-Bobs
  * Licensed under MIT License
@@ -29,9 +32,10 @@ public class GirderStrutPlacementEffects {
     private static final float PARTICLE_DENSITY = 0.1f;
 
     public static void tick(final LocalPlayer player) {
+        GirderStrutCostOverlay.reset();
+
         if (Minecraft.getInstance().isPaused() || Minecraft.getInstance().hitResult == null) return;
 
-        //Get held item
         final ItemStack heldItem = player.getMainHandItem().getItem() instanceof GirderStrutBlockItem ? player.getMainHandItem() :
                 player.getOffhandItem().getItem() instanceof GirderStrutBlockItem ? player.getOffhandItem() : null;
         if (heldItem != null) {
@@ -81,7 +85,6 @@ public class GirderStrutPlacementEffects {
 
         final Vec3 dir = delta.normalize();
         final double step = 0.25;
-        // 95CD41 valid and EA5C2B invalid
         final Vector3f color = valid ? new Vector3f(.3f, .9f, .5f) : new Vector3f(.9f, .3f, .5f);
         final Vector3f outlinerColor = valid ? new Vector3f(.35f, .85f, .55f) : new Vector3f(.85f, .35f, .55f);
         for (double t = 0; t <= length; t += step) {
@@ -102,6 +105,36 @@ public class GirderStrutPlacementEffects {
         showAnchorBox(fromPos, fromFace.getOpposite(), "from", (int) (outlinerColor.x * 256), (int) (outlinerColor.y * 256), (int) (outlinerColor.z * 256));
         showAnchorBox(targetPos, targetFace.getOpposite(), "to", (int) (outlinerColor.x * 256), (int) (outlinerColor.y * 256), (int) (outlinerColor.z * 256));
 
+        final int cost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
+        final int available = countMatchingItems(player, heldItem);
+        final boolean fulfilled = player.isCreative() || available >= cost;
+
+        if (!player.isCreative()) {
+            GirderStrutCostOverlay.display(heldItem, cost, fulfilled);
+        }
+
+        if (!valid) {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.strut_invalid_connection")
+                    .withStyle(ChatFormatting.RED), true);
+        } else if (!fulfilled) {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.strut_not_enough_items")
+                    .withStyle(ChatFormatting.RED), true);
+        } else {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.strut_valid_connection")
+                    .withStyle(ChatFormatting.GREEN), true);
+        }
+    }
+
+    private static int countMatchingItems(final LocalPlayer player, final ItemStack reference) {
+        final Inventory inventory = player.getInventory();
+        int total = 0;
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            final ItemStack slotStack = inventory.getItem(i);
+            if (ItemStack.isSameItem(slotStack, reference)) {
+                total += slotStack.getCount();
+            }
+        }
+        return total;
     }
 
     private static void showAnchorBox(final BlockPos targetPos, final Direction targetFace, final String id, final int r, final int g, final int b) {

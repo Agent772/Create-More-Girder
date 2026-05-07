@@ -91,8 +91,7 @@ public class CMGBlocks {
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                                        .add(LootItem.lootTableItem(block)
-                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
                         .model((c, p) ->
@@ -142,8 +141,7 @@ public class CMGBlocks {
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                                        .add(LootItem.lootTableItem(block)
-                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
                         .model((c, p) ->
@@ -293,8 +291,7 @@ public class CMGBlocks {
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                                        .add(LootItem.lootTableItem(block)
-                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
                         .model((c, p) ->
@@ -341,8 +338,7 @@ public class CMGBlocks {
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                                        .add(LootItem.lootTableItem(block)
-                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
                         .model((c, p) ->
@@ -391,8 +387,7 @@ public class CMGBlocks {
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                                        .add(LootItem.lootTableItem(block)
-                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
                         .model((c, p) ->
@@ -439,8 +434,7 @@ public class CMGBlocks {
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                                        .add(LootItem.lootTableItem(block)
-                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
                         .model((c, p) ->
@@ -490,8 +484,7 @@ public class CMGBlocks {
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                                        .add(LootItem.lootTableItem(block)
-                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
                         .model((c, p) ->
@@ -541,8 +534,7 @@ public class CMGBlocks {
                         .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
                         .loot((lt, block) -> lt.add(block, LootTable.lootTable()
                                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                                        .add(LootItem.lootTableItem(block)
-                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
                         .model((c, p) ->

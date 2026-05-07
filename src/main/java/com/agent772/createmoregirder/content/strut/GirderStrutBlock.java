@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.List;
 import net.minecraft.world.level.material.Fluids;
@@ -155,14 +156,19 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
-        List<ItemStack> drops = super.getDrops(state, builder);
-        // If loot table didn't work, manually create the drops
-        if (drops.isEmpty()) {
-            ItemStack stack = new ItemStack(this, 2);
-            drops.add(stack);
+        BlockEntity be = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (be instanceof GirderStrutBlockEntity strutBe) {
+            int totalCost = strutBe.totalCost();
+            if (totalCost <= 0) {
+                strutBe.migrateLegacyCosts();
+                totalCost = strutBe.totalCost();
+            }
+            if (totalCost <= 0) {
+                return List.of();
+            }
+            return List.of(new ItemStack(this, totalCost));
         }
-            drops.stream().mapToInt(ItemStack::getCount).sum();
-        return drops;
+        return List.of(new ItemStack(this, 1));
     }
 
     private void destroyConnectedStrut(final Level level, final BlockPos pos, final boolean dropBlock) {

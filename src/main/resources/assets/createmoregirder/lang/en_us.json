@@ -38,5 +38,8 @@
   "block.createmoregirder.weathered_iron_girder_encased_shaft": "Weathered Iron Girder Encased Shaft",
   "block.createmoregirder.weathered_iron_girder_strut": "Weathered Iron Girder Strut",
   
-  "message.createmoregirder.missing_girder_struts": "Not enough Girder Struts! Need %s more."
+  "message.createmoregirder.missing_girder_struts": "Not enough Girder Struts! Need %s more.",
+  "message.createmoregirder.strut_valid_connection": "Can Connect",
+  "message.createmoregirder.strut_invalid_connection": "Cannot Connect Here",
+  "message.createmoregirder.strut_not_enough_items": "Not Enough Girder Struts"
 }
