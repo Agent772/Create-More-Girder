@@ -51,7 +51,7 @@ public class GirderStrutPlacementEffects {
         final BlockPos fromPos = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM);
         final Direction fromFace = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
 
-        if (fromPos == null) {
+        if (fromPos == null || fromFace == null) {
             return;
         }
 
@@ -62,6 +62,13 @@ public class GirderStrutPlacementEffects {
 
         final BlockPos targetPos = resolvePlacementPos(level, hit.getBlockPos(), hit.getDirection());
         if (targetPos == null || targetPos.distSqr(fromPos) > GirderStrutBlock.MAX_SPAN * GirderStrutBlock.MAX_SPAN * 1.5) {
+            return;
+        }
+
+        if (fromPos.equals(targetPos)) {
+            final Vector3f invalidColor = new Vector3f(.85f, .35f, .55f);
+            showAnchorBox(fromPos, fromFace.getOpposite(), "from",
+                    (int) (invalidColor.x * 256), (int) (invalidColor.y * 256), (int) (invalidColor.z * 256));
             return;
         }
 
@@ -77,16 +84,31 @@ public class GirderStrutPlacementEffects {
 
         final Vec3 delta = renderTo.subtract(renderFrom);
         final double length = delta.length();
-        if (length < 1.0E-3 || length > GirderStrutBlock.MAX_SPAN * 3) {
+        if (length > GirderStrutBlock.MAX_SPAN * 3) {
             return;
         }
 
         final boolean valid = GirderStrutBlockItem.isValidConnection(level, fromPos, fromFace, targetPos, targetFace);
 
+        final int cost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
+        final int available = countMatchingItems(player, heldItem);
+        final boolean fulfilled = player.isCreative() || available >= cost;
+
+        final Vector3f color;
+        final Vector3f outlinerColor;
+        if (!valid) {
+            color = new Vector3f(.9f, .3f, .5f);
+            outlinerColor = new Vector3f(.85f, .35f, .55f);
+        } else if (!fulfilled) {
+            color = new Vector3f(.9f, .6f, .2f);
+            outlinerColor = new Vector3f(.85f, .55f, .25f);
+        } else {
+            color = new Vector3f(.3f, .9f, .5f);
+            outlinerColor = new Vector3f(.35f, .85f, .55f);
+        }
+
         final Vec3 dir = delta.normalize();
         final double step = 0.25;
-        final Vector3f color = valid ? new Vector3f(.3f, .9f, .5f) : new Vector3f(.9f, .3f, .5f);
-        final Vector3f outlinerColor = valid ? new Vector3f(.35f, .85f, .55f) : new Vector3f(.85f, .35f, .55f);
         for (double t = 0; t <= length; t += step) {
             final Vec3 lerped = renderFrom.add(dir.scale(t));
 
@@ -104,10 +126,6 @@ public class GirderStrutPlacementEffects {
 
         showAnchorBox(fromPos, fromFace.getOpposite(), "from", (int) (outlinerColor.x * 256), (int) (outlinerColor.y * 256), (int) (outlinerColor.z * 256));
         showAnchorBox(targetPos, targetFace.getOpposite(), "to", (int) (outlinerColor.x * 256), (int) (outlinerColor.y * 256), (int) (outlinerColor.z * 256));
-
-        final int cost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
-        final int available = countMatchingItems(player, heldItem);
-        final boolean fulfilled = player.isCreative() || available >= cost;
 
         if (!player.isCreative()) {
             GirderStrutCostOverlay.display(heldItem, cost, fulfilled);
