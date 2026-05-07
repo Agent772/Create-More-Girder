@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = TrackPaver.class, remap = false)
@@ -38,5 +39,17 @@ public abstract class TrackPaverMixin {
     private static boolean cmg$isGirder(BlockEntry<?> entry, BlockState state) {
         if (state.getBlock() instanceof GirderBlock) return true;
         return entry.has(state);
+    }
+
+    @ModifyArg(
+        method = "paveStraight",
+        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;placeBlockIfFree(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)Z"),
+        index = 2
+    )
+    private static BlockState cmg$setTopBracketForPaving(BlockState state) {
+        if (state.getBlock() instanceof GirderBlock && !AllBlocks.METAL_GIRDER.has(state)) {
+            return state.setValue(GirderBlock.TOP, true);
+        }
+        return state;
     }
 }
