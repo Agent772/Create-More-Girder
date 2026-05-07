@@ -55,7 +55,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntity>, SimpleWaterloggedBlock, IWrenchable {
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    public static final int MAX_SPAN = 8;
+    public static final int MAX_SPAN = 30;
 
     private StrutModelType modelType;
 

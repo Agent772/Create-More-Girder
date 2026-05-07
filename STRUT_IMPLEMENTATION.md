@@ -1,7 +1,7 @@
 # Girder Strut Implementation
 
 ## Overview
-This implementation adds dynamic spanning Girder Struts to Create: More Girder, allowing players to connect two anchor points up to 8 blocks apart with an I-beam structure.
+This implementation adds dynamic spanning Girder Struts to Create: More Girder, allowing players to connect two anchor points up to 30 blocks apart with an I-beam structure.
 
 ## Attribution
 **Original Source:** Bits-n-Bobs by Industrialists-Of-Create  
@@ -51,7 +51,7 @@ Significant portions of code, models, and concepts have been adapted from the Bi
      "createmoregirder.strut.first_anchor": "First anchor placed. Click another position to complete.",
      "createmoregirder.strut.connected": "Strut connected!",
      "createmoregirder.strut.same_position": "Cannot connect to the same position",
-     "createmoregirder.strut.too_far": "Too far apart (max 8 blocks)",
+     "createmoregirder.strut.too_far": "Too far apart (max 30 blocks)",
      "createmoregirder.strut.invalid_angle": "Invalid angle (no pure diagonals)",
      "createmoregirder.strut.angle_too_steep": "Angle too steep (max 75°)",
      "createmoregirder.strut.need_more": "Need %s more Girder Struts",
@@ -67,7 +67,7 @@ Significant portions of code, models, and concepts have been adapted from the Bi
 4. **Bidirectional:** Connections are stored in both anchor blocks
 
 ### Connection Constraints
-- **Max Distance:** 8 blocks (configurable via `GirderStrutBlock.MAX_SPAN`)
+- **Max Distance:** 30 blocks (configurable via `GirderStrutBlock.MAX_SPAN`)
 - **Axis Limit:** Max 2 different axes (prevents pure diagonal connections)
 - **Angle Limit:** Max 75° from anchor facing direction
 - **Double-Render Prevention:** Only renders from higher Y position (or higher X/Z if Y is equal)
@@ -76,7 +76,7 @@ Significant portions of code, models, and concepts have been adapted from the Bi
 - **Mode:** FAST only (simple segment repetition)
 - **Segments:** Calculated based on distance, I-beam model repeated along connection
 - **Rotation:** Dynamically calculated to point toward target anchor
-- **Render Bounds:** Inflated by 10 blocks to ensure visibility at distance
+- **Render Bounds:** Inflated by `MAX_SPAN + 2` blocks to ensure visibility at distance
 
 ## Extensibility for Other Variants
 
@@ -158,3 +158,43 @@ Follow the same pattern but extend `GirderStrutBlock` directly if you want diffe
 - Support weathering/oxidation transitions for copper variants
 - Add config options for max span and angle limits
 - Optimize rendering with cached buffers per variant
+
+## StrutYourStuff Library Evaluation
+
+Evaluated in issue #12. The upstream strut system from Bits-n-Bobs has been extracted into a
+standalone library called [StrutYourStuff](https://github.com/cakeGit/StrutYourStuff)
+(`com.cake.struts:struts`), published to `maven.azmod.net`.
+
+### Key Findings
+
+- **License:** MIT (declared in `neoforge.mods.toml`). Both external dependency and `jarJar`
+  bundling are viable. External dependency is preferred for parity with how Create is consumed.
+- **Stable release available:** `1.1.1+mc1.21.1` on `maven.azmod.net/releases`, CurseForge, and
+  Modrinth. The "wait for stable" concern from the original issue is resolved.
+- **8-variant support:** `StrutModelType` is a `record`, not an enum. Consumers can construct
+  unlimited instances, so our 8 material variants map cleanly.
+- **MAX_SPAN:** The library uses 30, matching our updated value.
+- **Library coverage:** 1:1 mapping for all of our strut classes (block, block entity, item,
+  renderer, geometry, mesh, cap, model builder, model manipulator, placement effects, relighter).
+- **#9 (length-scaled item consumption):** Not covered by the library. `StrutBlockItem` only
+  consumes anchor count (max 2), not span length. Custom item logic is still needed either way.
+- **API maturity:** Young library (~16 commits, single author). Pin to an exact version if
+  adopting.
+
+### Migration Decision
+
+Proceed with migration as a **separate issue** once timing aligns with #9. The library is MIT,
+stable, covers our full scope, and supports our 8 variants. Coordinate with #9 to avoid
+implementing length-scaled consumption twice.
+
+### Integration Path (for future migration)
+
+- Add `maven.azmod.net/releases` repository and `com.cake.struts:struts:1.1.1+mc1.21.1` dependency
+  to `build.gradle`
+- Declare `struts` as a required dependency in `neoforge.mods.toml`
+- Replace `GirderStrutBlock` with a thin subclass of `com.cake.struts.content.block.StrutBlock`
+- Replace `GirderStrutBlockEntity` with a subclass of `StrutBlockEntity`
+- Remove the 11 geometry/mesh/renderer classes the library covers
+- Validate rendering parity across all 8 variants in FAST and Fancy mode
+- Verify `IBE<GirderStrutBlockEntity>` coexists with the library's `EntityBlock` interface
+- Pin to exact version `1.1.1+mc1.21.1`, not a range
