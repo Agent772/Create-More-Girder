@@ -2,14 +2,18 @@ package com.agent772.createmoregirder;
 
 import org.slf4j.Logger;
 
+import com.agent772.createmoregirder.content.strut.GirderStrutMovementBehaviour;
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -36,8 +40,20 @@ public class CreateMoreGirder {
         
         // Initialize partial models
         CMGPartialModels.init();
-        
+
+        // Defer movement behaviour registration until registries are bound
+        modEventBus.addListener(this::onCommonSetup);
+
         LOGGER.info("Create: More Girder mod initialized!");
+    }
+
+    private void onCommonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            GirderStrutMovementBehaviour behaviour = new GirderStrutMovementBehaviour();
+            for (Block block : CMGBlockEntityTypes.GIRDER_STRUT.get().getValidBlocks()) {
+                MovementBehaviour.REGISTRY.register(block, behaviour);
+            }
+        });
     }
 
     public static ResourceLocation asResource(final String s) {

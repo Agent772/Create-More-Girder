@@ -1,6 +1,7 @@
 package com.agent772.createmoregirder.content.strut;
 
 import com.mojang.blaze3d.vertex.*;
+import com.simibubi.create.content.contraptions.ContraptionWorld;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -86,8 +87,9 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
         //     }
         //     ms.popPose();
         // }
-        // Fast, pure partial based approach, which actually looks ok so ill leave it for fast graphics
-        if (Minecraft.getInstance().options.graphicsMode().get() == GraphicsStatus.FAST) {
+        boolean onContraption = blockEntity.getLevel() instanceof ContraptionWorld;
+
+        if (onContraption || Minecraft.getInstance().options.graphicsMode().get() == GraphicsStatus.FAST) {
             // Render the girder strut segment
             for (BlockPos pos : blockEntity.getConnectionsCopy()) {
                 pos = pos.offset(blockEntity.getBlockPos());
@@ -125,7 +127,7 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
                 ms.translate(0, 0, lengthOffset + 0.5); // Adjust the translation based on segment length
                 if (getRenderPriority(relative) > getRenderPriority(relative.multiply(-1))) {
                     final Vec3 segDir = relativeVec.normalize();
-                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, blockEntity.getLevel(), thisAttachment, segDir);
+                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, onContraption ? null : blockEntity.getLevel(), thisAttachment, segDir);
                 }
                 ms.popPose();
             }
@@ -158,8 +160,13 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
         for (int i = 0; i < length; i++) {
             ms.pushPose();
             ms.translate(0, 0, i);
-            final Vec3 segWorldPos = segmentStart.add(segmentDir.scale(i + 0.5));
-            final int segLight = LevelRenderer.getLightColor(level, BlockPos.containing(segWorldPos));
+            final int segLight;
+            if (level != null) {
+                final Vec3 segWorldPos = segmentStart.add(segmentDir.scale(i + 0.5));
+                segLight = LevelRenderer.getLightColor(level, BlockPos.containing(segWorldPos));
+            } else {
+                segLight = fallbackLight;
+            }
             CachedBuffers.partial(model, state)
                     .light(segLight)
                     .renderInto(ms, buffer.getBuffer(RenderType.cutout()));
