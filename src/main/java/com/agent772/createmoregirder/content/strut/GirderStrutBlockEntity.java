@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
@@ -110,9 +112,89 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
         return connections.values().stream().mapToInt(Integer::intValue).sum();
     }
 
+    public void rotateConnections(Rotation rotation) {
+        if (rotation == Rotation.NONE) return;
+        applyRotationInPlace(rotation);
+        setChanged();
+        sendData();
+        notifyModelChange();
+    }
+
+    public void mirrorConnections(Mirror mirror) {
+        if (mirror == Mirror.NONE) return;
+        applyMirrorInPlace(mirror);
+        setChanged();
+        sendData();
+        notifyModelChange();
+    }
+
+    private void applyRotationInPlace(Rotation rotation) {
+        Map<BlockPos, Integer> transformed = new HashMap<>();
+        for (Map.Entry<BlockPos, Integer> entry : connections.entrySet()) {
+            transformed.put(rotateOffset(entry.getKey(), rotation), entry.getValue());
+        }
+        connections.clear();
+        connections.putAll(transformed);
+    }
+
+    private void applyMirrorInPlace(Mirror mirror) {
+        Map<BlockPos, Integer> transformed = new HashMap<>();
+        for (Map.Entry<BlockPos, Integer> entry : connections.entrySet()) {
+            transformed.put(mirrorOffset(entry.getKey(), mirror), entry.getValue());
+        }
+        connections.clear();
+        connections.putAll(transformed);
+    }
+
+    private static BlockPos rotateOffset(BlockPos offset, Rotation rotation) {
+        return switch (rotation) {
+            case NONE -> offset;
+            case CLOCKWISE_90 -> new BlockPos(-offset.getZ(), offset.getY(), offset.getX());
+            case CLOCKWISE_180 -> new BlockPos(-offset.getX(), offset.getY(), -offset.getZ());
+            case COUNTERCLOCKWISE_90 -> new BlockPos(offset.getZ(), offset.getY(), -offset.getX());
+        };
+    }
+
+    private static Rotation deduceRotation(Direction from, Direction to) {
+        if (from.getAxis() == Direction.Axis.Y || to.getAxis() == Direction.Axis.Y) {
+            return Rotation.NONE;
+        }
+        for (Rotation r : Rotation.values()) {
+            if (r.rotate(from) == to) return r;
+        }
+        return Rotation.NONE;
+    }
+
+    private record DeducedTransform(Mirror mirror, Rotation rotation) {
+        static final DeducedTransform NONE = new DeducedTransform(Mirror.NONE, Rotation.NONE);
+    }
+
+    private static DeducedTransform deduceFullTransform(Direction storedFacing, Direction currentFacing,
+                                                         Direction storedRef, Direction currentRef) {
+        for (Mirror m : Mirror.values()) {
+            for (Rotation r : Rotation.values()) {
+                if (r.rotate(m.mirror(storedFacing)) == currentFacing
+                        && r.rotate(m.mirror(storedRef)) == currentRef) {
+                    return new DeducedTransform(m, r);
+                }
+            }
+        }
+        return DeducedTransform.NONE;
+    }
+
+    private static BlockPos mirrorOffset(BlockPos offset, Mirror mirror) {
+        return switch (mirror) {
+            case NONE -> offset;
+            case FRONT_BACK -> new BlockPos(-offset.getX(), offset.getY(), offset.getZ());
+            case LEFT_RIGHT -> new BlockPos(offset.getX(), offset.getY(), -offset.getZ());
+        };
+    }
+
     @Override
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(tag, registries, clientPacket);
+        tag.putInt("StoredFacing", getBlockState().getValue(GirderStrutBlock.FACING).get3DDataValue());
+        tag.putInt("StoredRefFacing", getBlockState().getValue(GirderStrutBlock.REFERENCE_FACING).get3DDataValue());
         ListTag list = new ListTag();
         for (Map.Entry<BlockPos, Integer> entry : connections.entrySet()) {
             CompoundTag ct = new CompoundTag();
@@ -139,6 +221,29 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
                     connections.put(relative, cost);
                     if (cost <= 0) needsMigration = true;
                 }
+            }
+        }
+        connectionRenderBufferCache = null;
+        if (!connections.isEmpty() && tag.contains("StoredFacing")) {
+            Direction storedFacing = Direction.from3DDataValue(tag.getInt("StoredFacing"));
+            Direction currentFacing = getBlockState().getValue(GirderStrutBlock.FACING);
+            boolean transformed = false;
+            Direction storedRef = tag.contains("StoredRefFacing")
+                    ? Direction.from3DDataValue(tag.getInt("StoredRefFacing"))
+                    : Direction.NORTH;
+            Direction currentRef = getBlockState().getValue(GirderStrutBlock.REFERENCE_FACING);
+            DeducedTransform transform = deduceFullTransform(storedFacing, currentFacing, storedRef, currentRef);
+            if (transform.mirror() != Mirror.NONE) {
+                applyMirrorInPlace(transform.mirror());
+                transformed = true;
+            }
+            if (transform.rotation() != Rotation.NONE) {
+                applyRotationInPlace(transform.rotation());
+                transformed = true;
+            }
+            if (transformed) {
+                setChanged();
+                notifyModelChange();
             }
         }
         if (clientPacket) {
@@ -182,6 +287,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
     }
 
     private void notifyModelChange() {
+        connectionRenderBufferCache = null;
         if (level != null) {
             if (level.isClientSide) {
                 requestModelDataUpdate();

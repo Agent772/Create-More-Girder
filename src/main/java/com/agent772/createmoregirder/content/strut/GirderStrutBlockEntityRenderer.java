@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -123,7 +124,8 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
 
                 ms.translate(0, 0, lengthOffset + 0.5); // Adjust the translation based on segment length
                 if (getRenderPriority(relative) > getRenderPriority(relative.multiply(-1))) {
-                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, blockEntity.getLevel() == null ? light : LevelRenderer.getLightColor(blockEntity.getLevel(), pos));
+                    final Vec3 segDir = relativeVec.normalize();
+                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, blockEntity.getLevel(), thisAttachment, segDir);
                 }
                 ms.popPose();
             }
@@ -152,13 +154,14 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
         }
     }
 
-    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int light) {
-        // Render the segments of the girder strut
+    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int fallbackLight, final Level level, final Vec3 segmentStart, final Vec3 segmentDir) {
         for (int i = 0; i < length; i++) {
             ms.pushPose();
-            ms.translate(0, 0, i); // Adjust the translation based on segment height
+            ms.translate(0, 0, i);
+            final Vec3 segWorldPos = segmentStart.add(segmentDir.scale(i + 0.5));
+            final int segLight = LevelRenderer.getLightColor(level, BlockPos.containing(segWorldPos));
             CachedBuffers.partial(model, state)
-                    .light(light)
+                    .light(segLight)
                     .renderInto(ms, buffer.getBuffer(RenderType.cutout()));
             ms.popPose();
         }

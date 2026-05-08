@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -56,13 +57,15 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntity>, SimpleWaterloggedBlock, IWrenchable {
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final DirectionProperty REFERENCE_FACING = DirectionProperty.create(
+            "reference_facing", Direction.Plane.HORIZONTAL);
     public static final int MAX_SPAN = 30;
 
     private StrutModelType modelType;
 
     public GirderStrutBlock(final Properties properties, final StrutModelType modelType) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP).setValue(WATERLOGGED, false));
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP).setValue(REFERENCE_FACING, Direction.NORTH).setValue(WATERLOGGED, false));
         this.modelType = modelType;
 
     }
@@ -70,13 +73,15 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     @Override
     protected BlockState rotate(final BlockState state, final Rotation rotation) {
         return super.rotate(state, rotation)
-                .setValue(FACING, rotation.rotate(state.getValue(FACING)));
+                .setValue(FACING, rotation.rotate(state.getValue(FACING)))
+                .setValue(REFERENCE_FACING, rotation.rotate(state.getValue(REFERENCE_FACING)));
     }
 
     @Override
     protected BlockState mirror(final BlockState state, final Mirror mirror) {
         return super.mirror(state, mirror)
-                .setValue(FACING, mirror.mirror(state.getValue(FACING)));
+                .setValue(FACING, mirror.mirror(state.getValue(FACING)))
+                .setValue(REFERENCE_FACING, mirror.mirror(state.getValue(REFERENCE_FACING)));
     }
 
     @Override
@@ -111,7 +116,7 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING, REFERENCE_FACING, WATERLOGGED);
         super.createBlockStateDefinition(builder);
     }
 
@@ -125,7 +130,9 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
         final BlockState state = super.getStateForPlacement(context);
         if (state == null)
             return null;
-        return state.setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
+        return state.setValue(FACING, context.getClickedFace())
+                .setValue(REFERENCE_FACING, Direction.NORTH)
+                .setValue(WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
     }
 
     @Override

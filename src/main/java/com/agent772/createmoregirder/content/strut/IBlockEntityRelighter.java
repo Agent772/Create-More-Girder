@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -25,11 +24,12 @@ public interface IBlockEntityRelighter {
     }
 
     default Function<Vector3f, Integer> createLighter(BlockPos blockPos) {
+        final float bx = blockPos.getX();
+        final float by = blockPos.getY();
+        final float bz = blockPos.getZ();
         return (position) -> {
             if (getLevel() == null) return GirderGeometry.DEFAULT_LIGHT;
-            Matrix4f lightTransform = new Matrix4f().translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-            Vector3f lightPosition = lightTransform.transformPosition(position, new Vector3f());
-            List<BlockPos> positions = getClosePositions(lightPosition.x, lightPosition.y, lightPosition.z);
+            List<BlockPos> positions = getClosePositions(position.x + bx, position.y + by, position.z + bz);
             return positions
                 .stream()
                 .map(p -> LevelRenderer.getLightColor(getLevel(), p))

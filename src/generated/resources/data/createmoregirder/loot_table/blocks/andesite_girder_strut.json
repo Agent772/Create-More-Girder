@@ -11,13 +11,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "count": 2.0,
-              "function": "minecraft:set_count"
-            }
-          ],
           "name": "createmoregirder:andesite_girder_strut"
         }
       ],

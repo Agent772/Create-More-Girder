@@ -21,7 +21,14 @@ Significant portions of code, models, and concepts have been adapted from the Bi
    - `CMGDataComponents` - Data component registry for anchor storage
 
 2. **Rendering System**
-   - `GirderStrutBlockEntityRenderer` - FAST mode rendering only
+   - `GirderStrutBlockEntityRenderer` - Dual-mode rendering (FAST and FANCY)
+   - `GirderStrutModelManipulator` - FANCY mode mesh-based renderer with plane clipping
+   - `GirderStrutModelBuilder` - Collects connection geometry data for FANCY rendering
+   - `GirderMeshQuad` - Per-quad surface plane clipping (Sutherland-Hodgman)
+   - `GirderCapAccumulator` - Generates cap polygons at clipped ends
+   - `GirderGeometry` / `GirderVertex` - Geometry utilities and vertex data
+   - `GirderSegmentMesh` - Segment repetition and partial-length clipping
+   - `IBlockEntityRelighter` - Per-vertex light sampling for FANCY mode
    - `CMGPartialModels` - Partial model registry
    - Dynamic segment repetition along connections
 
@@ -73,7 +80,10 @@ Significant portions of code, models, and concepts have been adapted from the Bi
 - **Double-Render Prevention:** Only renders from higher Y position (or higher X/Z if Y is equal)
 
 ### Rendering
-- **Mode:** FAST only (simple segment repetition)
+- **FAST mode:** Simple segment repetition using partial models, per-segment light sampling
+- **FANCY mode:** Mesh-based rendering with surface plane clipping so segments do not visibly
+  intersect the attachment block at steep angles. Cap polygons are generated at clipped ends.
+  Per-vertex light sampling via `IBlockEntityRelighter` for correct lighting across long spans.
 - **Segments:** Calculated based on distance, I-beam model repeated along connection
 - **Rotation:** Dynamically calculated to point toward target anchor
 - **Render Bounds:** Inflated by `MAX_SPAN + 2` blocks to ensure visibility at distance
@@ -147,17 +157,16 @@ Follow the same pattern but extend `GirderStrutBlock` directly if you want diffe
 - [ ] No console errors
 
 ## Known Limitations
-- **FAST rendering only** - No fancy plane clipping or advanced lighting
-- **Simple geometry** - Segments may clip into blocks at steep angles
-- **No wrench behavior** - Unlike regular girders, doesn't rotate/configure with wrench
 - **Single variant renderer** - All variants use the same rendering logic (texture differences only)
+- **Transform compat (vertical facings)** - Automatic rotation detection on schematic/structure
+  placement works by comparing stored FACING with the rotated block state FACING. This correctly
+  handles horizontal facings (NORTH/SOUTH/EAST/WEST) but cannot detect rotation when both anchors
+  face UP or DOWN, since Y-axis rotation does not change vertical directions.
 
 ## Future Enhancements
-- Add FANCY rendering mode with plane clipping
-- Add wrench behavior for breaking entire connections
 - Support weathering/oxidation transitions for copper variants
 - Add config options for max span and angle limits
-- Optimize rendering with cached buffers per variant
+- Detect rotation for vertical-facing struts (requires a secondary reference direction in NBT)
 
 ## StrutYourStuff Library Evaluation
 
