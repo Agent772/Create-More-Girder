@@ -10,6 +10,12 @@ import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIr
 import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIronGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.weathered_iron_girder.WeatheredIronGirderBlock;
 import com.agent772.createmoregirder.content.weathered_iron_girder.WeatheredIronGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.copycat_girder.CopycatGirderBakedModel;
+import com.agent772.createmoregirder.content.copycat_girder.CopycatGirderBlock;
+import com.agent772.createmoregirder.content.copycat_girder.CopycatGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBakedModel;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlock;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlockItem;
 import com.agent772.createmoregirder.content.strut.GirderStrutBlock;
 import com.agent772.createmoregirder.content.strut.GirderStrutBlockItem;
 import com.agent772.createmoregirder.content.strut.GirderStrutModelBuilder;
@@ -526,6 +532,59 @@ public class CMGBlocks {
                         .build()
                         .register();
     
+        // Copycat Girder Strut
+        public static final BlockEntry<CopycatGirderStrutBlock> COPYCAT_GIRDER_STRUT =
+                REGISTRATE.block("copycat_girder_strut", CopycatGirderStrutBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/copycat_girder_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> CopycatGirderStrutBakedModel::new))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block)
+                                                .apply(net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount(ConstantValue.exactly(2))))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(CopycatGirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/copycat_girder_strut/item"))
+                        )
+                        .build()
+                        .register();
+
+        // Copycat Girder
+        public static final BlockEntry<CopycatGirderBlock> COPYCAT_GIRDER =
+                REGISTRATE.block("copycat_girder", CopycatGirderBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.STONE).sound(SoundType.NETHERITE_BLOCK).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .blockstate(GenericGirderGenerator::blockState)
+                        .onRegister(CreateRegistrate.blockModel(() -> CopycatGirderBakedModel::new))
+                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .register();
+
+        public static final BlockEntry<CopycatGirderEncasedShaftBlock> COPYCAT_GIRDER_ENCASED_SHAFT =
+                REGISTRATE.block("copycat_girder_encased_shaft", CopycatGirderEncasedShaftBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.STONE).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .onRegister(CreateRegistrate.blockModel(() -> CopycatGirderBakedModel::new))
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(COPYCAT_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .register();
+
     public static void register() {
 
     }

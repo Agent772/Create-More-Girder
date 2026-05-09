@@ -9,6 +9,7 @@ public class CMGDataComponents {
 
     private static final String GIRDER_STRUT_FROM = "GirderStrutFrom";
     private static final String GIRDER_STRUT_FROM_FACE = "GirderStrutFromFace";
+    private static final String COPYCAT_STRUT_OFFHAND_BLOCK = "CopycatStrutOffhandBlock";
 
     // =============================
     // BlockPos
@@ -45,6 +46,21 @@ public class CMGDataComponents {
     }
 
     // =============================
+    // Copycat Strut Offhand Block
+    // =============================
+
+    public static void setCopycatStrutOffhandBlock(ItemStack stack, String blockId) {
+        stack.getOrCreateTag().putString(COPYCAT_STRUT_OFFHAND_BLOCK, blockId);
+    }
+
+    public static String getCopycatStrutOffhandBlock(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null || !tag.contains(COPYCAT_STRUT_OFFHAND_BLOCK)) return null;
+
+        return tag.getString(COPYCAT_STRUT_OFFHAND_BLOCK);
+    }
+
+    // =============================
     // Clear
     // =============================
 
@@ -54,5 +70,6 @@ public class CMGDataComponents {
 
         tag.remove(GIRDER_STRUT_FROM);
         tag.remove(GIRDER_STRUT_FROM_FACE);
+        tag.remove(COPYCAT_STRUT_OFFHAND_BLOCK);
     }
 }

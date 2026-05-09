@@ -1,5 +1,7 @@
 package com.agent772.createmoregirder.content.strut;
 
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlockEntity;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatStrutTextureRemapper;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,13 +14,17 @@ import net.createmod.catnip.render.SuperBufferFactory;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -86,7 +92,15 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
         //     }
         //     ms.popPose();
         // }
-        // Fast, pure partial based approach, which actually looks ok so ill leave it for fast graphics
+        // Resolve copycat texture data if applicable
+        CopycatStrutTextureRemapper.FaceData[] copycatFaceData = null;
+        int copycatLightEmission = 0;
+        if (blockEntity instanceof CopycatGirderStrutBlockEntity copycatBe && copycatBe.hasMimickedState()) {
+            copycatFaceData = CopycatStrutTextureRemapper.resolveFaceData(copycatBe.getMimickedState(), copycatBe.getFaceRotation());
+            copycatLightEmission = copycatBe.getMimickedState().getLightEmission();
+        }
+
+        // Fast, pure partial based approach
         if (Minecraft.getInstance().options.graphicsMode().get() == GraphicsStatus.FAST) {
             // Render the girder strut segment
             for (BlockPos pos : blockEntity.getConnectionsCopy()) {
@@ -124,7 +138,8 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
 
                 ms.translate(0, 0, lengthOffset + 0.5); // Adjust the translation based on segment length
                 if (getRenderPriority(relative) > getRenderPriority(relative.multiply(-1))) {
-                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, blockEntity.getLevel() == null ? light : LevelRenderer.getLightColor(blockEntity.getLevel(), pos));
+                    final Vec3 segDir = relativeVec.normalize();
+                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, blockEntity.getLevel(), thisAttachment, segDir, copycatLightEmission);
                 }
                 ms.popPose();
             }
@@ -139,10 +154,23 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
                                 blockEntity
                         );
 
+                final CopycatStrutTextureRemapper.FaceData[] finalCopycatFaceData = copycatFaceData;
+                final int emissionLevel = copycatLightEmission;
+                java.util.function.Function<org.joml.Vector3f, Integer> lighter = blockEntity.createLighter();
+                if (emissionLevel > 0) {
+                    final java.util.function.Function<org.joml.Vector3f, Integer> baseLighter = lighter;
+                    lighter = pos -> {
+                        int base = baseLighter.apply(pos);
+                        int emissionLight = net.minecraft.client.renderer.LightTexture.pack(emissionLevel, 0);
+                        return IBlockEntityRelighter.maximizeLight(base, emissionLight);
+                    };
+                }
+                final java.util.function.Function<org.joml.Vector3f, Integer> finalLighter = lighter;
+
                 final List<Consumer<BufferBuilder>> quads = connectionData.connections()
                         .stream()
                         .flatMap(c -> GirderStrutModelManipulator
-                                .bakeConnectionToConsumer(c, modelType, blockEntity.createLighter())
+                                .bakeConnectionToConsumer(c, modelType, finalLighter, finalCopycatFaceData)
                                 .stream())
                         .toList();
 
@@ -166,13 +194,23 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
         }
     }
 
-    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int light) {
-        // Render the segments of the girder strut
+    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int fallbackLight, final Level level, final Vec3 segmentStart, final Vec3 segmentDir, final int lightEmission) {
         for (int i = 0; i < length; i++) {
             ms.pushPose();
-            ms.translate(0, 0, i); // Adjust the translation based on segment height
+            ms.translate(0, 0, i);
+            int segLight;
+            if (level != null) {
+                final Vec3 segWorldPos = segmentStart.add(segmentDir.scale(i + 0.5));
+                segLight = LevelRenderer.getLightColor(level, BlockPos.containing(segWorldPos));
+            } else {
+                segLight = fallbackLight;
+            }
+            if (lightEmission > 0) {
+                int emissionLight = net.minecraft.client.renderer.LightTexture.pack(lightEmission, 0);
+                segLight = IBlockEntityRelighter.maximizeLight(segLight, emissionLight);
+            }
             CachedBuffers.partial(model, state)
-                    .light(light)
+                    .light(segLight)
                     .renderInto(ms, buffer.getBuffer(RenderType.cutout()));
             ms.popPose();
         }

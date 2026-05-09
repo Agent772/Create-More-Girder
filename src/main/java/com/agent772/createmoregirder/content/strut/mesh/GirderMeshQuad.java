@@ -1,5 +1,6 @@
 package com.agent772.createmoregirder.content.strut.mesh;
 
+import com.agent772.createmoregirder.content.copycat_strut.CopycatStrutTextureRemapper;
 import com.agent772.createmoregirder.content.strut.cap.GirderCapAccumulator;
 import com.agent772.createmoregirder.content.strut.geometry.GirderGeometry;
 import com.agent772.createmoregirder.content.strut.geometry.GirderVertex;
@@ -8,6 +9,7 @@ import com.simibubi.create.foundation.model.BakedQuadHelper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -235,6 +237,19 @@ public final class GirderMeshQuad {
     }
 
     public void transformAndEmitToConsumer(Matrix4f pose, Matrix3f normalMatrix, Vector3f planePoint, Vector3f planeNormal, GirderCapAccumulator capAccumulator, List<Consumer<BufferBuilder>> bufferConsumer, Function<Vector3f, Integer> lightFunction) {
+        transformAndEmitToConsumer(pose, normalMatrix, planePoint, planeNormal, capAccumulator, bufferConsumer, lightFunction, null);
+    }
+
+    public void transformAndEmitToConsumer(Matrix4f pose, Matrix3f normalMatrix, Vector3f planePoint, Vector3f planeNormal, GirderCapAccumulator capAccumulator, List<Consumer<BufferBuilder>> bufferConsumer, Function<Vector3f, Integer> lightFunction, @Nullable CopycatStrutTextureRemapper.FaceData[] copycatFaceData) {
+        // Resolve copycat sprite for this quad's face direction
+        TextureAtlasSprite effectiveSprite = sprite;
+        if (copycatFaceData != null && nominalFace != null) {
+            CopycatStrutTextureRemapper.FaceData fd = copycatFaceData[nominalFace.get3DDataValue()];
+            if (fd != null && fd.sprite() != null) {
+                effectiveSprite = fd.sprite();
+            }
+        }
+
         List<GirderVertex> transformed = new ArrayList<>(vertices.length);
         for (GirderVertex vertex : vertices) {
             Vector3f position = new Vector3f(vertex.position());
@@ -244,7 +259,22 @@ public final class GirderMeshQuad {
             if (normal.lengthSquared() > GirderGeometry.EPSILON) {
                 normal.normalize();
             }
-            transformed.add(new GirderVertex(position, normal, vertex.u(), vertex.v(), vertex.color(), vertex.light()));
+            // Remap UVs if we have a copycat sprite
+            float u = vertex.u();
+            float v = vertex.v();
+            if (copycatFaceData != null && effectiveSprite != sprite) {
+                float spriteU0 = sprite.getU0();
+                float spriteV0 = sprite.getV0();
+                float spriteUSpan = sprite.getU1() - spriteU0;
+                float spriteVSpan = sprite.getV1() - spriteV0;
+                if (spriteUSpan != 0f && spriteVSpan != 0f) {
+                    float fu = (u - spriteU0) / spriteUSpan;
+                    float fv = (v - spriteV0) / spriteVSpan;
+                    u = effectiveSprite.getU0() + fu * (effectiveSprite.getU1() - effectiveSprite.getU0());
+                    v = effectiveSprite.getV0() + fv * (effectiveSprite.getV1() - effectiveSprite.getV0());
+                }
+            }
+            transformed.add(new GirderVertex(position, normal, u, v, vertex.color(), vertex.light()));
         }
 
         ClipResult clipResult = clipAgainstPlane(transformed, planePoint, planeNormal);
@@ -254,7 +284,7 @@ public final class GirderMeshQuad {
         }
 
         if (clipResult.clipped() && planeNormal.lengthSquared() > GirderGeometry.EPSILON) {
-            capAccumulator.addSegments(sprite, tintIndex, shade, clipResult.segments());
+            capAccumulator.addSegments(effectiveSprite, tintIndex, shade, clipResult.segments());
         }
     }
 

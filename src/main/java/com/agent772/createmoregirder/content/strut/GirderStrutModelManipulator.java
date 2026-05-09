@@ -1,6 +1,7 @@
 package com.agent772.createmoregirder.content.strut;
 
 import com.agent772.createmoregirder.CMGBlocks;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatStrutTextureRemapper;
 import com.agent772.createmoregirder.content.strut.cap.GirderCapAccumulator;
 import com.agent772.createmoregirder.content.strut.geometry.GirderGeometry;
 import com.agent772.createmoregirder.content.strut.mesh.GirderMeshQuad;
@@ -8,7 +9,10 @@ import com.agent772.createmoregirder.content.strut.mesh.GirderSegmentMesh;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,6 +39,10 @@ public class GirderStrutModelManipulator {
     }
 
     static List<Consumer<BufferBuilder>> bakeConnectionToConsumer(final GirderStrutModelBuilder.GirderConnection connection, final StrutModelType modelType, final Function<Vector3f, Integer> lightFunction) {
+        return bakeConnectionToConsumer(connection, modelType, lightFunction, null);
+    }
+
+    static List<Consumer<BufferBuilder>> bakeConnectionToConsumer(final GirderStrutModelBuilder.GirderConnection connection, final StrutModelType modelType, final Function<Vector3f, Integer> lightFunction, @org.jetbrains.annotations.Nullable final CopycatStrutTextureRemapper.FaceData[] copycatFaceData) {
         if (connection.renderLength() <= GirderGeometry.EPSILON) {
             return List.of();
         }
@@ -63,10 +71,19 @@ public class GirderStrutModelManipulator {
             planeNormal.normalize();
         }
 
+        // For copycat struts, use the mimicked block's texture for caps
+        ResourceLocation capTexture = modelType.getCapTexture();
+        if (copycatFaceData != null) {
+            TextureAtlasSprite capSprite = copycatFaceData[Direction.DOWN.get3DDataValue()].sprite();
+            if (capSprite != null) {
+                capTexture = capSprite.contents().name();
+            }
+        }
+
         final List<Consumer<BufferBuilder>> quadConsumer = new ArrayList<>();
-        final GirderCapAccumulator capAccumulator = new GirderCapAccumulator(modelType.getCapTexture());
+        final GirderCapAccumulator capAccumulator = new GirderCapAccumulator(capTexture);
         for (final GirderMeshQuad quad : quads) {
-            quad.transformAndEmitToConsumer(pose, normalMatrix, planePoint, planeNormal, capAccumulator, quadConsumer, lightFunction);
+            quad.transformAndEmitToConsumer(pose, normalMatrix, planePoint, planeNormal, capAccumulator, quadConsumer, lightFunction, copycatFaceData);
         }
         capAccumulator.emitCapsToConsumer(planeNormal, quadConsumer, lightFunction);
         return quadConsumer;

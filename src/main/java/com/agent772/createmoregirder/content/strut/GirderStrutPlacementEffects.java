@@ -1,6 +1,7 @@
 package com.agent772.createmoregirder.content.strut;
 
 import com.agent772.createmoregirder.CMGDataComponents;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlockItem;
 import net.createmod.catnip.outliner.Outliner;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.client.Minecraft;
@@ -32,8 +33,8 @@ public class GirderStrutPlacementEffects {
         if (Minecraft.getInstance().isPaused() || Minecraft.getInstance().hitResult == null) return;
 
         //Get held item
-        final ItemStack heldItem = player.getMainHandItem().getItem() instanceof GirderStrutBlockItem ? player.getMainHandItem() :
-                player.getOffhandItem().getItem() instanceof GirderStrutBlockItem ? player.getOffhandItem() : null;
+        final ItemStack heldItem = (player.getMainHandItem().getItem() instanceof GirderStrutBlockItem || player.getMainHandItem().getItem() instanceof CopycatGirderStrutBlockItem) ? player.getMainHandItem() :
+                (player.getOffhandItem().getItem() instanceof GirderStrutBlockItem || player.getOffhandItem().getItem() instanceof CopycatGirderStrutBlockItem) ? player.getOffhandItem() : null;
         if (heldItem != null) {
             display(player, heldItem);
         }

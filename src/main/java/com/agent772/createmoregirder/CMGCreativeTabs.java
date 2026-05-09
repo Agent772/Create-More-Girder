@@ -37,6 +37,8 @@ public class CMGCreativeTabs {
                 output.accept(CMGBlocks.INDUSTRIAL_IRON_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.WEATHERED_IRON_GIRDER.get());
                 output.accept(CMGBlocks.WEATHERED_IRON_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.COPYCAT_GIRDER.get());
+                output.accept(CMGBlocks.COPYCAT_GIRDER_STRUT.get());
             })
             .build()
             

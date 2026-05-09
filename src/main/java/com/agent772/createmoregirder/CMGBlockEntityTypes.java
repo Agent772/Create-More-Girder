@@ -1,5 +1,8 @@
 package com.agent772.createmoregirder;
 
+import com.agent772.createmoregirder.content.copycat_girder.CopycatGirderBlockEntity;
+import com.agent772.createmoregirder.content.copycat_girder.CopycatGirderEncasedShaftBlockEntity;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlockEntity;
 import com.agent772.createmoregirder.content.strut.GirderStrutBlockEntity;
 import com.agent772.createmoregirder.content.strut.GirderStrutBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.base.*;
@@ -93,6 +96,26 @@ public class CMGBlockEntityTypes {
                 .validBlocks(CMGBlocks.WEATHERED_IRON_GIRDER_ENCASED_SHAFT)
                 .renderer(() -> ShaftRenderer::new)
                 .register(); 
+
+        // Copycat Girder Block Entity
+        public static final BlockEntityEntry<CopycatGirderBlockEntity> COPYCAT_GIRDER = REGISTRATE
+                .blockEntity("copycat_girder", CopycatGirderBlockEntity::new)
+                .validBlocks(CMGBlocks.COPYCAT_GIRDER)
+                .register();
+
+        public static final BlockEntityEntry<CopycatGirderEncasedShaftBlockEntity> ENCASED_COPYCAT_GIRDER = REGISTRATE
+                .blockEntity("encased_copycat_girder", CopycatGirderEncasedShaftBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.COPYCAT_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        // Copycat Girder Strut Block Entity
+        public static final BlockEntityEntry<CopycatGirderStrutBlockEntity> COPYCAT_GIRDER_STRUT = REGISTRATE
+                .blockEntity("copycat_girder_strut", CopycatGirderStrutBlockEntity::new)
+                .validBlocks(CMGBlocks.COPYCAT_GIRDER_STRUT)
+                .renderer(() -> GirderStrutBlockEntityRenderer::new)
+                .register();
 
         // Girder Strut Block Entity
        public static final BlockEntityEntry<GirderStrutBlockEntity> GIRDER_STRUT = REGISTRATE.blockEntity("girder_strut", GirderStrutBlockEntity::new)
