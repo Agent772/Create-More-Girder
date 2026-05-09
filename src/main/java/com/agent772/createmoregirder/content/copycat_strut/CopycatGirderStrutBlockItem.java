@@ -63,6 +63,14 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
                 return InteractionResult.FAIL;
             }
 
+            if (GirderStrutBlockEntity.isAnchorAtCapacity(level, placementPos)) {
+                if (!level.isClientSide && context.getPlayer() != null) {
+                    notifyPlayer(context.getPlayer(), Component.translatable("message.createmoregirder.strut_anchor_occupied")
+                            .withStyle(ChatFormatting.RED));
+                }
+                return InteractionResult.FAIL;
+            }
+
             CMGDataComponents.setGirderStrutFrom(stack, placementPos);
             CMGDataComponents.setGirderStrutFromFace(stack, targetFace);
 
@@ -106,6 +114,10 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
                 if (result == ConnectionResult.INVALID) {
                     CMGDataComponents.clear(stack);
                 }
+                if (result == ConnectionResult.ANCHOR_OCCUPIED && context.getPlayer() != null) {
+                    notifyPlayer(context.getPlayer(), Component.translatable("message.createmoregirder.strut_anchor_occupied")
+                            .withStyle(ChatFormatting.RED));
+                }
                 return InteractionResult.FAIL;
             }
         }
@@ -134,7 +146,14 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
         final boolean fromNeedsPlacement = !(fromState.getBlock().equals(getBlock()));
         final boolean targetNeedsPlacement = !(targetState.getBlock().equals(getBlock()));
 
-        final int requiredAnchors = (fromNeedsPlacement ? 1 : 0) + (targetNeedsPlacement ? 1 : 0);
+        if (!fromNeedsPlacement && GirderStrutBlockEntity.isAnchorAtCapacity(level, fromPos)) {
+            return ConnectionResult.ANCHOR_OCCUPIED;
+        }
+        if (!targetNeedsPlacement && GirderStrutBlockEntity.isAnchorAtCapacity(level, targetPos)) {
+            return ConnectionResult.ANCHOR_OCCUPIED;
+        }
+
+        final int segmentCost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
 
         if (fromNeedsPlacement && !canOccupy(level, fromPos)) {
             return ConnectionResult.INVALID;
@@ -162,7 +181,7 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
         }
 
         if (player != null && !player.getAbilities().instabuild) {
-            if (!hasRequiredItems(player, stack, requiredAnchors)) {
+            if (!hasRequiredItems(player, stack, segmentCost)) {
                 return ConnectionResult.MISSING_ITEMS;
             }
         }
@@ -197,20 +216,23 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
             return ConnectionResult.INVALID;
         }
 
-        // Consume strut items
-        if (placedCount > 0) {
-            consumeItems(player, stack, placedCount);
+        // Consume strut items based on segment cost
+        consumeItems(player, stack, segmentCost);
+
+        // Consume offhand texture blocks based on segment cost
+        if (applyTexture && player != null && !player.getAbilities().instabuild) {
+            consumeOffhandItems(player, segmentCost);
         }
 
-        // Consume offhand texture blocks
-        if (applyTexture && player != null && !player.getAbilities().instabuild) {
-            consumeOffhandItems(player, 1);
+        // Force inventory sync to client
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            serverPlayer.inventoryMenu.broadcastChanges();
         }
 
         final SoundType soundType = getBlock().defaultBlockState().getSoundType(level, targetPos, context.getPlayer());
         level.playSound(null, targetPos, soundType.getPlaceSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 
-        connect(level, fromPos, targetPos);
+        connect(level, fromPos, targetPos, segmentCost);
 
         // Apply mimicked state to both anchors
         if (applyTexture && textureState != null) {
@@ -225,15 +247,15 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
         return ConnectionResult.SUCCESS;
     }
 
-    private void connect(Level level, BlockPos fromPos, BlockPos targetPos) {
+    private void connect(Level level, BlockPos fromPos, BlockPos targetPos, int cost) {
         if (!(level.getBlockEntity(fromPos) instanceof GirderStrutBlockEntity from)) {
             return;
         }
         if (!(level.getBlockEntity(targetPos) instanceof GirderStrutBlockEntity target)) {
             return;
         }
-        from.addConnection(targetPos);
-        target.addConnection(fromPos);
+        from.addConnection(targetPos, cost);
+        target.addConnection(fromPos, cost);
 
         final BlockState updatedFromState = level.getBlockState(fromPos);
         final BlockState updatedTargetState = level.getBlockState(targetPos);
@@ -261,14 +283,14 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
         int remaining = amount;
         final Inventory inventory = player.getInventory();
         final int heldSlot = inventory.selected;
-        final ItemStack referenceStack = heldStack.copy();
+        final net.minecraft.world.item.Item itemType = heldStack.getItem();
 
         remaining -= drainStack(heldStack, remaining);
 
         for (int i = 0; i < inventory.getContainerSize() && remaining > 0; i++) {
             if (i == heldSlot) continue;
             final ItemStack slotStack = inventory.getItem(i);
-            if (!ItemStack.isSameItem(slotStack, referenceStack)) continue;
+            if (slotStack.isEmpty() || slotStack.getItem() != itemType) continue;
             remaining -= drainStack(slotStack, remaining);
         }
     }
@@ -307,7 +329,7 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
         int total = 0;
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack slotStack = inventory.getItem(i);
-            if (ItemStack.isSameItem(slotStack, reference)) {
+            if (!slotStack.isEmpty() && slotStack.getItem() == reference.getItem()) {
                 total += slotStack.getCount();
             }
         }

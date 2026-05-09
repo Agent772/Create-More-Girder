@@ -88,27 +88,64 @@ public class CopycatGirderStrutBlock extends GirderStrutBlock {
     public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        if (!level.isClientSide) {
-            Player player = context.getPlayer();
+        Player player = context.getPlayer();
+        if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
             BlockEntity be = level.getBlockEntity(pos);
-            if (player != null && be instanceof CopycatGirderStrutBlockEntity copycatBe && copycatBe.hasMimickedState()) {
-                ItemStack dropStack = new ItemStack(copycatBe.getMimickedState().getBlock());
-                if (!player.isCreative()) {
-                    if (!player.getInventory().add(dropStack)) {
-                        Block.popResource(level, pos, dropStack);
+            if (be instanceof GirderStrutBlockEntity strutBe) {
+                // Determine the texture material and compute cost-based texture drop count
+                BlockState textureState = null;
+                if (be instanceof CopycatGirderStrutBlockEntity copycatBe && copycatBe.hasMimickedState()) {
+                    textureState = copycatBe.getMimickedState();
+                }
+                // Also check connected anchors for texture if this one doesn't have it
+                if (textureState == null) {
+                    for (BlockPos relOffset : strutBe.getConnectionsCopy()) {
+                        BlockPos otherPos = relOffset.offset(pos);
+                        BlockEntity otherBe = level.getBlockEntity(otherPos);
+                        if (otherBe instanceof CopycatGirderStrutBlockEntity otherCopycat && otherCopycat.hasMimickedState()) {
+                            textureState = otherCopycat.getMimickedState();
+                            break;
+                        }
                     }
                 }
-                copycatBe.clearMimickedState();
+
+                if (textureState != null && player != null && !player.isCreative()) {
+                    // Compute total cost (same as strut drop count) for texture drops
+                    int textureCost = strutBe.totalCost();
+                    if (textureCost <= 0) {
+                        strutBe.migrateLegacyCosts();
+                        textureCost = strutBe.totalCost();
+                    }
+                    if (textureCost > 0) {
+                        player.getInventory().placeItemBackInInventory(
+                                new ItemStack(textureState.getBlock(), textureCost));
+                    }
+                }
+
+                // Clear mimicked state on this anchor and all connected anchors
+                // so onRemove won't double-drop texture materials
+                if (be instanceof CopycatGirderStrutBlockEntity copycatBe) {
+                    copycatBe.clearMimickedState();
+                }
+                for (BlockPos relOffset : strutBe.getConnectionsCopy()) {
+                    BlockPos otherPos = relOffset.offset(pos);
+                    BlockEntity otherBe = level.getBlockEntity(otherPos);
+                    if (otherBe instanceof CopycatGirderStrutBlockEntity otherCopycat) {
+                        otherCopycat.clearMimickedState();
+                    }
+                }
             }
         }
+        // super handles strut item drops + block destruction
         return super.onSneakWrenched(state, context);
     }
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
+        if (state.getBlock() != newState.getBlock() && !isMoving) {
             if (!level.isClientSide) {
                 BlockEntity be = level.getBlockEntity(pos);
+                // Only pop texture as world drop if it hasn't been cleared already (e.g., by wrench)
                 if (be instanceof CopycatGirderStrutBlockEntity copycatBe && copycatBe.hasMimickedState()) {
                     Block.popResource(level, pos, new ItemStack(copycatBe.getMimickedState().getBlock()));
                 }

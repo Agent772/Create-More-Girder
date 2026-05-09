@@ -1,14 +1,14 @@
 {
   "itemGroup.createmoregirder.main_tab": "Create: More Girder",
-  
+
   "block.createmoregirder.andesite_girder": "Andesite Girder",
   "block.createmoregirder.andesite_girder_encased_shaft": "Andesite Girder Encased Shaft",
   "block.createmoregirder.andesite_girder_strut": "Andesite Girder Strut",
-  
+
   "block.createmoregirder.brass_girder": "Brass Girder",
   "block.createmoregirder.brass_girder_encased_shaft": "Brass Girder Encased Shaft",
   "block.createmoregirder.brass_girder_strut": "Brass Girder Strut",
-  
+
   "block.createmoregirder.copper_girder": "Copper Girder",
   "block.createmoregirder.copper_girder_encased_shaft": "Copper Girder Encased Shaft",
   "block.createmoregirder.exposed_copper_girder": "Exposed Copper Girder",
@@ -17,7 +17,7 @@
   "block.createmoregirder.weathered_copper_girder_encased_shaft": "Weathered Copper Girder Encased Shaft",
   "block.createmoregirder.oxidized_copper_girder": "Oxidized Copper Girder",
   "block.createmoregirder.oxidized_copper_girder_encased_shaft": "Oxidized Copper Girder Encased Shaft",
-  
+
   "block.createmoregirder.waxed_copper_girder": "Waxed Copper Girder",
   "block.createmoregirder.waxed_copper_girder_encased_shaft": "Waxed Copper Girder Encased Shaft",
   "block.createmoregirder.waxed_copper_girder_strut": "Waxed Copper Girder Strut",
@@ -30,7 +30,7 @@
   "block.createmoregirder.waxed_oxidized_copper_girder": "Waxed Oxidized Copper Girder",
   "block.createmoregirder.waxed_oxidized_copper_girder_encased_shaft": "Waxed Oxidized Copper Girder Encased Shaft",
   "block.createmoregirder.waxed_oxidized_copper_girder_strut": "Waxed Oxidized Copper Girder Strut",
-  
+
   "block.createmoregirder.industrial_iron_girder": "Industrial Iron Girder",
   "block.createmoregirder.industrial_iron_girder_encased_shaft": "Industrial Iron Girder Encased Shaft",
   "block.createmoregirder.industrial_iron_girder_strut": "Industrial Iron Girder Strut",
@@ -48,6 +48,7 @@
   "message.createmoregirder.strut_invalid_connection": "Cannot Connect Here",
   "message.createmoregirder.strut_not_enough_items": "Not Enough Girder Struts",
   "message.createmoregirder.strut_anchor_occupied": "Anchor Already Connected",
+  "message.createmoregirder.need_more": "Need %s more items",
 
   "tooltip.createmoregirder.copycat_strut.placement": "Hold a block in your Offhand during both anchor placements to set texture",
   "tooltip.createmoregirder.copycat_strut.hold_shift": "Hold [Shift] for more",

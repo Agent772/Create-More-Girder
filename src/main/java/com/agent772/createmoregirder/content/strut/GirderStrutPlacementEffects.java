@@ -1,15 +1,20 @@
 package com.agent772.createmoregirder.content.strut;
 
 import com.agent772.createmoregirder.CMGDataComponents;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlock;
 import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlockItem;
 import net.createmod.catnip.outliner.Outliner;
 import net.createmod.catnip.theme.Color;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -20,7 +25,7 @@ import org.joml.Vector3f;
 
 /**
  * Client-side visual effects for girder strut placement
- * 
+ *
  * Adapted from Bits-n-Bobs by Industrialists-Of-Create
  * Original: https://github.com/Industrialists-Of-Create/Bits-n-Bobs
  * Licensed under MIT License
@@ -30,9 +35,10 @@ public class GirderStrutPlacementEffects {
     private static final float PARTICLE_DENSITY = 0.1f;
 
     public static void tick(final LocalPlayer player) {
+        GirderStrutCostOverlay.reset();
+
         if (Minecraft.getInstance().isPaused() || Minecraft.getInstance().hitResult == null) return;
 
-        //Get held item
         final ItemStack heldItem = (player.getMainHandItem().getItem() instanceof GirderStrutBlockItem || player.getMainHandItem().getItem() instanceof CopycatGirderStrutBlockItem) ? player.getMainHandItem() :
                 (player.getOffhandItem().getItem() instanceof GirderStrutBlockItem || player.getOffhandItem().getItem() instanceof CopycatGirderStrutBlockItem) ? player.getOffhandItem() : null;
         if (heldItem != null) {
@@ -45,8 +51,6 @@ public class GirderStrutPlacementEffects {
         if (level == null) {
             return;
         }
-//        final BlockPos fromPos = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM);
-//        final Direction fromFace = heldItem.get(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
 
         final BlockPos fromPos = CMGDataComponents.getGirderStrutFrom(heldItem);
         final Direction fromFace = CMGDataComponents.getGirderStrutFromFace(heldItem);
@@ -65,6 +69,13 @@ public class GirderStrutPlacementEffects {
             return;
         }
 
+        if (fromPos.equals(targetPos)) {
+            final Vector3f invalidColor = new Vector3f(.85f, .35f, .55f);
+            showAnchorBox(fromPos, fromFace != null ? fromFace.getOpposite() : Direction.UP, "from",
+                    (int) (invalidColor.x * 256), (int) (invalidColor.y * 256), (int) (invalidColor.z * 256));
+            return;
+        }
+
         Direction targetFace = hit.getDirection();
 
         final BlockState targetState = level.getBlockState(targetPos);
@@ -77,17 +88,56 @@ public class GirderStrutPlacementEffects {
 
         final Vec3 delta = renderTo.subtract(renderFrom);
         final double length = delta.length();
-        if (length < 1.0E-3 || length > GirderStrutBlock.MAX_SPAN * 3) {
+        if (length > GirderStrutBlock.MAX_SPAN * 3) {
             return;
         }
 
         final boolean valid = GirderStrutBlockItem.isValidConnection(level, fromPos, fromFace, targetPos, targetFace);
 
+        final boolean anchorOccupied = GirderStrutBlockEntity.isAnchorAtCapacity(level, fromPos)
+                || GirderStrutBlockEntity.isAnchorAtCapacity(level, targetPos);
+
+        final int cost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
+        final int available = countMatchingItems(player, heldItem);
+        final boolean strutFulfilled = player.isCreative() || available >= cost;
+
+        // Check texture block availability for copycat struts
+        boolean isCopycatStrut = heldItem.getItem() instanceof CopycatGirderStrutBlockItem;
+        boolean hasTextureBlock = false;
+        boolean textureFulfilled = true;
+        ItemStack textureItem = ItemStack.EMPTY;
+        int textureAvailable = 0;
+        if (isCopycatStrut) {
+            String storedOffhandBlock = CMGDataComponents.getCopycatStrutOffhandBlock(heldItem);
+            ItemStack offhand = player.getOffhandItem();
+            if (storedOffhandBlock != null && !offhand.isEmpty()
+                    && offhand.getItem() instanceof BlockItem blockItem
+                    && offhand.getItem().toString().equals(storedOffhandBlock)
+                    && CopycatGirderStrutBlock.isValidMaterial(blockItem.getBlock().defaultBlockState())) {
+                hasTextureBlock = true;
+                textureItem = offhand;
+                textureAvailable = countMatchingItems(player, offhand);
+                textureFulfilled = player.isCreative() || textureAvailable >= cost;
+            }
+        }
+
+        final boolean fulfilled = strutFulfilled && textureFulfilled;
+
+        final Vector3f color;
+        final Vector3f outlinerColor;
+        if (!valid || anchorOccupied) {
+            color = new Vector3f(.9f, .3f, .5f);
+            outlinerColor = new Vector3f(.85f, .35f, .55f);
+        } else if (!fulfilled) {
+            color = new Vector3f(.9f, .6f, .2f);
+            outlinerColor = new Vector3f(.85f, .55f, .25f);
+        } else {
+            color = new Vector3f(.3f, .9f, .5f);
+            outlinerColor = new Vector3f(.35f, .85f, .55f);
+        }
+
         final Vec3 dir = delta.normalize();
         final double step = 0.25;
-        // 95CD41 valid and EA5C2B invalid
-        final Vector3f color = valid ? new Vector3f(.3f, .9f, .5f) : new Vector3f(.9f, .3f, .5f);
-        final Vector3f outlinerColor = valid ? new Vector3f(.35f, .85f, .55f) : new Vector3f(.85f, .35f, .55f);
         for (double t = 0; t <= length; t += step) {
             final Vec3 lerped = renderFrom.add(dir.scale(t));
 
@@ -106,6 +156,43 @@ public class GirderStrutPlacementEffects {
         showAnchorBox(fromPos, fromFace.getOpposite(), "from", (int) (outlinerColor.x * 256), (int) (outlinerColor.y * 256), (int) (outlinerColor.z * 256));
         showAnchorBox(targetPos, targetFace.getOpposite(), "to", (int) (outlinerColor.x * 256), (int) (outlinerColor.y * 256), (int) (outlinerColor.z * 256));
 
+        if (!player.isCreative()) {
+            if (hasTextureBlock) {
+                GirderStrutCostOverlay.displayWithTexture(heldItem, cost, strutFulfilled,
+                        textureItem, cost, textureFulfilled);
+            } else {
+                GirderStrutCostOverlay.display(heldItem, cost, strutFulfilled);
+            }
+        }
+
+        if (anchorOccupied) {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.strut_anchor_occupied")
+                    .withStyle(ChatFormatting.RED), true);
+        } else if (!valid) {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.strut_invalid_connection")
+                    .withStyle(ChatFormatting.RED), true);
+        } else if (!strutFulfilled) {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.strut_not_enough_items")
+                    .withStyle(ChatFormatting.RED), true);
+        } else if (!textureFulfilled) {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.missing_texture_blocks",
+                    cost - textureAvailable).withStyle(ChatFormatting.RED), true);
+        } else {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.strut_valid_connection")
+                    .withStyle(ChatFormatting.GREEN), true);
+        }
+    }
+
+    private static int countMatchingItems(final LocalPlayer player, final ItemStack reference) {
+        final Inventory inventory = player.getInventory();
+        int total = 0;
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            final ItemStack slotStack = inventory.getItem(i);
+            if (!slotStack.isEmpty() && slotStack.getItem() == reference.getItem()) {
+                total += slotStack.getCount();
+            }
+        }
+        return total;
     }
 
     private static void showAnchorBox(final BlockPos targetPos, final Direction targetFace, final String id, final int r, final int g, final int b) {

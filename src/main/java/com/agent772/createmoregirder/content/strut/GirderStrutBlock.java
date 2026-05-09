@@ -2,13 +2,17 @@ package com.agent772.createmoregirder.content.strut;
 
 import com.agent772.createmoregirder.CMGBlockEntityTypes;
 import com.agent772.createmoregirder.CMGShapes;
+import com.simibubi.create.api.schematic.requirement.SpecialBlockEntityItemRequirement;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
+import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.block.IBE;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -27,34 +31,40 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+import java.util.Map;
+
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 /**
  * Base Girder Strut Block implementation
- * 
+ *
  * Adapted from Bits-n-Bobs by Industrialists-Of-Create
  * Original: https://github.com/Industrialists-Of-Create/Bits-n-Bobs
  * Licensed under MIT License
- * 
+ *
  * Modifications:
  * - Adapted for Create: More Girder mod structure
  * - Added variant system for different girder types
  */
-public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntity>, SimpleWaterloggedBlock, IWrenchable {
+public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntity>, SimpleWaterloggedBlock, IWrenchable, SpecialBlockEntityItemRequirement {
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-    public static final int MAX_SPAN = 8;
+    public static final DirectionProperty REFERENCE_FACING = DirectionProperty.create(
+            "reference_facing", Direction.Plane.HORIZONTAL);
+    public static final int MAX_SPAN = 30;
 
     private StrutModelType modelType;
 
     public GirderStrutBlock(final Properties properties, final StrutModelType modelType) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP).setValue(WATERLOGGED, false));
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP).setValue(REFERENCE_FACING, Direction.NORTH).setValue(WATERLOGGED, false));
         this.modelType = modelType;
 
     }
@@ -62,13 +72,15 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     @Override
     public BlockState rotate(final BlockState state, final Rotation rotation) {
         return super.rotate(state, rotation)
-                .setValue(FACING, rotation.rotate(state.getValue(FACING)));
+                .setValue(FACING, rotation.rotate(state.getValue(FACING)))
+                .setValue(REFERENCE_FACING, rotation.rotate(state.getValue(REFERENCE_FACING)));
     }
 
     @Override
     public BlockState mirror(final BlockState state, final Mirror mirror) {
         return super.mirror(state, mirror)
-                .setValue(FACING, mirror.mirror(state.getValue(FACING)));
+                .setValue(FACING, mirror.mirror(state.getValue(FACING)))
+                .setValue(REFERENCE_FACING, mirror.mirror(state.getValue(REFERENCE_FACING)));
     }
 
     @Override
@@ -80,13 +92,37 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     public InteractionResult onSneakWrenched(final BlockState state, final UseOnContext context) {
         final Level level = context.getLevel();
         final BlockPos pos = context.getClickedPos();
-        if (!level.isClientSide) {
+        final Player player = context.getPlayer();
+        if (level instanceof ServerLevel serverLevel) {
+            // Compute cost-based drops BEFORE destroying connections
+            int dropCount = 0;
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof GirderStrutBlockEntity strutBe) {
+                dropCount = validTotalCost(strutBe);
+                if (dropCount <= 0) {
+                    strutBe.migrateLegacyCosts();
+                    dropCount = validTotalCost(strutBe);
+                }
+            }
+
+            // Give drops to player
+            if (player != null && !player.isCreative() && dropCount > 0) {
+                ItemStack drops = new ItemStack(this, dropCount);
+                player.getInventory().placeItemBackInInventory(drops);
+            }
+
+            // Clean up connected struts (no drops from cascade)
             destroyConnectedStrut(level, pos, false);
+
+            // Remove the block
+            level.destroyBlock(pos, false);
+            com.simibubi.create.AllSoundEvents.WRENCH_REMOVE.playOnServer(level, pos, 1,
+                    level.getRandom().nextFloat() * 0.5f + 0.5f);
         }
-        return IWrenchable.super.onSneakWrenched(state, context);
+        return InteractionResult.SUCCESS;
     }
 
-    
+
 
     @Override
     public @NotNull BlockState updateShape(final BlockState state, final @NotNull Direction direction, final @NotNull BlockState neighbourState, final @NotNull LevelAccessor world,
@@ -103,7 +139,7 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING, REFERENCE_FACING, WATERLOGGED);
         super.createBlockStateDefinition(builder);
     }
 
@@ -117,7 +153,9 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
         final BlockState state = super.getStateForPlacement(context);
         if (state == null)
             return null;
-        return state.setValue(FACING, context.getClickedFace()).setValue(WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
+        return state.setValue(FACING, context.getClickedFace())
+                .setValue(REFERENCE_FACING, Direction.NORTH)
+                .setValue(WATERLOGGED, ifluidstate.getType() == Fluids.WATER);
     }
 
     @Override
@@ -127,7 +165,7 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Shapes.empty();
+        return CMGShapes.GIRDER_STRUT.get(state.getValue(FACING));
     }
 
     @Override
@@ -137,13 +175,67 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     public @NotNull void playerWillDestroy(final @NotNull Level level, final @NotNull BlockPos pos, final @NotNull BlockState state, final Player player) {
-        final boolean shouldPreventDrops = player.isCreative();
-
-        if (shouldPreventDrops && !level.isClientSide) {
-            destroyConnectedStrut(level, pos, false);
+        if (!level.isClientSide) {
+            if (player.isCreative()) {
+                destroyConnectedStrut(level, pos, false);
+            } else {
+                cacheValidDropCost(level, pos);
+            }
         }
 
         super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+        BlockEntity be = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (be instanceof GirderStrutBlockEntity strutBe) {
+            int totalCost;
+            if (strutBe.getCachedDropCost() >= 0) {
+                totalCost = strutBe.getCachedDropCost();
+            } else {
+                totalCost = validTotalCost(strutBe);
+                if (totalCost <= 0) {
+                    strutBe.migrateLegacyCosts();
+                    totalCost = validTotalCost(strutBe);
+                }
+            }
+            if (totalCost <= 0) {
+                return List.of();
+            }
+            return List.of(new ItemStack(this, totalCost));
+        }
+        return List.of(new ItemStack(this, 1));
+    }
+
+    private void cacheValidDropCost(Level level, BlockPos pos) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof GirderStrutBlockEntity strutBe) {
+            int cost = validTotalCost(strutBe);
+            if (cost <= 0) {
+                strutBe.migrateLegacyCosts();
+                cost = validTotalCost(strutBe);
+            }
+            strutBe.cacheDropCost(cost);
+        }
+    }
+
+    private int validTotalCost(GirderStrutBlockEntity strutBe) {
+        Level level = strutBe.getLevel();
+        if (level == null) return strutBe.totalCost();
+        BlockPos pos = strutBe.getBlockPos();
+        int total = 0;
+        for (Map.Entry<BlockPos, Integer> entry : strutBe.getConnectionsWithCosts().entrySet()) {
+            BlockPos otherAbsolute = pos.offset(entry.getKey());
+            if (!level.hasChunkAt(otherAbsolute)) {
+                total += entry.getValue();
+                continue;
+            }
+            if (level.getBlockState(otherAbsolute).getBlock() instanceof GirderStrutBlock) {
+                total += entry.getValue();
+            }
+        }
+        return total;
     }
 
     private void destroyConnectedStrut(final Level level, final BlockPos pos, final boolean dropBlock) {
@@ -163,9 +255,9 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
+        if (state.getBlock() != newState.getBlock() && !isMoving) {
             if (!level.isClientSide) {
-                destroyConnectedStrut(level, pos, false);
+                destroyConnectedStrut(level, pos, true);
             }
         }
         super.onRemove(state, level, pos, newState, isMoving);
@@ -179,6 +271,11 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     @Override
     public BlockEntityType<? extends GirderStrutBlockEntity> getBlockEntityType() {
         return CMGBlockEntityTypes.GIRDER_STRUT.get();
+    }
+
+    @Override
+    public ItemRequirement getRequiredItems(BlockState state) {
+        return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(this, 1));
     }
 
     public StrutModelType getModelType() {

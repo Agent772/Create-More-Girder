@@ -5,7 +5,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,11 +23,11 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Custom Block Item for Girder Struts with 2-step placement logic
- * 
+ *
  * Adapted from Bits-n-Bobs by Industrialists-Of-Create
  * Original: https://github.com/Industrialists-Of-Create/Bits-n-Bobs
  * Licensed under MIT License
- * 
+ *
  * Modifications:
  * - Adapted for Create: More Girder mod structure
  * - Uses CMGDataComponents instead of BnbDataComponents
@@ -69,6 +68,13 @@ public class GirderStrutBlockItem extends BlockItem {
                 return InteractionResult.FAIL;
             }
 
+            if (GirderStrutBlockEntity.isAnchorAtCapacity(level, placementPos)) {
+                if (!level.isClientSide && context.getPlayer() != null) {
+                    notifyPlayer(context.getPlayer(), "message.createmoregirder.strut_anchor_occupied");
+                }
+                return InteractionResult.FAIL;
+            }
+
             CMGDataComponents.setGirderStrutFrom(stack, placementPos);
             CMGDataComponents.setGirderStrutFromFace(stack, targetFace);
             return InteractionResult.sidedSuccess(level.isClientSide);
@@ -99,6 +105,9 @@ public class GirderStrutBlockItem extends BlockItem {
             if (result != ConnectionResult.SUCCESS) {
                 if (result == ConnectionResult.INVALID) {
                     CMGDataComponents.clear(stack);
+                }
+                if (result == ConnectionResult.ANCHOR_OCCUPIED && context.getPlayer() != null) {
+                    notifyPlayer(context.getPlayer(), "message.createmoregirder.strut_anchor_occupied");
                 }
                 return InteractionResult.FAIL;
             }
@@ -174,7 +183,14 @@ public class GirderStrutBlockItem extends BlockItem {
         final boolean fromNeedsPlacement = !(fromState.getBlock().equals(getBlock()));
         final boolean targetNeedsPlacement = !(targetState.getBlock().equals(getBlock()));
 
-        final int requiredAnchors = (fromNeedsPlacement ? 1 : 0) + (targetNeedsPlacement ? 1 : 0);
+        if (!fromNeedsPlacement && GirderStrutBlockEntity.isAnchorAtCapacity(level, fromPos)) {
+            return ConnectionResult.ANCHOR_OCCUPIED;
+        }
+        if (!targetNeedsPlacement && GirderStrutBlockEntity.isAnchorAtCapacity(level, targetPos)) {
+            return ConnectionResult.ANCHOR_OCCUPIED;
+        }
+
+        final int segmentCost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
 
         if (fromNeedsPlacement && !canOccupy(level, fromPos)) {
             return ConnectionResult.INVALID;
@@ -184,31 +200,26 @@ public class GirderStrutBlockItem extends BlockItem {
         }
 
         if (player != null && !player.getAbilities().instabuild) {
-            if (!hasRequiredAnchors(player, stack, requiredAnchors)) {
+            if (!hasRequiredAnchors(player, stack, segmentCost)) {
                 return ConnectionResult.MISSING_ITEMS;
             }
         }
-
-        int placedCount = 0;
 
         if (fromNeedsPlacement) {
             if (!placeAnchor(level, fromPos, fromFace, player, stack.copy())) {
                 return ConnectionResult.INVALID;
             }
-            placedCount++;
         } else if (fromState.getValue(GirderStrutBlock.FACING) != fromFace) {
             level.setBlock(fromPos, fromState.setValue(GirderStrutBlock.FACING, fromFace), Block.UPDATE_ALL);
         }
 
         if (targetNeedsPlacement) {
             if (!placeAnchor(level, targetPos, targetFace, player, stack.copy())) {
-                // rollback other placement if we placed it
                 if (fromNeedsPlacement) {
                     level.removeBlock(fromPos, false);
                 }
                 return ConnectionResult.INVALID;
             }
-            placedCount++;
         } else if (targetState.getValue(GirderStrutBlock.FACING) != targetFace) {
             level.setBlock(targetPos, targetState.setValue(GirderStrutBlock.FACING, targetFace), Block.UPDATE_ALL);
         }
@@ -220,26 +231,29 @@ public class GirderStrutBlockItem extends BlockItem {
             return ConnectionResult.INVALID;
         }
 
-        if (placedCount > 0) {
-            consumeAnchors(player, stack, placedCount);
+        consumeAnchors(player, stack, segmentCost);
+
+        // Force inventory sync to client
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            serverPlayer.inventoryMenu.broadcastChanges();
         }
 
         final SoundType soundType = getBlock().defaultBlockState().getSoundType(level, targetPos, context.getPlayer());
         level.playSound(null, targetPos, soundType.getPlaceSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
 
-        connect(level, fromPos, targetPos);
+        connect(level, fromPos, targetPos, segmentCost);
         return ConnectionResult.SUCCESS;
     }
 
-    private void connect(final Level level, final BlockPos fromPos, final BlockPos targetPos) {
+    private void connect(final Level level, final BlockPos fromPos, final BlockPos targetPos, final int cost) {
         if (!(level.getBlockEntity(fromPos) instanceof final GirderStrutBlockEntity from)) {
             return;
         }
         if (!(level.getBlockEntity(targetPos) instanceof final GirderStrutBlockEntity target)) {
             return;
         }
-        from.addConnection(targetPos);
-        target.addConnection(fromPos);
+        from.addConnection(targetPos, cost);
+        target.addConnection(fromPos, cost);
 
         final BlockState updatedFromState = level.getBlockState(fromPos);
         final BlockState updatedTargetState = level.getBlockState(targetPos);
@@ -269,23 +283,20 @@ public class GirderStrutBlockItem extends BlockItem {
         }
 
         int remaining = amount;
-        
-        // Save the item type and slot BEFORE draining
+
         final Inventory inventory = player.getInventory();
         final int heldSlot = inventory.selected;
         final net.minecraft.world.item.Item itemType = heldStack.getItem();
-        
-        // First try to consume from the held stack
+
         remaining -= drainStack(heldStack, remaining);
-        
+
         if (remaining <= 0) {
             return;
         }
 
-        // Then consume from other matching stacks in the inventory
         for (int i = 0; i < inventory.getContainerSize() && remaining > 0; i++) {
             if (i == heldSlot) {
-                continue; // Skip the held stack since we already consumed from it
+                continue;
             }
             final ItemStack slotStack = inventory.getItem(i);
             if (slotStack.isEmpty() || slotStack.getItem() != itemType) {
@@ -327,13 +338,16 @@ public class GirderStrutBlockItem extends BlockItem {
         if (missing <= 0) {
             return;
         }
-        final Component message = Component.translatable("message.createmoregirder.missing_girder_struts", missing)
-                .withStyle(ChatFormatting.RED);
-        if (player instanceof final ServerPlayer serverPlayer) {
-            serverPlayer.displayClientMessage(message, true);
-        } else {
-            player.displayClientMessage(message, true);
-        }
+        notifyPlayer(player, Component.translatable("message.createmoregirder.missing_girder_struts", missing)
+                .withStyle(ChatFormatting.RED));
+    }
+
+    private static void notifyPlayer(final Player player, final String translationKey) {
+        notifyPlayer(player, Component.translatable(translationKey).withStyle(ChatFormatting.RED));
+    }
+
+    private static void notifyPlayer(final Player player, final Component message) {
+        player.displayClientMessage(message, true);
     }
 
     private boolean placeAnchor(final Level level, final BlockPos pos, final Direction face, final Player player, final ItemStack stackSnapshot) {
@@ -376,6 +390,7 @@ public class GirderStrutBlockItem extends BlockItem {
     private enum ConnectionResult {
         SUCCESS,
         INVALID,
-        MISSING_ITEMS
+        MISSING_ITEMS,
+        ANCHOR_OCCUPIED
     }
 }

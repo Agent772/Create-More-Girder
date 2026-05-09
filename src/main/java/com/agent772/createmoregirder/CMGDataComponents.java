@@ -71,5 +71,10 @@ public class CMGDataComponents {
         tag.remove(GIRDER_STRUT_FROM);
         tag.remove(GIRDER_STRUT_FROM_FACE);
         tag.remove(COPYCAT_STRUT_OFFHAND_BLOCK);
+
+        // Remove the tag entirely if empty so items stack with fresh ones
+        if (tag.isEmpty()) {
+            stack.setTag(null);
+        }
     }
 }
