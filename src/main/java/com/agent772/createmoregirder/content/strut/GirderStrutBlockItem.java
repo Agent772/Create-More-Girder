@@ -5,7 +5,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -69,6 +68,13 @@ public class GirderStrutBlockItem extends BlockItem {
                 return InteractionResult.FAIL;
             }
 
+            if (GirderStrutBlockEntity.isAnchorAtCapacity(level, placementPos)) {
+                if (!level.isClientSide && context.getPlayer() != null) {
+                    notifyPlayer(context.getPlayer(), "message.createmoregirder.strut_anchor_occupied");
+                }
+                return InteractionResult.FAIL;
+            }
+
             stack.set(CMGDataComponents.GIRDER_STRUT_FROM, placementPos);
             stack.set(CMGDataComponents.GIRDER_STRUT_FROM_FACE, targetFace);
             return InteractionResult.sidedSuccess(level.isClientSide);
@@ -101,6 +107,9 @@ public class GirderStrutBlockItem extends BlockItem {
                 if (result == ConnectionResult.INVALID) {
                     stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
                     stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+                }
+                if (result == ConnectionResult.ANCHOR_OCCUPIED && context.getPlayer() != null) {
+                    notifyPlayer(context.getPlayer(), "message.createmoregirder.strut_anchor_occupied");
                 }
                 return InteractionResult.FAIL;
             }
@@ -176,6 +185,13 @@ public class GirderStrutBlockItem extends BlockItem {
 
         final boolean fromNeedsPlacement = !(fromState.getBlock().equals(getBlock()));
         final boolean targetNeedsPlacement = !(targetState.getBlock().equals(getBlock()));
+
+        if (!fromNeedsPlacement && GirderStrutBlockEntity.isAnchorAtCapacity(level, fromPos)) {
+            return ConnectionResult.ANCHOR_OCCUPIED;
+        }
+        if (!targetNeedsPlacement && GirderStrutBlockEntity.isAnchorAtCapacity(level, targetPos)) {
+            return ConnectionResult.ANCHOR_OCCUPIED;
+        }
 
         final int segmentCost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
 
@@ -320,13 +336,16 @@ public class GirderStrutBlockItem extends BlockItem {
         if (missing <= 0) {
             return;
         }
-        final Component message = Component.translatable("message.createmoregirder.missing_girder_struts", missing)
-                .withStyle(ChatFormatting.RED);
-        if (player instanceof final ServerPlayer serverPlayer) {
-            serverPlayer.displayClientMessage(message, true);
-        } else {
-            player.displayClientMessage(message, true);
-        }
+        notifyPlayer(player, Component.translatable("message.createmoregirder.missing_girder_struts", missing)
+                .withStyle(ChatFormatting.RED));
+    }
+
+    private static void notifyPlayer(final Player player, final String translationKey) {
+        notifyPlayer(player, Component.translatable(translationKey).withStyle(ChatFormatting.RED));
+    }
+
+    private static void notifyPlayer(final Player player, final Component message) {
+        player.displayClientMessage(message, true);
     }
 
     private boolean placeAnchor(final Level level, final BlockPos pos, final Direction face, final Player player, final ItemStack stackSnapshot) {
@@ -369,6 +388,7 @@ public class GirderStrutBlockItem extends BlockItem {
     private enum ConnectionResult {
         SUCCESS,
         INVALID,
-        MISSING_ITEMS
+        MISSING_ITEMS,
+        ANCHOR_OCCUPIED
     }
 }

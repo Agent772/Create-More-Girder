@@ -11,6 +11,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.phys.Vec3;
+
+import com.agent772.createmoregirder.config.CMGServerConfig;
 
 import java.util.HashMap;
 import java.util.List;
@@ -102,6 +105,24 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
 
     public int connectionCount() {
         return connections.size();
+    }
+
+    /**
+     * Returns whether this anchor can accept an additional connection.
+     * Checked during placement; not enforced on read/rotate/mirror so legacy worlds are preserved.
+     */
+    public boolean canAcceptAdditionalConnection() {
+        return connections.size() < CMGServerConfig.MAX_CONNECTIONS_PER_ANCHOR.get();
+    }
+
+    /**
+     * Checks whether the anchor at the given position is at capacity.
+     * Returns {@code false} if there is no {@link GirderStrutBlockEntity} at the position.
+     * Usable from both server ({@code tryConnect}) and client ({@code GirderStrutPlacementEffects}).
+     */
+    public static boolean isAnchorAtCapacity(final BlockGetter level, final BlockPos pos) {
+        return level.getBlockEntity(pos) instanceof GirderStrutBlockEntity be
+                && !be.canAcceptAdditionalConnection();
     }
 
     public Set<BlockPos> getConnectionsCopy() {

@@ -90,13 +90,16 @@ public class GirderStrutPlacementEffects {
 
         final boolean valid = GirderStrutBlockItem.isValidConnection(level, fromPos, fromFace, targetPos, targetFace);
 
+        final boolean anchorOccupied = GirderStrutBlockEntity.isAnchorAtCapacity(level, fromPos)
+                || GirderStrutBlockEntity.isAnchorAtCapacity(level, targetPos);
+
         final int cost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
         final int available = countMatchingItems(player, heldItem);
         final boolean fulfilled = player.isCreative() || available >= cost;
 
         final Vector3f color;
         final Vector3f outlinerColor;
-        if (!valid) {
+        if (!valid || anchorOccupied) {
             color = new Vector3f(.9f, .3f, .5f);
             outlinerColor = new Vector3f(.85f, .35f, .55f);
         } else if (!fulfilled) {
@@ -131,7 +134,10 @@ public class GirderStrutPlacementEffects {
             GirderStrutCostOverlay.display(heldItem, cost, fulfilled);
         }
 
-        if (!valid) {
+        if (anchorOccupied) {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.strut_anchor_occupied")
+                    .withStyle(ChatFormatting.RED), true);
+        } else if (!valid) {
             player.displayClientMessage(Component.translatable("message.createmoregirder.strut_invalid_connection")
                     .withStyle(ChatFormatting.RED), true);
         } else if (!fulfilled) {
