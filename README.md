@@ -20,7 +20,7 @@
 
 ## ✨ **Features**
 
-**Create: More Girder** revolutionizes your structural building possibilities by adding **8 unique girder variants** to complement the Create mod ecosystem. Each girder type offers distinctive aesthetics while maintaining full compatibility with Create's mechanical systems.
+**Create: More Girder** revolutionizes your structural building possibilities by adding **9 unique girder variants** and a full **girder strut system** to complement the Create mod ecosystem. Each girder type offers distinctive aesthetics while maintaining full compatibility with Create's mechanical systems.
 
 ### 🎨 **Available Girder Variants**
 
@@ -36,13 +36,25 @@
 | 🟢 **Oxidized Copper Girder** | Fully oxidized copper | Final weathering stage |
 | ⚙️ **Industrial Iron Girder** | Heavy-duty iron construction | Maximum durability |
 | 🔶 **Weathered Iron Girder** | Time-worn iron girders | Rustic industrial charm |
+| 🎭 **Copycat Girder** | Mimics any block's texture | Blends into any build style |
+
+### 🏗️ **Girder Strut System**
+
+Bridge the gap between girder columns with structural struts that span up to **30 blocks**:
+
+- **Girder Struts**: Connect two girder anchors with a dynamic beam — material cost scales with length
+- **Copycat Struts**: Same functionality as regular struts but mimic any block's texture for seamless integration
+- **Contraption Compatible**: Struts assemble onto Create contraptions (bearings, pistons, cart assemblers) and move with the structure
+- **Placement Cost Overlay**: An on-screen overlay shows the exact material cost before you commit the placement
+- **Anchor Helper**: When aiming at a strut's start anchor, a visual indicator shows the valid endpoint
 
 ### 🔧 **Mechanical Integration**
 
 - **Full Create Compatibility**: All girders work seamlessly with Create's kinetic systems
 - **Encased Shaft Variants**: Every girder type includes encased shaft functionality
 - **Rotational Power**: Transfer mechanical energy through any girder structure
-- **Placement Helpers**: Intelligent building assistance for complex structures
+- **Track Paving**: Use CMG girders to pave rails under both straight and curved Create track sections
+- **Wrench Helpers**: All girder variants support wrench rotation blockstate helpers
 
 ### 🌟 **Advanced Features**
 
@@ -86,6 +98,7 @@ Create: More Girder seamlessly integrates into your Create builds. Simply craft 
 - ✅ **Create** and all official Create addons
 - ✅ **Create: Diesel Generators** (shares andesite girder foundation)
 - ✅ **Create: Enchantment Industry**
+- ✅ **Create Aeronautics** (girders and struts registered as Sable light blocks)
 
 ---
 
