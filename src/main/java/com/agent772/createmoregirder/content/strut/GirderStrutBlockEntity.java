@@ -40,6 +40,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
 
     private final Map<BlockPos, Integer> connections = new HashMap<>();
     private boolean needsCostMigration;
+    private transient int cachedDropCost = -1;
     public @Nullable SuperByteBuffer connectionRenderBufferCache;
 
     public GirderStrutBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -134,6 +135,14 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
 
     public int totalCost() {
         return connections.values().stream().mapToInt(Integer::intValue).sum();
+    }
+
+    public void cacheDropCost(int cost) {
+        this.cachedDropCost = cost;
+    }
+
+    public int getCachedDropCost() {
+        return cachedDropCost;
     }
 
     /**

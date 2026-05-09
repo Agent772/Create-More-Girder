@@ -35,6 +35,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.List;
+import java.util.Map;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -95,6 +96,7 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
         final Level level = context.getLevel();
         final BlockPos pos = context.getClickedPos();
         if (!level.isClientSide) {
+            cacheValidDropCost(level, pos);
             destroyConnectedStrut(level, pos, false);
         }
         return IWrenchable.super.onSneakWrenched(state, context);
@@ -153,10 +155,12 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     public @NotNull BlockState playerWillDestroy(final @NotNull Level level, final @NotNull BlockPos pos, final @NotNull BlockState state, final Player player) {
-        final boolean shouldPreventDrops = player.hasInfiniteMaterials();
-
-        if (shouldPreventDrops && !level.isClientSide) {
-            destroyConnectedStrut(level, pos, false);
+        if (!level.isClientSide) {
+            if (player.hasInfiniteMaterials()) {
+                destroyConnectedStrut(level, pos, false);
+            } else {
+                cacheValidDropCost(level, pos);
+            }
         }
 
         return super.playerWillDestroy(level, pos, state, player);
@@ -166,10 +170,15 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         BlockEntity be = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (be instanceof GirderStrutBlockEntity strutBe) {
-            int totalCost = strutBe.totalCost();
-            if (totalCost <= 0) {
-                strutBe.migrateLegacyCosts();
-                totalCost = strutBe.totalCost();
+            int totalCost;
+            if (strutBe.getCachedDropCost() >= 0) {
+                totalCost = strutBe.getCachedDropCost();
+            } else {
+                totalCost = validTotalCost(strutBe);
+                if (totalCost <= 0) {
+                    strutBe.migrateLegacyCosts();
+                    totalCost = validTotalCost(strutBe);
+                }
             }
             if (totalCost <= 0) {
                 return List.of();
@@ -177,6 +186,36 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
             return List.of(new ItemStack(this, totalCost));
         }
         return List.of(new ItemStack(this, 1));
+    }
+
+    private void cacheValidDropCost(Level level, BlockPos pos) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof GirderStrutBlockEntity strutBe) {
+            int cost = validTotalCost(strutBe);
+            if (cost <= 0) {
+                strutBe.migrateLegacyCosts();
+                cost = validTotalCost(strutBe);
+            }
+            strutBe.cacheDropCost(cost);
+        }
+    }
+
+    private int validTotalCost(GirderStrutBlockEntity strutBe) {
+        Level level = strutBe.getLevel();
+        if (level == null) return strutBe.totalCost();
+        BlockPos pos = strutBe.getBlockPos();
+        int total = 0;
+        for (Map.Entry<BlockPos, Integer> entry : strutBe.getConnectionsWithCosts().entrySet()) {
+            BlockPos otherAbsolute = pos.offset(entry.getKey());
+            if (!level.hasChunkAt(otherAbsolute)) {
+                total += entry.getValue();
+                continue;
+            }
+            if (level.getBlockState(otherAbsolute).getBlock() instanceof GirderStrutBlock) {
+                total += entry.getValue();
+            }
+        }
+        return total;
     }
 
     private void destroyConnectedStrut(final Level level, final BlockPos pos, final boolean dropBlock) {
