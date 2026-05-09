@@ -146,10 +146,15 @@ public class CopycatGirderStrutBlock extends GirderStrutBlock implements Special
 
     @Override
     public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
-        ItemRequirement req = new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(this));
+        int count = 1;
+        if (be instanceof GirderStrutBlockEntity gbe) {
+            int share = GirderStrutBlockEntity.computeAnchorItemShare(gbe.getConnectionsWithCosts());
+            if (share > 0) count = share;
+        }
+        ItemRequirement req = new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(this, count));
         if (be instanceof CopycatGirderStrutBlockEntity copycatBe && copycatBe.hasMimickedState()) {
             req = req.union(new ItemRequirement(ItemRequirement.ItemUseType.CONSUME,
-                    new ItemStack(copycatBe.getMimickedState().getBlock())));
+                    new ItemStack(copycatBe.getMimickedState().getBlock(), count)));
         }
         return req;
     }

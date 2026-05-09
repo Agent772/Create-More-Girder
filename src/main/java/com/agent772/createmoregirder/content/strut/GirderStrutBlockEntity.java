@@ -1,6 +1,5 @@
 package com.agent772.createmoregirder.content.strut;
 
-import com.simibubi.create.api.schematic.requirement.SpecialBlockEntityItemRequirement;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
@@ -37,7 +36,7 @@ import java.util.Set;
  * Modifications:
  * - Adapted for Create: More Girder mod structure
  */
-public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEntityRelighter, SpecialBlockEntityItemRequirement {
+public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEntityRelighter {
 
     private final Map<BlockPos, Integer> connections = new HashMap<>();
     private boolean needsCostMigration;
@@ -129,8 +128,38 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
         return Set.copyOf(connections.keySet());
     }
 
+    public Map<BlockPos, Integer> getConnectionsWithCosts() {
+        return Map.copyOf(connections);
+    }
+
     public int totalCost() {
         return connections.values().stream().mapToInt(Integer::intValue).sum();
+    }
+
+    /**
+     * Computes the item share this anchor should report for schematic material lists.
+     * Each connection's cost is split between its two endpoints to avoid double-counting:
+     * the "primary" end (canonical positive offset) gets ceil(cost/2),
+     * the "secondary" end gets floor(cost/2).
+     */
+    public static int computeAnchorItemShare(Map<BlockPos, Integer> connectionsWithCosts) {
+        int share = 0;
+        for (Map.Entry<BlockPos, Integer> entry : connectionsWithCosts.entrySet()) {
+            int cost = entry.getValue();
+            if (cost <= 0) continue;
+            if (isPrimaryEnd(entry.getKey())) {
+                share += (cost + 1) / 2;
+            } else {
+                share += cost / 2;
+            }
+        }
+        return share;
+    }
+
+    private static boolean isPrimaryEnd(BlockPos relOffset) {
+        if (relOffset.getX() != 0) return relOffset.getX() > 0;
+        if (relOffset.getY() != 0) return relOffset.getY() > 0;
+        return relOffset.getZ() > 0;
     }
 
     public void rotateConnections(Rotation rotation) {
