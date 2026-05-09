@@ -1,6 +1,8 @@
 package com.agent772.createmoregirder.content.strut;
 
 import com.agent772.createmoregirder.CMGDataComponents;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlock;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlockItem;
 import net.createmod.catnip.outliner.Outliner;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.ChatFormatting;
@@ -12,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -36,8 +39,8 @@ public class GirderStrutPlacementEffects {
 
         if (Minecraft.getInstance().isPaused() || Minecraft.getInstance().hitResult == null) return;
 
-        final ItemStack heldItem = player.getMainHandItem().getItem() instanceof GirderStrutBlockItem ? player.getMainHandItem() :
-                player.getOffhandItem().getItem() instanceof GirderStrutBlockItem ? player.getOffhandItem() : null;
+        final ItemStack heldItem = (player.getMainHandItem().getItem() instanceof GirderStrutBlockItem || player.getMainHandItem().getItem() instanceof CopycatGirderStrutBlockItem) ? player.getMainHandItem() :
+                (player.getOffhandItem().getItem() instanceof GirderStrutBlockItem || player.getOffhandItem().getItem() instanceof CopycatGirderStrutBlockItem) ? player.getOffhandItem() : null;
         if (heldItem != null) {
             display(player, heldItem);
         }
@@ -95,7 +98,29 @@ public class GirderStrutPlacementEffects {
 
         final int cost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
         final int available = countMatchingItems(player, heldItem);
-        final boolean fulfilled = player.isCreative() || available >= cost;
+        final boolean strutFulfilled = player.isCreative() || available >= cost;
+
+        // Check texture block availability for copycat struts
+        boolean isCopycatStrut = heldItem.getItem() instanceof CopycatGirderStrutBlockItem;
+        boolean hasTextureBlock = false;
+        boolean textureFulfilled = true;
+        ItemStack textureItem = ItemStack.EMPTY;
+        int textureAvailable = 0;
+        if (isCopycatStrut) {
+            String storedOffhandBlock = heldItem.get(CMGDataComponents.COPYCAT_STRUT_OFFHAND_BLOCK);
+            ItemStack offhand = player.getOffhandItem();
+            if (storedOffhandBlock != null && !offhand.isEmpty()
+                    && offhand.getItem() instanceof BlockItem blockItem
+                    && offhand.getItem().toString().equals(storedOffhandBlock)
+                    && CopycatGirderStrutBlock.isValidMaterial(blockItem.getBlock().defaultBlockState())) {
+                hasTextureBlock = true;
+                textureItem = offhand;
+                textureAvailable = countMatchingItems(player, offhand);
+                textureFulfilled = player.isCreative() || textureAvailable >= cost;
+            }
+        }
+
+        final boolean fulfilled = strutFulfilled && textureFulfilled;
 
         final Vector3f color;
         final Vector3f outlinerColor;
@@ -131,7 +156,12 @@ public class GirderStrutPlacementEffects {
         showAnchorBox(targetPos, targetFace.getOpposite(), "to", (int) (outlinerColor.x * 256), (int) (outlinerColor.y * 256), (int) (outlinerColor.z * 256));
 
         if (!player.isCreative()) {
-            GirderStrutCostOverlay.display(heldItem, cost, fulfilled);
+            if (hasTextureBlock) {
+                GirderStrutCostOverlay.displayWithTexture(heldItem, cost, strutFulfilled,
+                        textureItem, cost, textureFulfilled);
+            } else {
+                GirderStrutCostOverlay.display(heldItem, cost, strutFulfilled);
+            }
         }
 
         if (anchorOccupied) {
@@ -140,9 +170,12 @@ public class GirderStrutPlacementEffects {
         } else if (!valid) {
             player.displayClientMessage(Component.translatable("message.createmoregirder.strut_invalid_connection")
                     .withStyle(ChatFormatting.RED), true);
-        } else if (!fulfilled) {
+        } else if (!strutFulfilled) {
             player.displayClientMessage(Component.translatable("message.createmoregirder.strut_not_enough_items")
                     .withStyle(ChatFormatting.RED), true);
+        } else if (!textureFulfilled) {
+            player.displayClientMessage(Component.translatable("message.createmoregirder.missing_texture_blocks",
+                    cost - textureAvailable).withStyle(ChatFormatting.RED), true);
         } else {
             player.displayClientMessage(Component.translatable("message.createmoregirder.strut_valid_connection")
                     .withStyle(ChatFormatting.GREEN), true);

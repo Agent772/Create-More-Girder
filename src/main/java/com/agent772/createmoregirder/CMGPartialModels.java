@@ -30,6 +30,7 @@ public class CMGPartialModels {
     public static final PartialModel WAXED_OXIDIZED_COPPER_GIRDER_STRUT = block("waxed_oxidized_copper_girder_strut/strut");
     public static final PartialModel INDUSTRIAL_IRON_GIRDER_STRUT = block("industrial_iron_girder_strut/strut");
     public static final PartialModel WEATHERED_IRON_GIRDER_STRUT = block("weathered_iron_girder_strut/strut");
+    public static final PartialModel COPYCAT_GIRDER_STRUT = block("copycat_girder_strut/strut");
 
     private static final Map<String, PartialModel[]> SEGMENT_MODELS = new HashMap<>();
     private static final Map<String, EnumMap<Direction, PartialModel>> BRACKET_MODELS = new HashMap<>();
@@ -49,7 +50,8 @@ public class CMGPartialModels {
         "waxed_weathered_copper_girder",
         "waxed_oxidized_copper_girder",
         "industrial_iron_girder",
-        "weathered_iron_girder"
+        "weathered_iron_girder",
+        "copycat_girder"
     };
 
     static {

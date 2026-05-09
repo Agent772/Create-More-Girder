@@ -31,6 +31,9 @@ public class CMGClientSetup {
             ItemBlockRenderTypes.setRenderLayer(CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(CMGBlocks.INDUSTRIAL_IRON_GIRDER.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(CMGBlocks.WEATHERED_IRON_GIRDER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(CMGBlocks.COPYCAT_GIRDER.get(), RenderType.cutoutMipped());
+            ItemBlockRenderTypes.setRenderLayer(CMGBlocks.COPYCAT_GIRDER_ENCASED_SHAFT.get(), RenderType.cutoutMipped());
+            ItemBlockRenderTypes.setRenderLayer(CMGBlocks.COPYCAT_GIRDER_STRUT.get(), RenderType.cutoutMipped());
         });
     }
 

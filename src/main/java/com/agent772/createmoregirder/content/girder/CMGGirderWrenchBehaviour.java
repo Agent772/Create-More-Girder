@@ -1,6 +1,7 @@
 package com.agent772.createmoregirder.content.girder;
 
 import com.agent772.createmoregirder.CMGBlocks;
+import com.agent772.createmoregirder.content.copycat_girder.CopycatGirderBlock;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import net.createmod.catnip.data.Iterate;
@@ -103,8 +104,30 @@ public class CMGGirderWrenchBehaviour {
         if (validDirections.isEmpty())
             return null;
 
+        // For any encased shaft variant (and copycat girder), only activate the bracket toggle
+        // when looking at the top or bottom quarter of the block. This lets players wrench
+        // the shaft out by looking at the middle 50%.
+        BlockState hovered = world.getBlockState(pos);
+        List<Pair<Direction, Action>> reachable;
+        if (hovered.getBlock() instanceof CopycatGirderBlock
+                || CMGBlocks.isAnyCMGGirderEncasedShaft(hovered)) {
+            double hitY = result.getLocation().y - pos.getY();
+            reachable = validDirections.stream()
+                    .filter(pair -> {
+                        if (pair.getFirst() == Direction.UP) return hitY >= 0.75;
+                        if (pair.getFirst() == Direction.DOWN) return hitY <= 0.25;
+                        return false;
+                    })
+                    .toList();
+        } else {
+            reachable = validDirections;
+        }
+
+        if (reachable.isEmpty())
+            return null;
+
         List<Direction> directions = IPlacementHelper.orderedByDistance(pos, result.getLocation(),
-                validDirections.stream()
+                reachable.stream()
                         .map(Pair::getFirst)
                         .toList());
 
@@ -112,7 +135,7 @@ public class CMGGirderWrenchBehaviour {
             return null;
 
         Direction dir = directions.get(0);
-        return validDirections.stream()
+        return reachable.stream()
                 .filter(pair -> pair.getFirst() == dir)
                 .findFirst()
                 .orElseGet(() -> Pair.of(dir, Action.SINGLE));

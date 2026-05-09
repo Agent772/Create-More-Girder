@@ -1,5 +1,7 @@
 package com.agent772.createmoregirder.content.strut;
 
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlockEntity;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatStrutTextureRemapper;
 import com.mojang.blaze3d.vertex.*;
 import com.simibubi.create.content.contraptions.ContraptionWorld;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
@@ -87,6 +89,14 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
         //     }
         //     ms.popPose();
         // }
+        // Resolve copycat texture data if applicable
+        CopycatStrutTextureRemapper.FaceData[] copycatFaceData = null;
+        int copycatLightEmission = 0;
+        if (blockEntity instanceof CopycatGirderStrutBlockEntity copycatBe && copycatBe.hasMimickedState()) {
+            copycatFaceData = CopycatStrutTextureRemapper.resolveFaceData(copycatBe.getMimickedState(), copycatBe.getFaceRotation());
+            copycatLightEmission = copycatBe.getMimickedState().getLightEmission();
+        }
+
         boolean onContraption = blockEntity.getLevel() instanceof ContraptionWorld;
 
         if (onContraption || Minecraft.getInstance().options.graphicsMode().get() == GraphicsStatus.FAST) {
@@ -127,7 +137,7 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
                 ms.translate(0, 0, lengthOffset + 0.5); // Adjust the translation based on segment length
                 if (getRenderPriority(relative) > getRenderPriority(relative.multiply(-1))) {
                     final Vec3 segDir = relativeVec.normalize();
-                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, onContraption ? null : blockEntity.getLevel(), thisAttachment, segDir);
+                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, onContraption ? null : blockEntity.getLevel(), thisAttachment, segDir, copycatFaceData, copycatLightEmission);
                 }
                 ms.popPose();
             }
@@ -135,9 +145,21 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
             if (blockEntity.connectionRenderBufferCache == null) {
                 try (final ByteBufferBuilder bufferBuilder = new ByteBufferBuilder(256)) {
                     final GirderStrutModelBuilder.GirderStrutModelData connectionData = GirderStrutModelBuilder.GirderStrutModelData.collect(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity);
+                    final CopycatStrutTextureRemapper.FaceData[] finalCopycatFaceData = copycatFaceData;
+                    final int emissionLevel = copycatLightEmission;
+                    java.util.function.Function<org.joml.Vector3f, Integer> lighter = blockEntity.createLighter();
+                    if (emissionLevel > 0) {
+                        final java.util.function.Function<org.joml.Vector3f, Integer> baseLighter = lighter;
+                        lighter = pos -> {
+                            int base = baseLighter.apply(pos);
+                            int emissionLight = net.minecraft.client.renderer.LightTexture.pack(emissionLevel, 0);
+                            return IBlockEntityRelighter.maximizeLight(base, emissionLight);
+                        };
+                    }
+                    final java.util.function.Function<org.joml.Vector3f, Integer> finalLighter = lighter;
                     final List<Consumer<BufferBuilder>> quads = connectionData.connections()
                             .stream()
-                            .flatMap(c -> GirderStrutModelManipulator.bakeConnectionToConsumer(c, modelType, blockEntity.createLighter()).stream())
+                            .flatMap(c -> GirderStrutModelManipulator.bakeConnectionToConsumer(c, modelType, finalLighter, finalCopycatFaceData).stream())
                             .toList();
 
                     final BufferBuilder builder = new BufferBuilder(bufferBuilder, VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
@@ -156,16 +178,20 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
         }
     }
 
-    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int fallbackLight, final Level level, final Vec3 segmentStart, final Vec3 segmentDir) {
+    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int fallbackLight, final Level level, final Vec3 segmentStart, final Vec3 segmentDir, final CopycatStrutTextureRemapper.FaceData[] faceData, final int lightEmission) {
         for (int i = 0; i < length; i++) {
             ms.pushPose();
             ms.translate(0, 0, i);
-            final int segLight;
+            int segLight;
             if (level != null) {
                 final Vec3 segWorldPos = segmentStart.add(segmentDir.scale(i + 0.5));
                 segLight = LevelRenderer.getLightColor(level, BlockPos.containing(segWorldPos));
             } else {
                 segLight = fallbackLight;
+            }
+            if (lightEmission > 0) {
+                int emissionLight = net.minecraft.client.renderer.LightTexture.pack(lightEmission, 0);
+                segLight = IBlockEntityRelighter.maximizeLight(segLight, emissionLight);
             }
             CachedBuffers.partial(model, state)
                     .light(segLight)

@@ -18,17 +18,36 @@ public class GirderStrutCostOverlay {
     private static final int SLOT_WIDTH = 21;
     private static final int SLOT_ICON_OFFSET = 3;
     private static final int VERTICAL_OFFSET_FROM_BOTTOM = 100;
+    private static final int GROUP_GAP = 6;
 
     private static boolean active;
     private static ItemStack displayItem = ItemStack.EMPTY;
     private static int displayCount;
     private static boolean fulfilled;
 
+    private static ItemStack textureDisplayItem = ItemStack.EMPTY;
+    private static int textureDisplayCount;
+    private static boolean textureFulfilled;
+
     public static void display(ItemStack item, int count, boolean hasSufficient) {
         active = true;
         displayItem = item;
         displayCount = count;
         fulfilled = hasSufficient;
+        textureDisplayItem = ItemStack.EMPTY;
+        textureDisplayCount = 0;
+        textureFulfilled = true;
+    }
+
+    public static void displayWithTexture(ItemStack item, int count, boolean hasSufficient,
+                                           ItemStack textureItem, int textureCount, boolean textureHasSufficient) {
+        active = true;
+        displayItem = item;
+        displayCount = count;
+        fulfilled = hasSufficient;
+        textureDisplayItem = textureItem;
+        textureDisplayCount = textureCount;
+        textureFulfilled = textureHasSufficient;
     }
 
     public static void reset() {
@@ -42,27 +61,53 @@ public class GirderStrutCostOverlay {
         if (!active || displayItem.isEmpty() || displayCount <= 0)
             return;
 
+        boolean hasTexture = !textureDisplayItem.isEmpty() && textureDisplayCount > 0;
+
+        int strutSlots = slotCount(displayCount);
+        int textureSlots = hasTexture ? slotCount(textureDisplayCount) : 0;
+
+        int totalWidth = SLOT_WIDTH * strutSlots;
+        if (hasTexture) {
+            totalWidth += GROUP_GAP + SLOT_WIDTH * textureSlots;
+        }
+
+        int startX = (graphics.guiWidth() - totalWidth) / 2;
+        int y = graphics.guiHeight() - VERTICAL_OFFSET_FROM_BOTTOM;
+
+        // Render strut cost slots
+        renderSlots(graphics, mc, displayItem, displayCount, fulfilled, startX, y);
+
+        // Render texture cost slots side by side
+        if (hasTexture) {
+            int textureX = startX + SLOT_WIDTH * strutSlots + GROUP_GAP;
+            renderSlots(graphics, mc, textureDisplayItem, textureDisplayCount, textureFulfilled, textureX, y);
+        }
+
+        RenderSystem.disableBlend();
+    }
+
+    private static int slotCount(int count) {
         int slots = 0;
-        int remaining = displayCount;
+        int remaining = count;
         while (remaining > 0) {
             slots++;
             remaining -= 64;
         }
+        return slots;
+    }
 
-        int w = SLOT_WIDTH * slots;
-        int x = (graphics.guiWidth() - w) / 2;
-        int y = graphics.guiHeight() - VERTICAL_OFFSET_FROM_BOTTOM;
-
-        remaining = displayCount;
+    private static void renderSlots(GuiGraphics graphics, Minecraft mc, ItemStack item, int count, boolean isFulfilled, int x, int y) {
+        int remaining = count;
+        int slots = slotCount(count);
         for (int i = 0; i < slots; i++) {
             int slotCount = Math.min(64, remaining);
             remaining -= slotCount;
 
             RenderSystem.enableBlend();
-            (fulfilled ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).render(graphics, x, y);
+            (isFulfilled ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).render(graphics, x, y);
 
-            ItemStack renderStack = displayItem.copyWithCount(slotCount);
-            String countStr = fulfilled ? null : ChatFormatting.GOLD.toString() + slotCount;
+            ItemStack renderStack = item.copyWithCount(slotCount);
+            String countStr = isFulfilled ? null : ChatFormatting.GOLD.toString() + slotCount;
 
             GuiGameElement.of(renderStack)
                     .at(x + SLOT_ICON_OFFSET, y + SLOT_ICON_OFFSET)
@@ -70,7 +115,5 @@ public class GirderStrutCostOverlay {
             graphics.renderItemDecorations(mc.font, renderStack, x + SLOT_ICON_OFFSET, y + SLOT_ICON_OFFSET, countStr);
             x += SLOT_WIDTH;
         }
-
-        RenderSystem.disableBlend();
     }
 }

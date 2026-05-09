@@ -36,6 +36,12 @@ public class CMGDataComponents {
             builder -> builder.persistent(Direction.CODEC).networkSynchronized(Direction.STREAM_CODEC)
     );
 
+    public static final DataComponentType<String> COPYCAT_STRUT_OFFHAND_BLOCK = register(
+            "copycat_strut_offhand_block",
+            builder -> builder.persistent(com.mojang.serialization.Codec.STRING)
+                    .networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.STRING_UTF8)
+    );
+
     private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
         DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();
         DATA_COMPONENTS.register(name, () -> type);

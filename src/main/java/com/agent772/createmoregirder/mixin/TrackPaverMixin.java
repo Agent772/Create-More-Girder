@@ -1,5 +1,6 @@
 package com.agent772.createmoregirder.mixin;
 
+import com.agent772.createmoregirder.CMGTags;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import com.simibubi.create.content.trains.track.TrackPaver;
@@ -19,7 +20,7 @@ public abstract class TrackPaverMixin {
         at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;isWallLike(Lnet/minecraft/world/level/block/state/BlockState;)Z")
     )
     private static boolean cmg$isWallLikeCurve(BlockState state) {
-        if (state.getBlock() instanceof GirderBlock) return true;
+        if (state.is(CMGTags.PAVING_GIRDER)) return true;
         return state.getBlock() instanceof WallBlock || AllBlocks.METAL_GIRDER.has(state);
     }
 
@@ -28,7 +29,7 @@ public abstract class TrackPaverMixin {
         at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;isWallLike(Lnet/minecraft/world/level/block/state/BlockState;)Z")
     )
     private static boolean cmg$isWallLikeStraight(BlockState state) {
-        if (state.getBlock() instanceof GirderBlock) return true;
+        if (state.is(CMGTags.GIRDER_BLOCK)) return true;
         return state.getBlock() instanceof WallBlock || AllBlocks.METAL_GIRDER.has(state);
     }
 
@@ -37,7 +38,7 @@ public abstract class TrackPaverMixin {
         at = @At(value = "INVOKE", target = "Lcom/tterrag/registrate/util/entry/BlockEntry;has(Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 0)
     )
     private static boolean cmg$isGirder(BlockEntry<?> entry, BlockState state) {
-        if (state.getBlock() instanceof GirderBlock) return true;
+        if (state.is(CMGTags.PAVING_GIRDER)) return true;
         return entry.has(state);
     }
 
@@ -47,7 +48,7 @@ public abstract class TrackPaverMixin {
         index = 2
     )
     private static BlockState cmg$setTopBracketForPaving(BlockState state) {
-        if (state.getBlock() instanceof GirderBlock && !AllBlocks.METAL_GIRDER.has(state)) {
+        if (state.is(CMGTags.GIRDER_BLOCK)) {
             return state.setValue(GirderBlock.TOP, true);
         }
         return state;

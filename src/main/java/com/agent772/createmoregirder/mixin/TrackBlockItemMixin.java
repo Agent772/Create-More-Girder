@@ -1,8 +1,7 @@
 package com.agent772.createmoregirder.mixin;
 
 import com.agent772.createmoregirder.CMGBezierData;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.decoration.girder.GirderBlock;
+import com.agent772.createmoregirder.CMGTags;
 import com.simibubi.create.content.trains.track.BezierConnection;
 import com.simibubi.create.content.trains.track.TrackBlockItem;
 import com.simibubi.create.content.trains.track.TrackPlacement;
@@ -25,7 +24,7 @@ public abstract class TrackBlockItemMixin {
     )
     private boolean cmg$isGirderItem(BlockEntry<?> entry, ItemStack stack) {
         if (stack.getItem() instanceof BlockItem blockItem
-                && blockItem.getBlock() instanceof GirderBlock) {
+                && blockItem.getBlock().defaultBlockState().is(CMGTags.PAVING_GIRDER)) {
             return true;
         }
         return entry.isIn(stack);
@@ -54,8 +53,7 @@ public abstract class TrackBlockItemMixin {
                 ItemStack offhand = player.getOffhandItem();
                 if (offhand.getItem() instanceof BlockItem bi) {
                     Block girderBlock = bi.getBlock();
-                    if (girderBlock instanceof GirderBlock
-                            && !AllBlocks.METAL_GIRDER.is(girderBlock)) {
+                    if (girderBlock.defaultBlockState().is(CMGTags.PAVING_GIRDER)) {
                         ((CMGBezierData) curve).cmg$setGirderBlock(girderBlock);
                     }
                 }

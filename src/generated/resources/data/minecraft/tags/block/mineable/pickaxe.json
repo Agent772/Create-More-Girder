@@ -31,6 +31,9 @@
     "createmoregirder:industrial_iron_girder_strut",
     "createmoregirder:weathered_iron_girder",
     "createmoregirder:weathered_iron_girder_encased_shaft",
-    "createmoregirder:weathered_iron_girder_strut"
+    "createmoregirder:weathered_iron_girder_strut",
+    "createmoregirder:copycat_girder_strut",
+    "createmoregirder:copycat_girder",
+    "createmoregirder:copycat_girder_encased_shaft"
   ]
 }

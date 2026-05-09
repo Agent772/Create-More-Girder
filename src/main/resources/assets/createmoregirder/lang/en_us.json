@@ -38,9 +38,18 @@
   "block.createmoregirder.weathered_iron_girder_encased_shaft": "Weathered Iron Girder Encased Shaft",
   "block.createmoregirder.weathered_iron_girder_strut": "Weathered Iron Girder Strut",
   
+  "block.createmoregirder.copycat_girder": "Copycat Girder",
+  "block.createmoregirder.copycat_girder_encased_shaft": "Copycat Girder Encased Shaft",
+  "block.createmoregirder.copycat_girder_strut": "Copycat Girder Strut",
+
   "message.createmoregirder.missing_girder_struts": "Not enough Girder Struts! Need %s more.",
+  "message.createmoregirder.missing_texture_blocks": "Not enough Texture Blocks! Need %s more.",
   "message.createmoregirder.strut_valid_connection": "Can Connect",
   "message.createmoregirder.strut_invalid_connection": "Cannot Connect Here",
   "message.createmoregirder.strut_not_enough_items": "Not Enough Girder Struts",
-  "message.createmoregirder.strut_anchor_occupied": "Anchor Already Connected"
+  "message.createmoregirder.strut_anchor_occupied": "Anchor Already Connected",
+
+  "tooltip.createmoregirder.copycat_strut.placement": "Hold a block in your Offhand during both anchor placements to set texture",
+  "tooltip.createmoregirder.copycat_strut.hold_shift": "Hold [Shift] for more",
+  "tooltip.createmoregirder.copycat_strut.cycle_detail": "Right-click an anchor with the same block to cycle the texture"
 }

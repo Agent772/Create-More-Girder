@@ -58,6 +58,9 @@ public class CreateMoreGirder {
             for (Block block : CMGBlockEntityTypes.GIRDER_STRUT.get().getValidBlocks()) {
                 MovementBehaviour.REGISTRY.register(block, behaviour);
             }
+            for (Block block : CMGBlockEntityTypes.COPYCAT_GIRDER_STRUT.get().getValidBlocks()) {
+                MovementBehaviour.REGISTRY.register(block, behaviour);
+            }
         });
     }
 

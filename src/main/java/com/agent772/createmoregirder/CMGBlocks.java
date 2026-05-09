@@ -3,6 +3,12 @@ package com.agent772.createmoregirder;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderBlock;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderGenerator;
+import com.agent772.createmoregirder.content.copycat_girder.CopycatGirderBakedModel;
+import com.agent772.createmoregirder.content.copycat_girder.CopycatGirderBlock;
+import com.agent772.createmoregirder.content.copycat_girder.CopycatGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBakedModel;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlock;
+import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlockItem;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderBlock;
 import com.agent772.createmoregirder.content.brass_girder.BrassGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderBlock;
@@ -58,7 +64,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(AndesiteGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model((c, p) -> p.blockItem(c, "/item")).build()
                         .register();
@@ -109,7 +115,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -160,7 +166,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -186,7 +192,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -212,7 +218,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -238,7 +244,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -265,7 +271,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -314,7 +320,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -363,7 +369,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -412,7 +418,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -461,7 +467,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -512,7 +518,7 @@ public class CMGBlocks {
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
                         .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
-                        .tag(CMGTags.GIRDER_BLOCK)
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
                         .blockstate(GenericGirderGenerator::blockState)
                         .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
                         .register();
@@ -555,7 +561,59 @@ public class CMGBlocks {
                         )
                         .build()
                         .register();
-    
+
+        // Copycat Girder Strut
+        public static final BlockEntry<CopycatGirderStrutBlock> COPYCAT_GIRDER_STRUT =
+                REGISTRATE.block("copycat_girder_strut", CopycatGirderStrutBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/copycat_girder_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> CopycatGirderStrutBakedModel::new))
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(CopycatGirderStrutBlockItem::new)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/copycat_girder_strut/item"))
+                        )
+                        .build()
+                        .register();
+
+        // Copycat Girder
+        public static final BlockEntry<CopycatGirderBlock> COPYCAT_GIRDER =
+                REGISTRATE.block("copycat_girder", CopycatGirderBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.STONE).sound(SoundType.NETHERITE_BLOCK).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_BLOCK, AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .blockstate(GenericGirderGenerator::blockState)
+                        .onRegister(CreateRegistrate.blockModel(() -> CopycatGirderBakedModel::new))
+                        .item().model(GenericGirderGenerator::itemModel).build()
+                        .register();
+
+        public static final BlockEntry<CopycatGirderEncasedShaftBlock> COPYCAT_GIRDER_ENCASED_SHAFT =
+                REGISTRATE.block("copycat_girder_encased_shaft", CopycatGirderEncasedShaftBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.STONE).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .tag(AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .onRegister(CreateRegistrate.blockModel(() -> CopycatGirderBakedModel::new))
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(COPYCAT_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .register();
+
     private static volatile java.util.Set<Block> GIRDER_BLOCKS;
     private static volatile java.util.Set<Block> GIRDER_ENCASED_SHAFT_BLOCKS;
 
@@ -574,7 +632,8 @@ public class CMGBlocks {
                     WAXED_WEATHERED_COPPER_GIRDER.get(),
                     WAXED_OXIDIZED_COPPER_GIRDER.get(),
                     INDUSTRIAL_IRON_GIRDER.get(),
-                    WEATHERED_IRON_GIRDER.get()
+                    WEATHERED_IRON_GIRDER.get(),
+                    COPYCAT_GIRDER.get()
             );
             GIRDER_BLOCKS = s;
         }
@@ -596,7 +655,8 @@ public class CMGBlocks {
                     WAXED_WEATHERED_COPPER_GIRDER_ENCASED_SHAFT.get(),
                     WAXED_OXIDIZED_COPPER_GIRDER_ENCASED_SHAFT.get(),
                     INDUSTRIAL_IRON_GIRDER_ENCASED_SHAFT.get(),
-                    WEATHERED_IRON_GIRDER_ENCASED_SHAFT.get()
+                    WEATHERED_IRON_GIRDER_ENCASED_SHAFT.get(),
+                    COPYCAT_GIRDER_ENCASED_SHAFT.get()
             );
             GIRDER_ENCASED_SHAFT_BLOCKS = s;
         }

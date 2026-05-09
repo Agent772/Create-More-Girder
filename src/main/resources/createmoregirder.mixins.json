@@ -9,7 +9,8 @@
     "BezierConnectionMixin",
     "PlacementInfoAccessor",
     "TrackBlockItemMixin",
-    "TrackPaverMixin"
+    "TrackPaverMixin",
+    "TrackPlacementMixin"
   ],
   "client": [
     "GirderVisualMixin",
