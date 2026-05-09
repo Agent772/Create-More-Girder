@@ -6,7 +6,7 @@ import com.agent772.createmoregirder.content.girder.CMGGirderWrenchBehaviour;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
-import com.simibubi.create.content.decoration.girder.GirderBlock;
+import com.agent772.createmoregirder.content.girder.CMGGirderBlock;
 import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class CopycatGirderBlock extends GirderBlock implements IBE<CopycatGirderBlockEntity>, SpecialBlockItemRequirement {
+public class CopycatGirderBlock extends CMGGirderBlock implements IBE<CopycatGirderBlockEntity>, SpecialBlockItemRequirement {
     private static final int placementHelperId = PlacementHelpers.register(new CopycatGirderPlacementHelper());
 
     public CopycatGirderBlock(Properties properties) {

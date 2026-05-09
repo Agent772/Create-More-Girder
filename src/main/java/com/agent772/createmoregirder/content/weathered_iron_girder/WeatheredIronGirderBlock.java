@@ -1,7 +1,7 @@
 package com.agent772.createmoregirder.content.weathered_iron_girder;
 
 import com.agent772.createmoregirder.CMGBlocks;
-import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderBlock;
+import com.agent772.createmoregirder.content.girder.CMGGirderBlock;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -23,7 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class WeatheredIronGirderBlock extends AndesiteGirderBlock {
+public class WeatheredIronGirderBlock extends CMGGirderBlock {
     private static final int placementHelperId = PlacementHelpers.register(new WeatheredIronGirderPlacementHelper());
 
     public WeatheredIronGirderBlock(BlockBehaviour.Properties properties) {
