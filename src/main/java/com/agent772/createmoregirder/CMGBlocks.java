@@ -102,6 +102,7 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
                         .model((c, p) ->
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/andesite_girder_strut/item"))
                         )
@@ -153,6 +154,7 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
                         .model((c, p) ->
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/brass_girder_strut/item"))
                         )
@@ -308,6 +310,7 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
                         .model((c, p) ->
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/waxed_copper_girder_strut/item"))
                         )
@@ -356,6 +359,7 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
                         .model((c, p) ->
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/waxed_exposed_copper_girder_strut/item"))
                         )
@@ -406,6 +410,7 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
                         .model((c, p) ->
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/waxed_weathered_copper_girder_strut/item"))
                         )
@@ -454,6 +459,7 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
                         .model((c, p) ->
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/waxed_oxidized_copper_girder_strut/item"))
                         )
@@ -505,6 +511,7 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
                         .model((c, p) ->
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/industrial_iron_girder_strut/item"))
                         )
@@ -556,6 +563,7 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
                         .model((c, p) ->
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/weathered_iron_girder_strut/item"))
                         )
@@ -579,6 +587,7 @@ public class CMGBlocks {
                                         .add(LootItem.lootTableItem(block))
                                         .when(ExplosionCondition.survivesExplosion()))))
                         .item(CopycatGirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
                         .model((c, p) ->
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/copycat_girder_strut/item"))
                         )
