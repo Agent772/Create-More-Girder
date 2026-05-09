@@ -16,6 +16,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -46,6 +47,7 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
             if (stack.has(CMGDataComponents.GIRDER_STRUT_FROM) || stack.has(CMGDataComponents.GIRDER_STRUT_FROM_FACE)) {
                 stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
                 stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+                stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
                 stack.remove(CMGDataComponents.COPYCAT_STRUT_OFFHAND_BLOCK);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -72,6 +74,7 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
 
             stack.set(CMGDataComponents.GIRDER_STRUT_FROM, placementPos);
             stack.set(CMGDataComponents.GIRDER_STRUT_FROM_FACE, targetFace);
+            stack.set(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL, level.dimension());
 
             // Capture offhand texture block on first click
             if (context.getPlayer() != null) {
@@ -92,6 +95,16 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
         if (fromPos == null) {
             stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
             stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
+            stack.remove(CMGDataComponents.COPYCAT_STRUT_OFFHAND_BLOCK);
+            return InteractionResult.FAIL;
+        }
+
+        final ResourceKey<Level> fromLevelKey = stack.get(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
+        if (fromLevelKey == null || !fromLevelKey.equals(level.dimension())) {
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
             stack.remove(CMGDataComponents.COPYCAT_STRUT_OFFHAND_BLOCK);
             return InteractionResult.FAIL;
         }
@@ -115,6 +128,7 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
                 if (result == ConnectionResult.INVALID) {
                     stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
                     stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+                    stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
                     stack.remove(CMGDataComponents.COPYCAT_STRUT_OFFHAND_BLOCK);
                 }
                 if (result == ConnectionResult.ANCHOR_OCCUPIED && context.getPlayer() != null) {
@@ -126,6 +140,7 @@ public class CopycatGirderStrutBlockItem extends BlockItem {
 
         stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
         stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+        stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
         stack.remove(CMGDataComponents.COPYCAT_STRUT_OFFHAND_BLOCK);
 
         return InteractionResult.sidedSuccess(level.isClientSide);

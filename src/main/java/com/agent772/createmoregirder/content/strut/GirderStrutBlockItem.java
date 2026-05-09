@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -52,6 +53,7 @@ public class GirderStrutBlockItem extends BlockItem {
             if (stack.has(CMGDataComponents.GIRDER_STRUT_FROM) || stack.has(CMGDataComponents.GIRDER_STRUT_FROM_FACE)) {
                 stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
                 stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+                stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
             return InteractionResult.PASS;
@@ -77,6 +79,7 @@ public class GirderStrutBlockItem extends BlockItem {
 
             stack.set(CMGDataComponents.GIRDER_STRUT_FROM, placementPos);
             stack.set(CMGDataComponents.GIRDER_STRUT_FROM_FACE, targetFace);
+            stack.set(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL, level.dimension());
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
@@ -85,6 +88,15 @@ public class GirderStrutBlockItem extends BlockItem {
         if (fromPos == null) {
             stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
             stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
+            return InteractionResult.FAIL;
+        }
+
+        final ResourceKey<Level> fromLevelKey = stack.get(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
+        if (fromLevelKey == null || !fromLevelKey.equals(level.dimension())) {
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+            stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
             return InteractionResult.FAIL;
         }
 
@@ -107,6 +119,7 @@ public class GirderStrutBlockItem extends BlockItem {
                 if (result == ConnectionResult.INVALID) {
                     stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
                     stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+                    stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
                 }
                 if (result == ConnectionResult.ANCHOR_OCCUPIED && context.getPlayer() != null) {
                     notifyPlayer(context.getPlayer(), "message.createmoregirder.strut_anchor_occupied");
@@ -117,6 +130,7 @@ public class GirderStrutBlockItem extends BlockItem {
 
         stack.remove(CMGDataComponents.GIRDER_STRUT_FROM);
         stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_FACE);
+        stack.remove(CMGDataComponents.GIRDER_STRUT_FROM_LEVEL);
 
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

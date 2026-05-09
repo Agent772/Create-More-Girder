@@ -8,6 +8,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -34,6 +36,12 @@ public class CMGDataComponents {
     public static final DataComponentType<Direction> GIRDER_STRUT_FROM_FACE = register(
             "girder_strut_from_face",
             builder -> builder.persistent(Direction.CODEC).networkSynchronized(Direction.STREAM_CODEC)
+    );
+
+    public static final DataComponentType<ResourceKey<Level>> GIRDER_STRUT_FROM_LEVEL = register(
+            "girder_strut_from_level",
+            builder -> builder.persistent(Level.RESOURCE_KEY_CODEC)
+                    .networkSynchronized(ResourceKey.streamCodec(Registries.DIMENSION))
     );
 
     public static final DataComponentType<String> COPYCAT_STRUT_OFFHAND_BLOCK = register(
