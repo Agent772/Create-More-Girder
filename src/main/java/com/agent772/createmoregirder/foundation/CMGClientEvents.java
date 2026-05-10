@@ -1,5 +1,6 @@
 package com.agent772.createmoregirder.foundation;
 
+import com.agent772.createmoregirder.content.girder.CMGGirderWrenchBehaviour;
 import com.agent772.createmoregirder.content.strut.GirderStrutPlacementEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,6 +19,7 @@ public class CMGClientEvents {
         final Minecraft mc = Minecraft.getInstance();
         if (mc.level != null && mc.player != null) {
             GirderStrutPlacementEffects.tick(mc.player);
+            CMGGirderWrenchBehaviour.tick();
         }
     }
 }

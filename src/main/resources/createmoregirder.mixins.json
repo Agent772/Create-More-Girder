@@ -5,7 +5,17 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "createmoregirder.refmap.json",
   "mixins": [
-    "SchematicExportMixin"
+    "BezierConnectionDropMixin",
+    "BezierConnectionMixin",
+    "PlacementInfoAccessor",
+    "SchematicExportMixin",
+    "TrackBlockItemMixin",
+    "TrackPaverMixin",
+    "TrackPlacementMixin"
+  ],
+  "client": [
+    "GirderVisualMixin",
+    "TrackRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

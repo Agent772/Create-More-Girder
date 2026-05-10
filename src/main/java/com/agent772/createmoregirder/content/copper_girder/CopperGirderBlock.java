@@ -1,10 +1,8 @@
 package com.agent772.createmoregirder.content.copper_girder;
 
 import com.agent772.createmoregirder.CMGBlocks;
-import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderBlock;
-import com.agent772.createmoregirder.content.andesite_girder.AndesiteGirderWrenchBehaviour;
+import com.agent772.createmoregirder.content.girder.CMGGirderBlock;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import net.createmod.catnip.placement.IPlacementHelper;
@@ -30,11 +28,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-public class CopperGirderBlock extends AndesiteGirderBlock implements WeatheringCopper {
+public class CopperGirderBlock extends CMGGirderBlock implements WeatheringCopper {
     private static final int placementHelperId = PlacementHelpers.register(new CopperGirderPlacementHelper());
 
     public CopperGirderBlock(BlockBehaviour.Properties properties) {
@@ -119,11 +116,9 @@ public class CopperGirderBlock extends AndesiteGirderBlock implements Weathering
         }
 
         // Handle wrench behavior
-        if (AllItems.WRENCH.isIn(stack) && !player.isShiftKeyDown()) {
-            if (AndesiteGirderWrenchBehaviour.handleClick(level, pos, state, hitResult))
-                return InteractionResult.sidedSuccess(level.isClientSide);
-            return InteractionResult.FAIL;
-        }
+        InteractionResult wrenchResult = tryGirderWrenchInteraction(stack, state, level, pos, player, hitResult);
+        if (wrenchResult != null)
+            return wrenchResult;
 
         // Handle placement helper
         IPlacementHelper helper = PlacementHelpers.get(getPlacementHelperId());

@@ -2,6 +2,6 @@
 	"credit": "Copied from Create Diesel Generators",
 	"parent": "createmoregirder:block/andesite_girder/bracket_west",
 	"textures": {
-		"0": "create:block/girder"
+		"0": "createmoregirder:block/industrial_iron_girder"
 	}
 }
