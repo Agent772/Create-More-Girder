@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.agent772.createmoregirder.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "createmoregirder.refmap.json",
+  "mixins": [
+    "SchematicExportMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

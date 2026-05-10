@@ -186,10 +186,12 @@ public class CopycatGirderStrutBlock extends GirderStrutBlock {
         return 0;
     }
 
+    @Override
     public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
         int count = 1;
         if (be instanceof GirderStrutBlockEntity gbe) {
-            count = Math.max(1, gbe.connectionCount());
+            int share = GirderStrutBlockEntity.computeAnchorItemShare(gbe.getConnectionsWithCosts());
+            if (share > 0) count = share;
         }
         ItemRequirement req = new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(this, count));
         if (be instanceof CopycatGirderStrutBlockEntity copycatBe && copycatBe.hasMimickedState()) {

@@ -2,7 +2,7 @@ package com.agent772.createmoregirder.content.strut;
 
 import com.agent772.createmoregirder.CMGBlockEntityTypes;
 import com.agent772.createmoregirder.CMGShapes;
-import com.simibubi.create.api.schematic.requirement.SpecialBlockEntityItemRequirement;
+import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.block.IBE;
@@ -53,7 +53,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  * - Adapted for Create: More Girder mod structure
  * - Added variant system for different girder types
  */
-public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntity>, SimpleWaterloggedBlock, IWrenchable, SpecialBlockEntityItemRequirement {
+public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntity>, SimpleWaterloggedBlock, IWrenchable, SpecialBlockItemRequirement {
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final DirectionProperty REFERENCE_FACING = DirectionProperty.create(
@@ -274,8 +274,13 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     }
 
     @Override
-    public ItemRequirement getRequiredItems(BlockState state) {
-        return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(this, 1));
+    public ItemRequirement getRequiredItems(BlockState state, BlockEntity be) {
+        int count = 1;
+        if (be instanceof GirderStrutBlockEntity gbe) {
+            int share = GirderStrutBlockEntity.computeAnchorItemShare(gbe.getConnectionsWithCosts());
+            if (share > 0) count = share;
+        }
+        return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(this, count));
     }
 
     public StrutModelType getModelType() {
