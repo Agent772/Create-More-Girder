@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"render_type": "solid",
+	"render_type": "cutout",
 	"parent": "block/block",
 	"textures": {
 		"0": "createmoregirder:block/copycat_girder"
