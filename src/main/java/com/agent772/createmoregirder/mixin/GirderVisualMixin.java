@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(targets = "com.simibubi.create.content.trains.track.TrackVisual$BezierTrackVisual$GirderVisual", remap = false)
+@Mixin(targets = "com.simibubi.create.content.trains.track.TrackVisual$BezierTrackVisual$GirderVisual")
 public class GirderVisualMixin {
 
     @Shadow
@@ -45,8 +45,9 @@ public class GirderVisualMixin {
 
     @Redirect(
         method = "<init>(Lcom/simibubi/create/content/trains/track/TrackVisual$BezierTrackVisual;Lcom/simibubi/create/content/trains/track/BezierConnection;)V",
-        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/BezierConnection;getSegmentCount()I"),
-        require = 0
+        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/BezierConnection;getSegmentCount()I", remap = false),
+        require = 0,
+        remap = false
     )
     private int cmg$captureSegmentCount(BezierConnection bc) {
         this.cmg$bc = bc;
@@ -55,8 +56,9 @@ public class GirderVisualMixin {
 
     @Redirect(
         method = "<init>(Lcom/simibubi/create/content/trains/track/TrackVisual$BezierTrackVisual;Lcom/simibubi/create/content/trains/track/BezierConnection;)V",
-        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/foundation/render/SpecialModels;flatChunk(Ldev/engine_room/flywheel/lib/model/baked/PartialModel;)Ldev/engine_room/flywheel/api/model/Model;"),
-        require = 0
+        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/foundation/render/SpecialModels;flatChunk(Ldev/engine_room/flywheel/lib/model/baked/PartialModel;)Ldev/engine_room/flywheel/api/model/Model;", remap = false),
+        require = 0,
+        remap = false
     )
     private Model cmg$swapModel(PartialModel original) {
         if (cmg$bc != null) {
@@ -72,8 +74,9 @@ public class GirderVisualMixin {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Redirect(
         method = "<init>(Lcom/simibubi/create/content/trains/track/TrackVisual$BezierTrackVisual;Lcom/simibubi/create/content/trains/track/BezierConnection;)V",
-        at = @At(value = "INVOKE", target = "Ldev/engine_room/flywheel/api/instance/InstancerProvider;instancer(Ldev/engine_room/flywheel/api/instance/InstanceType;Ldev/engine_room/flywheel/api/model/Model;)Ldev/engine_room/flywheel/api/instance/Instancer;"),
-        require = 0
+        at = @At(value = "INVOKE", target = "Ldev/engine_room/flywheel/api/instance/InstancerProvider;instancer(Ldev/engine_room/flywheel/api/instance/InstanceType;Ldev/engine_room/flywheel/api/model/Model;)Ldev/engine_room/flywheel/api/instance/Instancer;", remap = false),
+        require = 0,
+        remap = false
     )
     private Instancer cmg$captureProvider(InstancerProvider provider, InstanceType type, Model model) {
         this.cmg$provider = provider;
@@ -85,7 +88,8 @@ public class GirderVisualMixin {
     @Inject(
         method = "<init>(Lcom/simibubi/create/content/trains/track/TrackVisual$BezierTrackVisual;Lcom/simibubi/create/content/trains/track/BezierConnection;)V",
         at = @At("RETURN"),
-        require = 0
+        require = 0,
+        remap = false
     )
     private void cmg$replaceBeamInstances(CallbackInfo ci) {
         if (cmg$bc == null || cmg$provider == null) return;

@@ -23,10 +23,10 @@ import java.util.Set;
  * bypassing the EntityBlock check while skipping paveCurve (copycat
  * girders should not be placed on curves).
  */
-@Mixin(value = TrackPlacement.class, remap = false)
+@Mixin(value = TrackPlacement.class)
 public abstract class TrackPlacementMixin {
 
-    @Inject(method = "paveTracks", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "paveTracks", at = @At("HEAD"), cancellable = true, remap = false)
     private static void cmg$bypassEntityBlockCheckForCopycat(
             Level level, TrackPlacement.PlacementInfo info, BlockItem blockItem,
             boolean dryRun, CallbackInfo ci

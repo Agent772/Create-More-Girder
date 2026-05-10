@@ -7,26 +7,26 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(value = TrackPlacement.PlacementInfo.class, remap = false)
+@Mixin(value = TrackPlacement.PlacementInfo.class)
 public interface PlacementInfoAccessor {
-    @Accessor("curve")
+    @Accessor(value = "curve", remap = false)
     BezierConnection getCurve();
 
-    @Accessor("end1Extent")
+    @Accessor(value = "end1Extent", remap = false)
     int getEnd1Extent();
 
-    @Accessor("end2Extent")
+    @Accessor(value = "end2Extent", remap = false)
     int getEnd2Extent();
 
-    @Accessor("axis1")
+    @Accessor(value = "axis1", remap = false)
     Vec3 getAxis1();
 
-    @Accessor("axis2")
+    @Accessor(value = "axis2", remap = false)
     Vec3 getAxis2();
 
-    @Accessor("pos1")
+    @Accessor(value = "pos1", remap = false)
     BlockPos getPos1();
 
-    @Accessor("pos2")
+    @Accessor(value = "pos2", remap = false)
     BlockPos getPos2();
 }

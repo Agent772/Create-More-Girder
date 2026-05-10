@@ -9,12 +9,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(value = BezierConnection.class, remap = false)
+@Mixin(value = BezierConnection.class)
 public abstract class BezierConnectionDropMixin implements CMGBezierData {
 
     @Redirect(
         method = "addItemsToPlayer",
-        at = @At(value = "INVOKE", target = "Lcom/tterrag/registrate/util/entry/BlockEntry;asStack(I)Lnet/minecraft/world/item/ItemStack;", ordinal = 0)
+        at = @At(value = "INVOKE", target = "Lcom/tterrag/registrate/util/entry/BlockEntry;asStack(I)Lnet/minecraft/world/item/ItemStack;", ordinal = 0, remap = false),
+        remap = false
     )
     private ItemStack cmg$replaceGirderStackForPlayer(BlockEntry<?> entry, int count) {
         Block cmgBlock = cmg$getGirderBlock();
@@ -26,7 +27,8 @@ public abstract class BezierConnectionDropMixin implements CMGBezierData {
 
     @Redirect(
         method = "spawnItems",
-        at = @At(value = "INVOKE", target = "Lcom/tterrag/registrate/util/entry/BlockEntry;asStack()Lnet/minecraft/world/item/ItemStack;", ordinal = 0)
+        at = @At(value = "INVOKE", target = "Lcom/tterrag/registrate/util/entry/BlockEntry;asStack()Lnet/minecraft/world/item/ItemStack;", ordinal = 0, remap = false),
+        remap = false
     )
     private ItemStack cmg$replaceGirderStackForWorld(BlockEntry<?> entry) {
         Block cmgBlock = cmg$getGirderBlock();

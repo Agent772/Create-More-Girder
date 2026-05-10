@@ -32,12 +32,13 @@ import java.util.Set;
  * partner is outside the captured region are removed entirely — no anchor
  * block, no material list entry, no placement.
  */
-@Mixin(value = SchematicExport.class, remap = false)
+@Mixin(value = SchematicExport.class)
 public abstract class SchematicExportMixin {
 
     @WrapOperation(method = "saveSchematic",
             at = @At(value = "INVOKE",
-                    target = "Lcom/simibubi/create/content/schematics/SchematicAndQuillItem;replaceStructureVoidWithAir(Lnet/minecraft/nbt/CompoundTag;)V"))
+                    target = "Lcom/simibubi/create/content/schematics/SchematicAndQuillItem;replaceStructureVoidWithAir(Lnet/minecraft/nbt/CompoundTag;)V", remap = false),
+            remap = false)
     private static void cmg$pruneIncompleteStrutsBeforeVoidReplace(CompoundTag tag, Operation<Void> original) {
         cmg$pruneIncompleteStruts(tag);
         original.call(tag);

@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(value = TrackBlockItem.class, remap = false)
+@Mixin(value = TrackBlockItem.class)
 public abstract class TrackBlockItemMixin {
 
     @Redirect(
         method = "useOn",
-        at = @At(value = "INVOKE", target = "Lcom/tterrag/registrate/util/entry/BlockEntry;isIn(Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0)
+        at = @At(value = "INVOKE", target = "Lcom/tterrag/registrate/util/entry/BlockEntry;isIn(Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 0, remap = false)
     )
     private boolean cmg$isGirderItem(BlockEntry<?> entry, ItemStack stack) {
         if (stack.getItem() instanceof BlockItem blockItem
@@ -32,7 +32,7 @@ public abstract class TrackBlockItemMixin {
 
     @Redirect(
         method = "useOn",
-        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPlacement;tryConnect(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/item/ItemStack;ZZ)Lcom/simibubi/create/content/trains/track/TrackPlacement$PlacementInfo;")
+        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPlacement;tryConnect(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/item/ItemStack;ZZ)Lcom/simibubi/create/content/trains/track/TrackPlacement$PlacementInfo;", remap = false)
     )
     private TrackPlacement.PlacementInfo cmg$storeCurveGirder(
         net.minecraft.world.level.Level level,

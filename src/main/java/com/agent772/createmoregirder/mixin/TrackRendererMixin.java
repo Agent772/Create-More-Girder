@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = TrackRenderer.class, remap = false)
+@Mixin(value = TrackRenderer.class)
 public class TrackRendererMixin {
 
     @Unique
@@ -30,14 +30,14 @@ public class TrackRendererMixin {
     @Unique
     private static final ThreadLocal<int[]> cmg$middleCallCounter = ThreadLocal.withInitial(() -> new int[]{0});
 
-    @Inject(method = "renderGirder", at = @At("HEAD"), require = 0)
+    @Inject(method = "renderGirder", at = @At("HEAD"), require = 0, remap = false)
     private static void cmg$captureGirder(Level level, BezierConnection bc, PoseStack ms,
                                           VertexConsumer vb, BlockPos tePosition, CallbackInfo ci) {
         cmg$currentGirder.set(((CMGBezierData) bc).cmg$getGirderBlock());
         cmg$middleCallCounter.get()[0] = 0;
     }
 
-    @Inject(method = "renderGirder", at = @At("RETURN"), require = 0)
+    @Inject(method = "renderGirder", at = @At("RETURN"), require = 0, remap = false)
     private static void cmg$clearGirder(Level level, BezierConnection bc, PoseStack ms,
                                         VertexConsumer vb, BlockPos tePosition, CallbackInfo ci) {
         cmg$currentGirder.remove();
@@ -46,8 +46,9 @@ public class TrackRendererMixin {
 
     @Redirect(
         method = "renderGirder",
-        at = @At(value = "INVOKE", target = "Lnet/createmod/catnip/render/CachedBuffers;partial(Ldev/engine_room/flywheel/lib/model/baked/PartialModel;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/createmod/catnip/render/SuperByteBuffer;"),
-        require = 0
+        at = @At(value = "INVOKE", target = "Lnet/createmod/catnip/render/CachedBuffers;partial(Ldev/engine_room/flywheel/lib/model/baked/PartialModel;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/createmod/catnip/render/SuperByteBuffer;", remap = false),
+        require = 0,
+        remap = false
     )
     private static SuperByteBuffer cmg$swapRendererModel(PartialModel original, BlockState state) {
         Block girder = cmg$currentGirder.get();

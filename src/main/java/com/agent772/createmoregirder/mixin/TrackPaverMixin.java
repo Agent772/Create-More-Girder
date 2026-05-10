@@ -12,12 +12,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(value = TrackPaver.class, remap = false)
+@Mixin(value = TrackPaver.class)
 public abstract class TrackPaverMixin {
 
     @Redirect(
         method = "paveCurve",
-        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;isWallLike(Lnet/minecraft/world/level/block/state/BlockState;)Z")
+        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;isWallLike(Lnet/minecraft/world/level/block/state/BlockState;)Z", remap = false),
+        remap = false
     )
     private static boolean cmg$isWallLikeCurve(BlockState state) {
         if (state.is(CMGTags.PAVING_GIRDER)) return true;
@@ -26,7 +27,8 @@ public abstract class TrackPaverMixin {
 
     @Redirect(
         method = "paveStraight",
-        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;isWallLike(Lnet/minecraft/world/level/block/state/BlockState;)Z")
+        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;isWallLike(Lnet/minecraft/world/level/block/state/BlockState;)Z", remap = false),
+        remap = false
     )
     private static boolean cmg$isWallLikeStraight(BlockState state) {
         if (state.is(CMGTags.GIRDER_BLOCK)) return true;
@@ -35,7 +37,8 @@ public abstract class TrackPaverMixin {
 
     @Redirect(
         method = "paveCurve",
-        at = @At(value = "INVOKE", target = "Lcom/tterrag/registrate/util/entry/BlockEntry;has(Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 0)
+        at = @At(value = "INVOKE", target = "Lcom/tterrag/registrate/util/entry/BlockEntry;has(Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 0, remap = false),
+        remap = false
     )
     private static boolean cmg$isGirder(BlockEntry<?> entry, BlockState state) {
         if (state.is(CMGTags.PAVING_GIRDER)) return true;
@@ -49,8 +52,9 @@ public abstract class TrackPaverMixin {
      */
     @ModifyArg(
         method = "paveStraight",
-        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;placeBlockIfFree(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)Z"),
-        index = 2
+        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;placeBlockIfFree(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)Z", remap = false),
+        index = 2,
+        remap = false
     )
     private static BlockState cmg$setTopBracketForPaving(BlockState state) {
         if (state.is(CMGTags.GIRDER_BLOCK)) {
@@ -65,8 +69,9 @@ public abstract class TrackPaverMixin {
      */
     @ModifyArg(
         method = "paveCurve",
-        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;placeBlockIfFree(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)Z"),
-        index = 2
+        at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/trains/track/TrackPaver;placeBlockIfFree(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)Z", remap = false),
+        index = 2,
+        remap = false
     )
     private static BlockState cmg$setTopBracketForCurvePaving(BlockState state) {
         if (state.is(CMGTags.GIRDER_BLOCK)) {

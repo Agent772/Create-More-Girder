@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = BezierConnection.class, remap = false)
+@Mixin(value = BezierConnection.class)
 public abstract class BezierConnectionMixin implements CMGBezierData {
 
     @Unique
@@ -33,7 +33,7 @@ public abstract class BezierConnectionMixin implements CMGBezierData {
         cmg$girderBlock = block;
     }
 
-    @Inject(method = "write(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/nbt/CompoundTag;", at = @At("RETURN"))
+    @Inject(method = "write(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/nbt/CompoundTag;", at = @At("RETURN"), remap = false)
     private void cmg$writeNbt(BlockPos pos, CallbackInfoReturnable<CompoundTag> cir) {
         if (cmg$girderBlock != null) {
             ResourceLocation key = BuiltInRegistries.BLOCK.getKey(cmg$girderBlock);
@@ -41,7 +41,7 @@ public abstract class BezierConnectionMixin implements CMGBezierData {
         }
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/BlockPos;)V", at = @At("RETURN"))
+    @Inject(method = "<init>(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/BlockPos;)V", at = @At("RETURN"), remap = false)
     private void cmg$readNbt(CompoundTag tag, BlockPos pos, CallbackInfo ci) {
         if (tag.contains("CMGGirder")) {
             ResourceLocation id = new ResourceLocation(tag.getString("CMGGirder"));
