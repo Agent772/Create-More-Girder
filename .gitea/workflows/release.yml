@@ -43,7 +43,7 @@ jobs:
         run: |
           CHANGELOG=$(cat /tmp/release-notes.md)
           ./gradlew release \
-            -Pcurseforge_api_key=${{ secrets.CURSEFORGE_API_KEY }} \
+            -Pcurseforge_api_key=${{ secrets.CURSEFORGE_TOKEN }} \
             -Pmodrinth_token=${{ secrets.MODRINTH_TOKEN }} \
             -Pchangelog="$CHANGELOG"
 
