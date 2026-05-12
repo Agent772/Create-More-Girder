@@ -1,7 +1,7 @@
 {
 	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
-	"render_type": "solid",
+	"render_type": "cutout_mipped",
 	"textures": {
 		"0": "createmoregirder:block/copycat_girder/brace_side",
 		"1": "createmoregirder:block/copycat_girder/brace_top",

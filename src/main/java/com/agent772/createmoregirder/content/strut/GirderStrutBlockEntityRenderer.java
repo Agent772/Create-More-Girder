@@ -15,12 +15,16 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -92,9 +96,12 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
         // Resolve copycat texture data if applicable
         CopycatStrutTextureRemapper.FaceData[] copycatFaceData = null;
         int copycatLightEmission = 0;
+        RenderType beamRenderType = RenderType.cutout();
         if (blockEntity instanceof CopycatGirderStrutBlockEntity copycatBe && copycatBe.hasMimickedState()) {
-            copycatFaceData = CopycatStrutTextureRemapper.resolveFaceData(copycatBe.getMimickedState(), copycatBe.getFaceRotation());
-            copycatLightEmission = copycatBe.getMimickedState().getLightEmission();
+            BlockState mimicked = copycatBe.getMimickedState();
+            copycatFaceData = CopycatStrutTextureRemapper.resolveFaceData(mimicked, copycatBe.getFaceRotation());
+            copycatLightEmission = mimicked.getLightEmission();
+            beamRenderType = resolveBeamRenderType(mimicked);
         }
 
         boolean onContraption = blockEntity.getLevel() instanceof ContraptionWorld;
@@ -137,7 +144,7 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
                 ms.translate(0, 0, lengthOffset + 0.5); // Adjust the translation based on segment length
                 if (getRenderPriority(relative) > getRenderPriority(relative.multiply(-1))) {
                     final Vec3 segDir = relativeVec.normalize();
-                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, onContraption ? null : blockEntity.getLevel(), thisAttachment, segDir, copycatFaceData, copycatLightEmission);
+                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, onContraption ? null : blockEntity.getLevel(), thisAttachment, segDir, copycatFaceData, copycatLightEmission, beamRenderType);
                 }
                 ms.popPose();
             }
@@ -174,11 +181,11 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
                     blockEntity.connectionRenderBufferCache = SuperBufferFactory.getInstance().create(meshData);
                 }
             }
-            blockEntity.connectionRenderBufferCache.renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+            blockEntity.connectionRenderBufferCache.renderInto(ms, buffer.getBuffer(beamRenderType));
         }
     }
 
-    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int fallbackLight, final Level level, final Vec3 segmentStart, final Vec3 segmentDir, final CopycatStrutTextureRemapper.FaceData[] faceData, final int lightEmission) {
+    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int fallbackLight, final Level level, final Vec3 segmentStart, final Vec3 segmentDir, final CopycatStrutTextureRemapper.FaceData[] faceData, final int lightEmission, final RenderType renderType) {
         for (int i = 0; i < length; i++) {
             ms.pushPose();
             ms.translate(0, 0, i);
@@ -195,9 +202,22 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
             }
             CachedBuffers.partial(model, state)
                     .light(segLight)
-                    .renderInto(ms, buffer.getBuffer(RenderType.cutout()));
+                    .renderInto(ms, buffer.getBuffer(renderType));
             ms.popPose();
         }
+    }
+
+    private static RenderType resolveBeamRenderType(final BlockState mimicked) {
+        try {
+            final BakedModel srcModel = Minecraft.getInstance().getBlockRenderer().getBlockModel(mimicked);
+            final ChunkRenderTypeSet srcTypes = srcModel.getRenderTypes(mimicked, RandomSource.create(0L), ModelData.EMPTY);
+            final List<RenderType> typeList = srcTypes.asList();
+            if (!typeList.isEmpty()) {
+                return typeList.get(0);
+            }
+        } catch (final Exception ignored) {
+        }
+        return RenderType.cutout();
     }
 
     /**
