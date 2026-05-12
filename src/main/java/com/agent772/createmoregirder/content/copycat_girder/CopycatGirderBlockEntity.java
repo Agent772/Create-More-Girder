@@ -14,9 +14,18 @@ import java.util.List;
 public class CopycatGirderBlockEntity extends SmartBlockEntity implements MimickedBlockEntity {
 
     private final MimickedStateStorage storage = new MimickedStateStorage();
+    private transient boolean suppressTextureDrop = false;
 
     public CopycatGirderBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public void suppressTextureDrop() {
+        this.suppressTextureDrop = true;
+    }
+
+    public boolean isTextureDropSuppressed() {
+        return suppressTextureDrop;
     }
 
     @Override

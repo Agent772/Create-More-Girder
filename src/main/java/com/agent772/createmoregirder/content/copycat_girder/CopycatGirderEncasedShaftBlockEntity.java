@@ -11,9 +11,18 @@ import net.minecraft.world.level.block.state.BlockState;
 public class CopycatGirderEncasedShaftBlockEntity extends KineticBlockEntity implements MimickedBlockEntity {
 
     private final MimickedStateStorage storage = new MimickedStateStorage();
+    private transient boolean suppressTextureDrop = false;
 
     public CopycatGirderEncasedShaftBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public void suppressTextureDrop() {
+        this.suppressTextureDrop = true;
+    }
+
+    public boolean isTextureDropSuppressed() {
+        return suppressTextureDrop;
     }
 
     @Override

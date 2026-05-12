@@ -243,10 +243,23 @@ public class CopycatGirderEncasedShaftBlock extends GirderEncasedShaftBlock {
     }
 
     @Override
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative()) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof CopycatGirderEncasedShaftBlockEntity encasedBe) {
+                encasedBe.suppressTextureDrop();
+            }
+        }
+        super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && !(newState.getBlock() instanceof CopycatGirderBlock)) {
             BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof CopycatGirderEncasedShaftBlockEntity copycatBe && copycatBe.hasMimickedState()) {
+            if (be instanceof CopycatGirderEncasedShaftBlockEntity copycatBe
+                    && copycatBe.hasMimickedState()
+                    && !copycatBe.isTextureDropSuppressed()) {
                 Block.popResource(level, pos, new ItemStack(copycatBe.getMimickedState().getBlock()));
             }
         }
