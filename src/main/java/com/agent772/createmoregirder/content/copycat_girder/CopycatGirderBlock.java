@@ -252,10 +252,23 @@ public class CopycatGirderBlock extends CMGGirderBlock implements IBE<CopycatGir
     }
 
     @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.hasInfiniteMaterials()) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof CopycatGirderBlockEntity copycatBe) {
+                copycatBe.suppressTextureDrop();
+            }
+        }
+        return super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && !(newState.getBlock() instanceof CopycatGirderEncasedShaftBlock)) {
             BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof CopycatGirderBlockEntity copycatBe && copycatBe.hasMimickedState()) {
+            if (be instanceof CopycatGirderBlockEntity copycatBe
+                    && copycatBe.hasMimickedState()
+                    && !copycatBe.isTextureDropSuppressed()) {
                 Block.popResource(level, pos, new ItemStack(copycatBe.getMimickedState().getBlock()));
             }
         }
