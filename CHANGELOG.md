@@ -1,3 +1,17 @@
+## version 1.2.3
+
+### Fixed
+- fixed rendering of copycat girders with translucent or transparent texture blocks
+- fixed copycat girder droping texture block on destroy in creative mode
+
+## Version 1.2.2
+skipped
+
+## Version 1.2.1
+
+### Fixed
+- fixed missing recipes
+
 ## Version 1.2.0
 
 ### Added
