@@ -1,4 +1,4 @@
-// 1.21.1	2026-05-14T08:11:46.770861464	Registrate Provider for createmoregirder [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2026-05-14T11:11:02.599606886	Registrate Provider for createmoregirder [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 8cf78e0ba1c6fce8a2e2ace10fead85a7807b274 assets/createmoregirder/blockstates/andesite_girder.json
 d40f45fdeb12e3b490e48229f33c77e07c9a4837 assets/createmoregirder/blockstates/andesite_girder_encased_shaft.json
 a9b9e5ed1dca7d5961cddf6ff218a65e2d915c73 assets/createmoregirder/blockstates/andesite_girder_strut.json
@@ -184,6 +184,7 @@ bd38b43e0bcb6d41bd6208c7b52c6f2587a68542 data/createmoregirder/loot_table/blocks
 d950043e4b4206f90c39f4193ba4da8ca21c5faa data/createmoregirder/tags/block/girder.json
 60c8d7c4a4fea776d6151b696d1febc28ca4d259 data/createmoregirder/tags/block/girder_encased_shaft.json
 a4b966db1e31999db15c0e4f02127e1fcd396647 data/createmoregirder/tags/block/paving_girder.json
+3c78948bf189a57a8c216788a826b7b952fe53e2 data/createmoregirder/tags/block/strut.json
 a4b966db1e31999db15c0e4f02127e1fcd396647 data/createmoregirder/tags/item/girder.json
 3c78948bf189a57a8c216788a826b7b952fe53e2 data/createmoregirder/tags/item/strut.json
 2e14304cdabffae84d2da3ccf50889a28eaedb41 data/minecraft/tags/block/mineable/pickaxe.json
