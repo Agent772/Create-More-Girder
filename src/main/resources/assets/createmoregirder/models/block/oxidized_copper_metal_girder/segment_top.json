@@ -1,0 +1,7 @@
+{
+	"parent": "createmoregirder:block/andesite_metal_girder/segment_top",
+	"textures": {
+		"particle": "createmoregirder:block/oxidized_copper_metal_girder",
+		"0": "createmoregirder:block/oxidized_copper_metal_girder"
+	}
+}

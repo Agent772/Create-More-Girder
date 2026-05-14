@@ -303,4 +303,36 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
     public static NonNullFunction<Properties, GirderStrutBlock> weathered_iron() {
         return properties -> new GirderStrutBlock(properties, StrutModelType.WEATHERED_IRON);
     }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> andesite_metal() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.ANDESITE_METAL);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> brass_metal() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.BRASS_METAL);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> waxed_copper_metal() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WAXED_COPPER_METAL);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> waxed_exposed_copper_metal() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WAXED_EXPOSED_COPPER_METAL);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> waxed_weathered_copper_metal() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WAXED_WEATHERED_COPPER_METAL);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> waxed_oxidized_copper_metal() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WAXED_OXIDIZED_COPPER_METAL);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> weathered_iron_metal() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.WEATHERED_IRON_METAL);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> create_metal() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.CREATE_METAL);
+    }
 }

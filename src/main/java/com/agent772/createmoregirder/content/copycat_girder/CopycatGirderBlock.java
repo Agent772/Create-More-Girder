@@ -11,6 +11,7 @@ import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import com.simibubi.create.foundation.block.IBE;
+import com.tterrag.registrate.util.entry.BlockEntry;
 import net.createmod.catnip.placement.IPlacementHelper;
 import net.createmod.catnip.placement.PlacementHelpers;
 import net.minecraft.core.BlockPos;
@@ -45,6 +46,22 @@ public class CopycatGirderBlock extends CMGGirderBlock implements IBE<CopycatGir
         super(properties);
     }
 
+    /**
+     * The encased-shaft block this girder converts to when a shaft is inserted.
+     * Overridden by variants so they encase into their own silhouette.
+     */
+    protected BlockEntry<? extends Block> getEncasedShaftBlock() {
+        return CMGBlocks.COPYCAT_GIRDER_ENCASED_SHAFT;
+    }
+
+    /**
+     * The placement-helper id used for this girder variant. Overridden by
+     * variants so item placement only offsets onto matching blocks.
+     */
+    protected int getPlacementHelperId() {
+        return placementHelperId;
+    }
+
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (player == null || hand != InteractionHand.MAIN_HAND)
@@ -61,7 +78,7 @@ public class CopycatGirderBlock extends CMGGirderBlock implements IBE<CopycatGir
                 carriedRotation = copycatBe.getFaceRotation();
             }
 
-            KineticBlockEntity.switchToBlockState(level, pos, CMGBlocks.COPYCAT_GIRDER_ENCASED_SHAFT.getDefaultState()
+            KineticBlockEntity.switchToBlockState(level, pos, getEncasedShaftBlock().getDefaultState()
                     .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
                     .setValue(TOP, state.getValue(TOP))
                     .setValue(BOTTOM, state.getValue(BOTTOM))
@@ -115,7 +132,7 @@ public class CopycatGirderBlock extends CMGGirderBlock implements IBE<CopycatGir
             BlockState sourceState = sourceBlock.defaultBlockState();
 
             // Don't consume girder items here - let placement helper handle them
-            IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
+            IPlacementHelper helper = PlacementHelpers.get(getPlacementHelperId());
             if (helper.matchesItem(stack))
                 return helper.getOffset(player, level, state, pos, hitResult)
                         .placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);

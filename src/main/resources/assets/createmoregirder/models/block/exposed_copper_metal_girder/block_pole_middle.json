@@ -1,0 +1,8 @@
+{
+	"parent": "createmoregirder:block/andesite_metal_girder/block_pole_middle",
+	"textures": {
+		"particle": "createmoregirder:block/exposed_copper_metal_girder",
+		"2": "createmoregirder:block/poles/exposed_copper_metal_girder_pole",
+		"3": "createmoregirder:block/poles/exposed_copper_metal_girder_pole_side_connected"
+	}
+}

@@ -70,15 +70,43 @@ public class GirderStrutMovementBehaviour implements MovementBehaviour {
         if (anchorPos != null && context.world != null) {
             BlockPos worldPos = anchorPos.offset(context.localPos);
 
-            if (noConnectionsLeft) {
-                context.contraption.getBlocks().remove(context.localPos);
-                Block.popResource(context.world, worldPos, new ItemStack(context.state.getBlock(), 1 + droppedCost));
-            } else if (droppedCost > 0) {
+            if (droppedCost > 0) {
+                // Refund exactly the segments the player paid for when placing
+                // the connection — same total as a normal in-world break.
                 Block.popResource(context.world, worldPos, new ItemStack(context.state.getBlock(), droppedCost));
+            }
+
+            if (noConnectionsLeft) {
+                // Anchor has no valid in-contraption partner left. Destroy it at
+                // its current world position (still in the world at this point —
+                // startMoving runs before Contraption#removeBlocksFromWorld).
+                // Contraption#removeBlocksFromWorld will then see a block
+                // mismatch at this position, call iterator.remove() on its
+                // blocks map, and the anchor will neither be carried by the
+                // contraption nor re-placed on disassemble.
+                destroyOrphanAnchorAt(context.world, worldPos);
             }
         }
 
         cleanupWorldOrphans(context, invalidRelativeOffsets);
+    }
+
+    /**
+     * Destroys an orphan anchor in the world without triggering its
+     * {@code destroyConnectedStrut} cascade. The cascade would clobber the
+     * partners' connections (which can include valid in-contraption neighbours)
+     * via the in-world BE, so we clear the in-world BE's connection map first
+     * and then remove the block.
+     */
+    private void destroyOrphanAnchorAt(Level world, BlockPos worldPos) {
+        BlockEntity be = world.getBlockEntity(worldPos);
+        if (be instanceof GirderStrutBlockEntity strutBe) {
+            BlockPos beOrigin = strutBe.getBlockPos();
+            for (BlockPos rel : strutBe.getConnectionsCopy()) {
+                strutBe.removeConnection(beOrigin.offset(rel));
+            }
+        }
+        world.removeBlock(worldPos, false);
     }
 
     private void cleanupWorldOrphans(MovementContext context, List<BlockPos> invalidRelativeOffsets) {
@@ -96,6 +124,12 @@ public class GirderStrutMovementBehaviour implements MovementBehaviour {
             if (be instanceof GirderStrutBlockEntity orphanBe) {
                 orphanBe.removeConnection(myWorldPos);
                 if (orphanBe.connectionCount() == 0) {
+                    // No item drop: the connection cost was already popped at
+                    // the contraption-side anchor's worldPos above, and
+                    // GirderStrutBlock#getDrops returns List.of() for an orphan
+                    // with zero remaining connections and no cached cost — so
+                    // destroyBlock(..., true) is a silent remove for the visual
+                    // partner.
                     world.destroyBlock(orphanWorldPos, true);
                 }
             }

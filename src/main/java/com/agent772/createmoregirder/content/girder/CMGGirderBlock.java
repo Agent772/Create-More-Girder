@@ -1,20 +1,34 @@
 package com.agent772.createmoregirder.content.girder;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
+import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.tterrag.registrate.util.entry.BlockEntry;
+import net.createmod.catnip.placement.IPlacementHelper;
+import net.createmod.catnip.placement.PlacementHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
+
 /**
- * Shared base class for all CMG girder blocks.
+ * Shared base class for all CMG girder blocks, regardless of variant (the plain
+ * {@code *_girder} family and the OG-style {@code *_metal_girder} family alike).
  *
  * <p>Overrides {@link GirderBlock#updateShape} so that TOP and BOTTOM bracket
  * connectors on horizontal girders are <em>sticky</em>: once enabled they are
@@ -24,12 +38,28 @@ import net.minecraft.world.phys.BlockHitResult;
  * <p>This prevents the neighbor cascade triggered by {@code TrackPaver} from
  * undoing the {@code TOP=true} set by the paving mixin, and also ensures that
  * placing a block above a girder always shows the bracket cap.
+ *
+ * <p>It also provides the shared {@link #useItemOn} flow that every girder
+ * variant uses: encasing a shaft, the wrench bracket toggle, and the
+ * placement-helper offset placement. Subclasses only supply the two per-variant
+ * values via {@link #getEncasedShaftBlock()} and {@link #getPlacementHelperId()}.
  */
-public class CMGGirderBlock extends GirderBlock {
+public abstract class CMGGirderBlock extends GirderBlock {
 
     public CMGGirderBlock(Properties properties) {
         super(properties);
     }
+
+    /**
+     * The encased-shaft block this girder turns into when a shaft is used on it.
+     */
+    protected abstract BlockEntry<? extends Block> getEncasedShaftBlock();
+
+    /**
+     * The id of the {@link net.createmod.catnip.placement.PlacementHelpers}
+     * entry registered for this girder variant.
+     */
+    protected abstract int getPlacementHelperId();
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -78,6 +108,41 @@ public class CMGGirderBlock extends GirderBlock {
         }
 
         return result;
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (player == null)
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
+        if (AllBlocks.SHAFT.isIn(stack)) {
+            KineticBlockEntity.switchToBlockState(level, pos, getEncasedShaftBlock().getDefaultState()
+                    .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
+                    .setValue(TOP, state.getValue(TOP))
+                    .setValue(BOTTOM, state.getValue(BOTTOM))
+                    .setValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS, state.getValue(X) || hitResult.getDirection()
+                            .getAxis() == Direction.Axis.Z ? Direction.Axis.Z : Direction.Axis.X));
+
+            level.playSound(null, pos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.BLOCKS, 0.5f, 1.25f);
+            if (!level.isClientSide && !player.isCreative()) {
+                stack.shrink(1);
+                if (stack.isEmpty())
+                    player.setItemInHand(hand, ItemStack.EMPTY);
+            }
+
+            return ItemInteractionResult.SUCCESS;
+        }
+
+        ItemInteractionResult wrenchResult = tryGirderWrenchInteraction(stack, state, level, pos, player, hitResult);
+        if (wrenchResult != null)
+            return wrenchResult;
+
+        IPlacementHelper helper = PlacementHelpers.get(getPlacementHelperId());
+        if (helper.matchesItem(stack))
+            return helper.getOffset(player, level, state, pos, hitResult)
+                    .placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
+
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     protected static ItemInteractionResult tryGirderWrenchInteraction(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {

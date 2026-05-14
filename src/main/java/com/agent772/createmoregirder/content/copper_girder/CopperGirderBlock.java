@@ -1,143 +1,52 @@
 package com.agent772.createmoregirder.content.copper_girder;
 
 import com.agent772.createmoregirder.CMGBlocks;
-import com.agent772.createmoregirder.content.girder.CMGGirderBlock;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import net.createmod.catnip.placement.IPlacementHelper;
+import com.agent772.createmoregirder.content.girder.CMGCopperGirderBlock;
+import com.tterrag.registrate.util.entry.BlockEntry;
 import net.createmod.catnip.placement.PlacementHelpers;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.WeatheringCopper;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.Optional;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
-
-public class CopperGirderBlock extends CMGGirderBlock implements WeatheringCopper {
+/**
+ * Concrete base copper girder, and the shared parent for every other plain
+ * {@code copper_girder} variant. Supplies the {@code WeatheringCopperGirders}
+ * weathering maps to the shared logic in {@link CMGCopperGirderBlock}.
+ */
+public class CopperGirderBlock extends CMGCopperGirderBlock {
     private static final int placementHelperId = PlacementHelpers.register(new CopperGirderPlacementHelper());
 
-    public CopperGirderBlock(BlockBehaviour.Properties properties) {
+    public CopperGirderBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    public WeatheringCopper.WeatherState getAge() {
-        return WeatheringCopper.WeatherState.UNAFFECTED;
+    protected BlockEntry<? extends Block> getEncasedShaftBlock() {
+        return CMGBlocks.COPPER_GIRDER_ENCASED_SHAFT;
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        this.changeOverTime(state, level, pos, random);
+    protected int getPlacementHelperId() {
+        return placementHelperId;
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
-        return WeatheringCopperGirders.getNext(state.getBlock()).isPresent();
+    public WeatherState getAge() {
+        return WeatherState.UNAFFECTED;
     }
 
     @Override
-    public Optional<BlockState> getNext(BlockState state) {
-        return WeatheringCopperGirders.getNext(state.getBlock())
-                .map(block -> block.defaultBlockState()
-                        .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
-                        .setValue(TOP, state.getValue(TOP))
-                        .setValue(BOTTOM, state.getValue(BOTTOM))
-                        .setValue(X, state.getValue(X))
-                        .setValue(Z, state.getValue(Z))
-                        .setValue(AXIS, state.getValue(AXIS)));
+    protected Optional<Block> getHoneycombTransition(Block self) {
+        return WeatheringCopperGirders.getWaxed(self);
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (player == null)
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    protected Optional<Block> getAxeTransition(Block self) {
+        return WeatheringCopperGirders.getPrevious(self);
+    }
 
-        // Handle honeycomb waxing
-        if (stack.is(Items.HONEYCOMB)) {
-            Optional<Block> waxedBlock = WeatheringCopperGirders.getWaxed(state.getBlock());
-            if (waxedBlock.isPresent()) {
-                if (!level.isClientSide) {
-                    BlockState waxedState = waxedBlock.get().defaultBlockState()
-                            .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
-                            .setValue(TOP, state.getValue(TOP))
-                            .setValue(BOTTOM, state.getValue(BOTTOM))
-                            .setValue(X, state.getValue(X))
-                            .setValue(Z, state.getValue(Z))
-                            .setValue(AXIS, state.getValue(AXIS));
-                    level.setBlock(pos, waxedState, 3);
-                    level.playSound(null, pos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0f, 1.0f);
-                    if (!player.isCreative()) {
-                        stack.shrink(1);
-                    }
-                }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            }
-        }
-
-        // Handle axe scraping (for weathered variants)
-        if (stack.getItem() instanceof AxeItem) {
-            Optional<Block> scrapedBlock = WeatheringCopperGirders.getPrevious(state.getBlock());
-            if (scrapedBlock.isPresent()) {
-                if (!level.isClientSide) {
-                    BlockState scrapedState = scrapedBlock.get().defaultBlockState()
-                            .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
-                            .setValue(TOP, state.getValue(TOP))
-                            .setValue(BOTTOM, state.getValue(BOTTOM))
-                            .setValue(X, state.getValue(X))
-                            .setValue(Z, state.getValue(Z))
-                            .setValue(AXIS, state.getValue(AXIS));
-                    level.setBlock(pos, scrapedState, 3);
-                    level.playSound(null, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0f, 1.0f);
-                }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            }
-        }
-
-        if (AllBlocks.SHAFT.isIn(stack)) {
-            KineticBlockEntity.switchToBlockState(level, pos, CMGBlocks.COPPER_GIRDER_ENCASED_SHAFT.getDefaultState()
-                    .setValue(WATERLOGGED, state.getValue(WATERLOGGED))
-                    .setValue(TOP, state.getValue(TOP))
-                    .setValue(BOTTOM, state.getValue(BOTTOM))
-                    .setValue(GirderEncasedShaftBlock.HORIZONTAL_AXIS, state.getValue(X) || hitResult.getDirection()
-                            .getAxis() == Direction.Axis.Z ? Direction.Axis.Z : Direction.Axis.X));
-
-            level.playSound(null, pos, SoundEvents.NETHERITE_BLOCK_HIT, SoundSource.BLOCKS, 0.5f, 1.25f);
-            if (!level.isClientSide && !player.isCreative()) {
-                stack.shrink(1);
-                if (stack.isEmpty())
-                    player.setItemInHand(hand, ItemStack.EMPTY);
-            }
-
-            return ItemInteractionResult.SUCCESS;
-        }
-
-        ItemInteractionResult wrenchResult = tryGirderWrenchInteraction(stack, state, level, pos, player, hitResult);
-        if (wrenchResult != null)
-            return wrenchResult;
-
-        IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-        if (helper.matchesItem(stack))
-            return helper.getOffset(player, level, state, pos, hitResult)
-                    .placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
-
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    @Override
+    protected Optional<Block> getNextWeatherBlock(Block self) {
+        return WeatheringCopperGirders.getNext(self);
     }
 }

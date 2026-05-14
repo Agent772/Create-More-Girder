@@ -1,0 +1,7 @@
+{
+	"parent": "createmoregirder:block/andesite_metal_girder/bracket_east",
+	"textures": {
+		"particle": "createmoregirder:block/exposed_copper_metal_girder",
+		"0": "createmoregirder:block/exposed_copper_metal_girder"
+	}
+}

@@ -9,6 +9,7 @@ import com.simibubi.create.content.decoration.girder.GirderBlock;
 import com.simibubi.create.content.decoration.girder.GirderEncasedShaftBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
+import com.tterrag.registrate.util.entry.BlockEntry;
 import net.createmod.catnip.placement.IPlacementHelper;
 import net.createmod.catnip.placement.PlacementHelpers;
 import net.minecraft.core.BlockPos;
@@ -40,11 +41,26 @@ public class CopycatGirderEncasedShaftBlock extends GirderEncasedShaftBlock {
         super(properties);
     }
 
+    /**
+     * The girder block this encased shaft reverts to when wrenched.
+     * Overridden by variants so they revert to their own silhouette.
+     */
+    protected BlockEntry<? extends Block> getGirderBlock() {
+        return CMGBlocks.COPYCAT_GIRDER;
+    }
+
+    /**
+     * The placement-helper id used for this encased-shaft variant.
+     */
+    protected int getPlacementHelperId() {
+        return placementHelperId;
+    }
+
     @Override
     public BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
         boolean hasVerticalConnection = originalState.getValue(TOP) || originalState.getValue(BOTTOM);
         if (hasVerticalConnection) {
-            return CMGBlocks.COPYCAT_GIRDER.get().defaultBlockState()
+            return getGirderBlock().get().defaultBlockState()
                     .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
                     .setValue(GirderBlock.X, false)
                     .setValue(GirderBlock.Z, false)
@@ -52,7 +68,7 @@ public class CopycatGirderEncasedShaftBlock extends GirderEncasedShaftBlock {
                     .setValue(GirderBlock.BOTTOM, originalState.getValue(BOTTOM))
                     .setValue(GirderBlock.TOP, originalState.getValue(TOP));
         } else {
-            return CMGBlocks.COPYCAT_GIRDER.get().defaultBlockState()
+            return getGirderBlock().get().defaultBlockState()
                     .setValue(WATERLOGGED, originalState.getValue(WATERLOGGED))
                     .setValue(GirderBlock.X, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.Z)
                     .setValue(GirderBlock.Z, originalState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X)
@@ -93,7 +109,7 @@ public class CopycatGirderEncasedShaftBlock extends GirderEncasedShaftBlock {
             Block sourceBlock = blockItem.getBlock();
             BlockState sourceState = sourceBlock.defaultBlockState();
 
-            IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
+            IPlacementHelper helper = PlacementHelpers.get(getPlacementHelperId());
             if (helper.matchesItem(stack))
                 return helper.getOffset(player, level, state, pos, hitResult)
                         .placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
@@ -231,7 +247,7 @@ public class CopycatGirderEncasedShaftBlock extends GirderEncasedShaftBlock {
         // Build requirements directly to avoid infinite recursion through
         // ItemRequirement.of → SpecialBlockItemRequirement.getRequiredItems on CopycatGirderBlock
         ItemRequirement req = new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(AllBlocks.SHAFT.get()))
-                .union(new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(CMGBlocks.COPYCAT_GIRDER.get())));
+                .union(new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, new ItemStack(getGirderBlock().get())));
         if (be instanceof CopycatGirderEncasedShaftBlockEntity encasedBe && encasedBe.hasMimickedState()) {
             req = req.union(new ItemRequirement(ItemRequirement.ItemUseType.CONSUME,
                     new ItemStack(encasedBe.getMimickedState().getBlock())));
