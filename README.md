@@ -20,11 +20,15 @@
 
 ## ✨ **Features**
 
-**Create: More Girder** revolutionizes your structural building possibilities by adding **9 unique girder variants** and a full **girder strut system** to complement the Create mod ecosystem. Each girder type offers distinctive aesthetics while maintaining full compatibility with Create's mechanical systems.
+**Create: More Girder** revolutionizes your structural building possibilities by adding **two full girder families — Strut Girders and Plate Girders, totalling 17 unique variants** — and a full **girder strut system** to complement the Create mod ecosystem. Each girder type offers distinctive aesthetics while maintaining full compatibility with Create's mechanical systems.
 
-### 🎨 **Available Girder Variants**
+### 🎨 **Strut Girders**
+
+The original CMG girder silhouette. **9 variants**, each with encased shaft and strut forms.
 
 ![Girder Variants](src/main/resources/GirderTypes.png)
+
+> *Note: this render predates the Plate Girder family and shows the Strut Girders only.*
 
 | Girder Type | Description | Special Properties |
 |-------------|-------------|-------------------|
@@ -38,12 +42,28 @@
 | 🔶 **Weathered Iron Girder** | Time-worn iron girders | Rustic industrial charm |
 | 🎭 **Copycat Girder** | Mimics any block's texture | Blends into any build style |
 
+### 🧱 **Plate Girders**
+
+A second girder family built on Create's own `metal_girder` silhouette — shown in-game as **"… Metal Girder"**. **8 variants**, each with encased shaft and strut forms, matching the Strut Girders in scope. Note there is **no Industrial Iron Plate Girder** — Industrial Iron is exclusive to the Strut Girder family.
+
+| Girder Type | Description | Special Properties |
+|-------------|-------------|-------------------|
+| 🗿 **Andesite Metal Girder** | Plate-style andesite girder | Classic industrial look |
+| 🥉 **Brass Metal Girder** | Plate-style brass construction | Premium mechanical aesthetics |
+| 🟠 **Copper Metal Girder** | Fresh copper with natural shine | Weathers over time |
+| 🟤 **Exposed Copper Metal Girder** | Slightly weathered copper | Natural aging process |
+| 🟫 **Weathered Copper Metal Girder** | Well-aged copper patina | Advanced weathering stage |
+| 🟢 **Oxidized Copper Metal Girder** | Fully oxidized copper | Final weathering stage |
+| 🔶 **Weathered Iron Metal Girder** | Time-worn iron girders | Rustic industrial charm |
+| 🎭 **Copycat Metal Girder** | Mimics any block's texture | Blends into any build style |
+
 ### 🏗️ **Girder Strut System**
 
 Bridge the gap between girder columns with structural struts that span up to **30 blocks**:
 
-- **Girder Struts**: Connect two girder anchors with a dynamic beam — material cost scales with length
+- **Girder Struts**: Connect two girder anchors with a dynamic beam — material cost scales with length. Available for both the Strut Girder and Plate Girder families
 - **Copycat Struts**: Same functionality as regular struts but mimic any block's texture for seamless integration
+- **Metal Girder Strut**: A dedicated strut that bridges Create's own vanilla `create:metal_girder` blocks
 - **Contraption Compatible**: Struts assemble onto Create contraptions (bearings, pistons, cart assemblers) and move with the structure
 - **Placement Cost Overlay**: An on-screen overlay shows the exact material cost before you commit the placement
 - **Anchor Helper**: When aiming at a strut's start anchor, a visual indicator shows the valid endpoint
@@ -51,10 +71,10 @@ Bridge the gap between girder columns with structural struts that span up to **3
 ### 🔧 **Mechanical Integration**
 
 - **Full Create Compatibility**: All girders work seamlessly with Create's kinetic systems
-- **Encased Shaft Variants**: Every girder type includes encased shaft functionality
+- **Encased Shaft Variants**: Every girder type in both families includes encased shaft functionality
 - **Rotational Power**: Transfer mechanical energy through any girder structure
 - **Track Paving**: Use CMG girders to pave rails under both straight and curved Create track sections
-- **Wrench Helpers**: All girder variants support wrench rotation blockstate helpers
+- **Wrench Helpers**: All girder variants in both families support wrench rotation blockstate helpers
 
 ### 🌟 **Advanced Features**
 
