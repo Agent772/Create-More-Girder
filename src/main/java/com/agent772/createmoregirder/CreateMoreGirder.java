@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 
 import com.agent772.createmoregirder.config.CMGServerConfig;
 import com.agent772.createmoregirder.content.strut.GirderStrutMovementBehaviour;
+import com.agent772.createmoregirder.foundation.CMGRegistryAliases;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -54,6 +55,9 @@ public class CreateMoreGirder {
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            // World-save migration for the #97 girder id rename
+            CMGRegistryAliases.register();
+
             GirderStrutMovementBehaviour behaviour = new GirderStrutMovementBehaviour();
             for (Block block : CMGBlockEntityTypes.GIRDER_STRUT.get().getValidBlocks()) {
                 MovementBehaviour.REGISTRY.register(block, behaviour);

@@ -1,0 +1,8 @@
+{
+	"credit": "Copied from Create Diesel Generators",
+	"render_type": "cutout",
+	"parent": "createmoregirder:block/andesite_strut_girder/block_cross",
+	"textures": {
+		"0": "createmoregirder:block/exposed_copper_strut_girder"
+	}
+}

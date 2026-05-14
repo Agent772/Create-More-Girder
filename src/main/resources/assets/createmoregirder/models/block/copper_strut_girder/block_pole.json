@@ -1,0 +1,8 @@
+{
+	"credit": "Copied from Create Diesel Generators",
+	"parent": "createmoregirder:block/andesite_strut_girder/block_pole",
+	"textures": {
+		"3": "createmoregirder:block/copper_strut_girder",
+		"particle": "createmoregirder:block/copper_strut_girder"
+	}
+}

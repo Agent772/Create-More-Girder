@@ -1,0 +1,7 @@
+{
+	"parent": "createmoregirder:block/plate_girder_strut/item",
+	"textures": {
+		"1": "createmoregirder:block/andesite_plate_girder",
+		"particle": "createmoregirder:block/andesite_plate_girder"
+	}
+}

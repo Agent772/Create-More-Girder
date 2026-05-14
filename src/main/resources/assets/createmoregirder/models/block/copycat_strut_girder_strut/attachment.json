@@ -1,0 +1,23 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Copycat Girder Strut anchor - derived from copycat_strut_girder/block_bottom",
+	"textures": {
+		"0": "createmoregirder:block/copycat_strut_girder/brace_side",
+		"1": "createmoregirder:block/copycat_strut_girder/brace_top",
+		"particle": "createmoregirder:block/copycat_strut_girder/brace_side"
+	},
+	"elements": [
+		{
+			"from": [3, -5, 3],
+			"to": [13, 1, 13],
+			"faces": {
+				"north": {"uv": [13, 8, 16, 13], "rotation": 270, "texture": "#0"},
+				"east": {"uv": [13, 8, 16, 13], "rotation": 270, "texture": "#0"},
+				"south": {"uv": [13, 8, 16, 13], "rotation": 270, "texture": "#0"},
+				"west": {"uv": [13, 8, 16, 13], "rotation": 270, "texture": "#0"},
+				"up": {"uv": [3, 3, 13, 13], "texture": "#1"},
+				"down": {"uv": [3, 3, 13, 13], "rotation": 180, "texture": "#1"}
+			}
+		}
+	]
+}

@@ -1,0 +1,7 @@
+{
+	"parent": "createmoregirder:block/andesite_plate_girder/block_pole",
+	"textures": {
+		"particle": "createmoregirder:block/exposed_copper_plate_girder",
+		"2": "createmoregirder:block/poles/exposed_copper_plate_girder_pole"
+	}
+}

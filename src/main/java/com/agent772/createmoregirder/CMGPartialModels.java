@@ -22,23 +22,23 @@ import java.util.Map;
  */
 public class CMGPartialModels {
 
-    public static final PartialModel ANDESITE_GIRDER_STRUT = block("andesite_girder_strut/strut");
-    public static final PartialModel BRASS_GIRDER_STRUT = block("brass_girder_strut/strut");
-    public static final PartialModel WAXED_COPPER_GIRDER_STRUT = block("waxed_copper_girder_strut/strut");
-    public static final PartialModel WAXED_EXPOSED_COPPER_GIRDER_STRUT = block("waxed_exposed_copper_girder_strut/strut");
-    public static final PartialModel WAXED_WEATHERED_COPPER_GIRDER_STRUT = block("waxed_weathered_copper_girder_strut/strut");
-    public static final PartialModel WAXED_OXIDIZED_COPPER_GIRDER_STRUT = block("waxed_oxidized_copper_girder_strut/strut");
-    public static final PartialModel INDUSTRIAL_IRON_GIRDER_STRUT = block("industrial_iron_girder_strut/strut");
-    public static final PartialModel WEATHERED_IRON_GIRDER_STRUT = block("weathered_iron_girder_strut/strut");
-    public static final PartialModel COPYCAT_GIRDER_STRUT = block("copycat_girder_strut/strut");
-    public static final PartialModel COPYCAT_METAL_GIRDER_STRUT = block("copycat_metal_girder_strut/strut");
-    public static final PartialModel ANDESITE_METAL_GIRDER_STRUT = block("andesite_metal_girder_strut/strut");
-    public static final PartialModel BRASS_METAL_GIRDER_STRUT = block("brass_metal_girder_strut/strut");
-    public static final PartialModel WAXED_COPPER_METAL_GIRDER_STRUT = block("waxed_copper_metal_girder_strut/strut");
-    public static final PartialModel WAXED_EXPOSED_COPPER_METAL_GIRDER_STRUT = block("waxed_exposed_copper_metal_girder_strut/strut");
-    public static final PartialModel WAXED_WEATHERED_COPPER_METAL_GIRDER_STRUT = block("waxed_weathered_copper_metal_girder_strut/strut");
-    public static final PartialModel WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT = block("waxed_oxidized_copper_metal_girder_strut/strut");
-    public static final PartialModel WEATHERED_IRON_METAL_GIRDER_STRUT = block("weathered_iron_metal_girder_strut/strut");
+    public static final PartialModel ANDESITE_GIRDER_STRUT = block("andesite_strut_girder_strut/strut");
+    public static final PartialModel BRASS_GIRDER_STRUT = block("brass_strut_girder_strut/strut");
+    public static final PartialModel WAXED_COPPER_GIRDER_STRUT = block("waxed_copper_strut_girder_strut/strut");
+    public static final PartialModel WAXED_EXPOSED_COPPER_GIRDER_STRUT = block("waxed_exposed_copper_strut_girder_strut/strut");
+    public static final PartialModel WAXED_WEATHERED_COPPER_GIRDER_STRUT = block("waxed_weathered_copper_strut_girder_strut/strut");
+    public static final PartialModel WAXED_OXIDIZED_COPPER_GIRDER_STRUT = block("waxed_oxidized_copper_strut_girder_strut/strut");
+    public static final PartialModel INDUSTRIAL_IRON_GIRDER_STRUT = block("industrial_iron_strut_girder_strut/strut");
+    public static final PartialModel WEATHERED_IRON_GIRDER_STRUT = block("weathered_iron_strut_girder_strut/strut");
+    public static final PartialModel COPYCAT_GIRDER_STRUT = block("copycat_strut_girder_strut/strut");
+    public static final PartialModel COPYCAT_METAL_GIRDER_STRUT = block("copycat_plate_girder_strut/strut");
+    public static final PartialModel ANDESITE_METAL_GIRDER_STRUT = block("andesite_plate_girder_strut/strut");
+    public static final PartialModel BRASS_METAL_GIRDER_STRUT = block("brass_plate_girder_strut/strut");
+    public static final PartialModel WAXED_COPPER_METAL_GIRDER_STRUT = block("waxed_copper_plate_girder_strut/strut");
+    public static final PartialModel WAXED_EXPOSED_COPPER_METAL_GIRDER_STRUT = block("waxed_exposed_copper_plate_girder_strut/strut");
+    public static final PartialModel WAXED_WEATHERED_COPPER_METAL_GIRDER_STRUT = block("waxed_weathered_copper_plate_girder_strut/strut");
+    public static final PartialModel WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT = block("waxed_oxidized_copper_plate_girder_strut/strut");
+    public static final PartialModel WEATHERED_IRON_METAL_GIRDER_STRUT = block("weathered_iron_plate_girder_strut/strut");
     public static final PartialModel CREATE_METAL_GIRDER_STRUT = block("create_metal_girder_strut/strut");
 
     private static final Map<String, PartialModel[]> SEGMENT_MODELS = new HashMap<>();
@@ -48,46 +48,46 @@ public class CMGPartialModels {
     private static volatile Map<Block, EnumMap<Direction, PartialModel>> BRACKET_MODELS_BY_BLOCK;
 
     private static final String[] GIRDER_VARIANTS = {
-        "andesite_girder",
-        "andesite_metal_girder",
-        "brass_girder",
-        "brass_metal_girder",
-        "copper_girder",
-        "exposed_copper_girder",
-        "weathered_copper_girder",
-        "oxidized_copper_girder",
-        "waxed_copper_girder",
-        "waxed_exposed_copper_girder",
-        "waxed_weathered_copper_girder",
-        "waxed_oxidized_copper_girder",
-        "copper_metal_girder",
-        "exposed_copper_metal_girder",
-        "weathered_copper_metal_girder",
-        "oxidized_copper_metal_girder",
-        "waxed_copper_metal_girder",
-        "waxed_exposed_copper_metal_girder",
-        "waxed_weathered_copper_metal_girder",
-        "waxed_oxidized_copper_metal_girder",
-        "industrial_iron_girder",
-        "weathered_iron_girder",
-        "weathered_iron_metal_girder",
-        "copycat_girder",
-        "copycat_metal_girder"
+        "andesite_strut_girder",
+        "andesite_plate_girder",
+        "brass_strut_girder",
+        "brass_plate_girder",
+        "copper_strut_girder",
+        "exposed_copper_strut_girder",
+        "weathered_copper_strut_girder",
+        "oxidized_copper_strut_girder",
+        "waxed_copper_strut_girder",
+        "waxed_exposed_copper_strut_girder",
+        "waxed_weathered_copper_strut_girder",
+        "waxed_oxidized_copper_strut_girder",
+        "copper_plate_girder",
+        "exposed_copper_plate_girder",
+        "weathered_copper_plate_girder",
+        "oxidized_copper_plate_girder",
+        "waxed_copper_plate_girder",
+        "waxed_exposed_copper_plate_girder",
+        "waxed_weathered_copper_plate_girder",
+        "waxed_oxidized_copper_plate_girder",
+        "industrial_iron_strut_girder",
+        "weathered_iron_strut_girder",
+        "weathered_iron_plate_girder",
+        "copycat_strut_girder",
+        "copycat_plate_girder"
     };
 
     private static final String[] METAL_GIRDER_VARIANTS = {
-        "andesite_metal_girder",
-        "brass_metal_girder",
-        "copper_metal_girder",
-        "exposed_copper_metal_girder",
-        "weathered_copper_metal_girder",
-        "oxidized_copper_metal_girder",
-        "waxed_copper_metal_girder",
-        "waxed_exposed_copper_metal_girder",
-        "waxed_weathered_copper_metal_girder",
-        "waxed_oxidized_copper_metal_girder",
-        "weathered_iron_metal_girder",
-        "copycat_metal_girder"
+        "andesite_plate_girder",
+        "brass_plate_girder",
+        "copper_plate_girder",
+        "exposed_copper_plate_girder",
+        "weathered_copper_plate_girder",
+        "oxidized_copper_plate_girder",
+        "waxed_copper_plate_girder",
+        "waxed_exposed_copper_plate_girder",
+        "waxed_weathered_copper_plate_girder",
+        "waxed_oxidized_copper_plate_girder",
+        "weathered_iron_plate_girder",
+        "copycat_plate_girder"
     };
 
     private static final Map<String, Map<String, PartialModel>> METAL_GIRDER_CT_POLES = new HashMap<>();

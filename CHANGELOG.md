@@ -1,5 +1,9 @@
 ## version 1.2.3
 
+### Changed
+- renamed every girder block id for clarity: `*_girder` -> `*_strut_girder` and `*_metal_girder` -> `*_plate_girder` (`create_metal_girder_strut` is unchanged)
+- existing worlds are migrated automatically on load via a `MissingMappingsEvent` remap, so placed blocks survive the rename
+
 ### Fixed
 - fixed rendering of copycat girders with translucent or transparent texture blocks
 - fixed copycat girder droping texture block on destroy in creative mode

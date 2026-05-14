@@ -1,0 +1,13 @@
+{
+  "type": "create:sandpaper_polishing",
+  "ingredients": [
+    {
+      "item": "createmoregirder:exposed_copper_plate_girder"
+    }
+  ],
+  "results": [
+    {
+      "id": "createmoregirder:copper_plate_girder"
+    }
+  ]
+}

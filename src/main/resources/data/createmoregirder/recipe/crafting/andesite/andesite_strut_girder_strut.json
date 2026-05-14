@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "A": {
+      "item": "create:andesite_alloy"
+    },
+    "G": {
+      "item": "createmoregirder:andesite_strut_girder"
+    }
+  },
+  "pattern": [
+    "A  ",
+    "GGG",
+    "  A"
+  ],
+  "result": {
+    "count": 6,
+    "id": "createmoregirder:andesite_strut_girder_strut"
+  }
+}
