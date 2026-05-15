@@ -1,0 +1,30 @@
+{
+    "neoforge:conditions": [
+        {
+        "type": "neoforge:not",
+        "value": 
+            {
+                "type": "neoforge:mod_loaded",
+                "modid": "createdeco"
+            }
+        }
+    ],
+    "type": "minecraft:crafting_shaped",
+    "category": "building",
+    "key": {
+        "C": {
+        "item": "create:andesite_alloy"
+        },
+        "P": {
+        "item": "minecraft:andesite"
+        }
+    },
+    "pattern": [
+        "PPP",
+        "CCC"
+    ],
+    "result": {
+        "count": 8,
+        "id": "createmoregirder:andesite_beam"
+    }
+}

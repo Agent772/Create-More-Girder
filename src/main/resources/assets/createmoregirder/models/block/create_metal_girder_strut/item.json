@@ -1,5 +1,5 @@
 {
-	"parent": "createmoregirder:block/plate_girder_strut/item",
+	"parent": "createmoregirder:block/beam_strut/item",
 	"textures": {
 		"1": "create:block/girder",
 		"particle": "create:block/industrial_iron_block"

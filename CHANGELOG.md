@@ -1,3 +1,8 @@
+## Version 2.1.0
+
+### Changed
+- Renamed the two girder families to drop the redundant "Girder" word: `*_strut_girder` → `*_truss` and `*_plate_girder` → `*_beam`. Display names follow suit (e.g. `Brass Girder` → `Brass Truss`, `Brass Metal Girder` → `Brass Beam`). `create_metal_girder_strut` is unchanged. Worlds saved on either 1.x (pre-#97) or 2.0 are migrated automatically — placed blocks survive the rename regardless of which version they last loaded. Create schematics captured on either prior version also load cleanly: the registry-alias lookup that protects placed blocks is the same path `StructureTemplate.load` uses to resolve schematic block ids
+
 ## Version 2.0.0
 
 ### Added

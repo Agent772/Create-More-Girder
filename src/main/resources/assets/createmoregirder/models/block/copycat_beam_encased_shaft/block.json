@@ -1,0 +1,92 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"render_type": "cutout_mipped",
+	"textures": {
+		"0": "createmoregirder:block/copycat_truss/bearing_front",
+		"1": "createmoregirder:block/copycat_truss/bearing_hole_fixed",
+		"2": "createmoregirder:block/copycat_truss/bearing_side",
+		"3": "createmoregirder:block/copycat_truss/block_bottom",
+		"4": "createmoregirder:block/copycat_truss/block_top",
+		"5": "createmoregirder:block/copycat_truss/copycat_beam_horizontal_side",
+		"particle": "createmoregirder:block/copycat_truss/bearing_front"
+	},
+	"elements": [
+		{
+			"name": "Mid",
+			"from": [0, 4, 6],
+			"to": [16, 12, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 16, 12], "texture": "#5"},
+				"east": {"uv": [0, 6, 8, 10], "rotation": 270, "texture": "#3", "cullface": "east"},
+				"south": {"uv": [0, 4, 16, 12], "texture": "#5"},
+				"west": {"uv": [0, 6, 8, 10], "rotation": 270, "texture": "#3", "cullface": "west"}
+			}
+		},
+		{
+			"name": "Bot",
+			"from": [0, 2, 4],
+			"to": [16, 4, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 16, 6], "texture": "#3"},
+				"east": {"uv": [8, 7, 16, 9], "texture": "#3"},
+				"south": {"uv": [0, 4, 16, 6], "texture": "#3"},
+				"west": {"uv": [8, 7, 16, 9], "texture": "#3"},
+				"up": {"uv": [0, 4, 16, 12], "rotation": 180, "texture": "#3"},
+				"down": {"uv": [0, 4, 16, 12], "texture": "#4", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Top",
+			"from": [0, 12, 4],
+			"to": [16, 14, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 16, 6], "rotation": 180, "texture": "#3"},
+				"east": {"uv": [8, 7, 16, 9], "texture": "#3"},
+				"south": {"uv": [0, 4, 16, 6], "rotation": 180, "texture": "#3"},
+				"west": {"uv": [8, 7, 16, 9], "texture": "#3"},
+				"up": {"uv": [0, 4, 16, 12], "texture": "#4", "cullface": "up"},
+				"down": {"uv": [0, 4, 16, 12], "rotation": 180, "texture": "#3"}
+			}
+		},
+		{
+			"from": [4, 4, 4],
+			"to": [12, 12, 12],
+			"faces": {
+				"north": {"uv": [4, 4, 12, 12], "texture": "#0"},
+				"east": {"uv": [4, 4, 12, 12], "texture": "#2"},
+				"south": {"uv": [4, 4, 12, 12], "texture": "#0"},
+				"west": {"uv": [4, 4, 12, 12], "texture": "#2"}
+			}
+		},
+		{
+			"name": "Center_fixed",
+			"from": [4, 4, 3.9],
+			"to": [12, 12, 12.1],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [4, 4, 12, 12], "texture": "#1"},
+				"south": {"uv": [4, 4, 12, 12], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Beam X",
+			"origin": [8, 13, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [0, 1, 2]
+		},
+		{
+			"name": "Bearing",
+			"origin": [0, 0, 0],
+			"scope": 0,
+			"color": 0,
+			"children": [3, 4]
+		}
+	]
+}

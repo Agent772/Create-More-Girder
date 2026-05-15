@@ -1,0 +1,13 @@
+{
+  "type": "create:sandpaper_polishing",
+  "ingredients": [
+    {
+      "item": "createmoregirder:oxidized_copper_truss"
+    }
+  ],
+  "results": [
+    {
+      "id": "createmoregirder:weathered_copper_truss"
+    }
+  ]
+}

@@ -20,48 +20,48 @@
 
 ## ✨ **Features**
 
-**Create: More Girder** revolutionizes your structural building possibilities by adding **two full girder families — Strut Girders and Plate Girders, totalling 17 unique variants** — and a full **girder strut system** to complement the Create mod ecosystem. Each girder type offers distinctive aesthetics while maintaining full compatibility with Create's mechanical systems.
+**Create: More Girder** revolutionizes your structural building possibilities by adding **two full girder families — Trusses and Beams, totalling 17 unique variants** — and a full **girder strut system** to complement the Create mod ecosystem. Each girder type offers distinctive aesthetics while maintaining full compatibility with Create's mechanical systems.
 
-### 🎨 **Strut Girders**
+### 🎨 **Trusses**
 
 The original CMG girder silhouette. **9 variants**, each with encased shaft and strut forms.
 
 ![Girder Variants](src/main/resources/GirderTypes.png)
 
-> *Note: this render predates the Plate Girder family and shows the Strut Girders only.*
+> *Note: this render predates the Beam family and shows the Trusses only.*
 
-| Girder Type | Description | Special Properties |
+| Truss Type | Description | Special Properties |
 |-------------|-------------|-------------------|
-| 🗿 **Andesite Girder** | The foundation variant from Create: Diesel Generators | Classic industrial look |
-| 🥉 **Brass Girder** | Elegant brass construction | Premium mechanical aesthetics |
-| 🟠 **Copper Girder** | Fresh copper with natural shine | Weathers over time |
-| 🟤 **Exposed Copper Girder** | Slightly weathered copper | Natural aging process |
-| 🟫 **Weathered Copper Girder** | Well-aged copper patina | Advanced weathering stage |
-| 🟢 **Oxidized Copper Girder** | Fully oxidized copper | Final weathering stage |
-| ⚙️ **Industrial Iron Girder** | Heavy-duty iron construction | Maximum durability |
-| 🔶 **Weathered Iron Girder** | Time-worn iron girders | Rustic industrial charm |
-| 🎭 **Copycat Girder** | Mimics any block's texture | Blends into any build style |
+| 🗿 **Andesite Truss** | The foundation variant from Create: Diesel Generators | Classic industrial look |
+| 🥉 **Brass Truss** | Elegant brass construction | Premium mechanical aesthetics |
+| 🟠 **Copper Truss** | Fresh copper with natural shine | Weathers over time |
+| 🟤 **Exposed Copper Truss** | Slightly weathered copper | Natural aging process |
+| 🟫 **Weathered Copper Truss** | Well-aged copper patina | Advanced weathering stage |
+| 🟢 **Oxidized Copper Truss** | Fully oxidized copper | Final weathering stage |
+| ⚙️ **Industrial Iron Truss** | Heavy-duty iron construction | Maximum durability |
+| 🔶 **Weathered Iron Truss** | Time-worn iron girders | Rustic industrial charm |
+| 🎭 **Copycat Truss** | Mimics any block's texture | Blends into any build style |
 
-### 🧱 **Plate Girders**
+### 🧱 **Beams**
 
-A second girder family built on Create's own `metal_girder` silhouette — shown in-game as **"… Metal Girder"**. **8 variants**, each with encased shaft and strut forms, matching the Strut Girders in scope. Note there is **no Industrial Iron Plate Girder** — Industrial Iron is exclusive to the Strut Girder family.
+A second girder family built on Create's own `metal_girder` silhouette. **8 variants**, each with encased shaft and strut forms, matching the Trusses in scope. Note there is **no Industrial Iron Beam** — Industrial Iron is exclusive to the Truss family.
 
-| Girder Type | Description | Special Properties |
+| Beam Type | Description | Special Properties |
 |-------------|-------------|-------------------|
-| 🗿 **Andesite Metal Girder** | Plate-style andesite girder | Classic industrial look |
-| 🥉 **Brass Metal Girder** | Plate-style brass construction | Premium mechanical aesthetics |
-| 🟠 **Copper Metal Girder** | Fresh copper with natural shine | Weathers over time |
-| 🟤 **Exposed Copper Metal Girder** | Slightly weathered copper | Natural aging process |
-| 🟫 **Weathered Copper Metal Girder** | Well-aged copper patina | Advanced weathering stage |
-| 🟢 **Oxidized Copper Metal Girder** | Fully oxidized copper | Final weathering stage |
-| 🔶 **Weathered Iron Metal Girder** | Time-worn iron girders | Rustic industrial charm |
-| 🎭 **Copycat Metal Girder** | Mimics any block's texture | Blends into any build style |
+| 🗿 **Andesite Beam** | Plate-style andesite girder | Classic industrial look |
+| 🥉 **Brass Beam** | Plate-style brass construction | Premium mechanical aesthetics |
+| 🟠 **Copper Beam** | Fresh copper with natural shine | Weathers over time |
+| 🟤 **Exposed Copper Beam** | Slightly weathered copper | Natural aging process |
+| 🟫 **Weathered Copper Beam** | Well-aged copper patina | Advanced weathering stage |
+| 🟢 **Oxidized Copper Beam** | Fully oxidized copper | Final weathering stage |
+| 🔶 **Weathered Iron Beam** | Time-worn iron girders | Rustic industrial charm |
+| 🎭 **Copycat Beam** | Mimics any block's texture | Blends into any build style |
 
 ### 🏗️ **Girder Strut System**
 
 Bridge the gap between girder columns with structural struts that span up to **30 blocks**:
 
-- **Girder Struts**: Connect two girder anchors with a dynamic beam — material cost scales with length. Available for both the Strut Girder and Plate Girder families
+- **Girder Struts**: Connect two girder anchors with a dynamic beam — material cost scales with length. Available for both the Truss and Beam families
 - **Copycat Struts**: Same functionality as regular struts but mimic any block's texture for seamless integration
 - **Metal Girder Strut**: A dedicated strut that bridges Create's own vanilla `create:metal_girder` blocks
 - **Contraption Compatible**: Struts assemble onto Create contraptions (bearings, pistons, cart assemblers) and move with the structure

@@ -1,0 +1,33 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"render_type": "cutout_mipped",
+	"textures": {
+		"0": "createmoregirder:block/copycat_truss/brace_side",
+		"1": "createmoregirder:block/copycat_truss/brace_top",
+		"particle": "createmoregirder:block/copycat_truss/brace_side"
+	},
+	"elements": [
+		{
+			"from": [3, 11, 3],
+			"to": [13, 16, 13],
+			"faces": {
+				"north": {"uv": [10, 3, 16, 13], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [10, 3, 16, 13], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [10, 3, 16, 13], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [10, 3, 16, 13], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [3, 3, 13, 13], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [3, 3, 13, 13], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Brace",
+			"origin": [0, 0, 0],
+			"scope": 0,
+			"color": 0,
+			"children": [0]
+		}
+	]
+}

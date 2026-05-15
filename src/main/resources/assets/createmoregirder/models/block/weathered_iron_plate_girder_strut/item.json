@@ -1,7 +1,0 @@
-{
-	"parent": "createmoregirder:block/plate_girder_strut/item",
-	"textures": {
-		"1": "createmoregirder:block/weathered_iron_plate_girder",
-		"particle": "createmoregirder:block/weathered_iron_plate_girder"
-	}
-}

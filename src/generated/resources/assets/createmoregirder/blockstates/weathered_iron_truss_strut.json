@@ -1,0 +1,212 @@
+{
+  "variants": {
+    "facing=down,reference_facing=east,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 180
+    },
+    "facing=down,reference_facing=east,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 180
+    },
+    "facing=down,reference_facing=north,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 180
+    },
+    "facing=down,reference_facing=north,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 180
+    },
+    "facing=down,reference_facing=south,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 180
+    },
+    "facing=down,reference_facing=south,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 180
+    },
+    "facing=down,reference_facing=west,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 180
+    },
+    "facing=down,reference_facing=west,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 180
+    },
+    "facing=east,reference_facing=east,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,reference_facing=east,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,reference_facing=north,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,reference_facing=north,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,reference_facing=south,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,reference_facing=south,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,reference_facing=west,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,reference_facing=west,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,reference_facing=east,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90
+    },
+    "facing=north,reference_facing=east,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90
+    },
+    "facing=north,reference_facing=north,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90
+    },
+    "facing=north,reference_facing=north,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90
+    },
+    "facing=north,reference_facing=south,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90
+    },
+    "facing=north,reference_facing=south,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90
+    },
+    "facing=north,reference_facing=west,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90
+    },
+    "facing=north,reference_facing=west,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90
+    },
+    "facing=south,reference_facing=east,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,reference_facing=east,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,reference_facing=north,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,reference_facing=north,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,reference_facing=south,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,reference_facing=south,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,reference_facing=west,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,reference_facing=west,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,reference_facing=east,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment"
+    },
+    "facing=up,reference_facing=east,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment"
+    },
+    "facing=up,reference_facing=north,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment"
+    },
+    "facing=up,reference_facing=north,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment"
+    },
+    "facing=up,reference_facing=south,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment"
+    },
+    "facing=up,reference_facing=south,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment"
+    },
+    "facing=up,reference_facing=west,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment"
+    },
+    "facing=up,reference_facing=west,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment"
+    },
+    "facing=west,reference_facing=east,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,reference_facing=east,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,reference_facing=north,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,reference_facing=north,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,reference_facing=south,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,reference_facing=south,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,reference_facing=west,waterlogged=false": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,reference_facing=west,waterlogged=true": {
+      "model": "createmoregirder:block/weathered_iron_truss_strut/attachment",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

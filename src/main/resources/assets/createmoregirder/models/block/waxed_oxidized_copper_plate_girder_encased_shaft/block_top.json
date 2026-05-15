@@ -1,7 +1,0 @@
-{
-	"parent": "createmoregirder:block/andesite_plate_girder_encased_shaft/block_top",
-	"textures": {
-		"particle": "createmoregirder:block/oxidized_copper_plate_girder",
-		"0": "createmoregirder:block/oxidized_copper_plate_girder"
-	}
-}

@@ -1,0 +1,13 @@
+{
+  "type": "create:sandpaper_polishing",
+  "ingredients": [
+    {
+      "item": "createmoregirder:oxidized_copper_beam"
+    }
+  ],
+  "results": [
+    {
+      "id": "createmoregirder:weathered_copper_beam"
+    }
+  ]
+}

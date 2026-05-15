@@ -1,0 +1,7 @@
+{
+	"parent": "createmoregirder:block/andesite_beam/block_x",
+	"textures": {
+		"particle": "createmoregirder:block/exposed_copper_beam",
+		"0": "createmoregirder:block/exposed_copper_beam"
+	}
+}

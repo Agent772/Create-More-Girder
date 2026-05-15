@@ -55,7 +55,7 @@ public class CreateMoreGirder {
 
     private void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            // World-save migration for the #97 girder id rename
+            // World-save migration for the #97 and #118 girder id renames; see CMGRegistryAliases.
             CMGRegistryAliases.register();
 
             GirderStrutMovementBehaviour behaviour = new GirderStrutMovementBehaviour();
