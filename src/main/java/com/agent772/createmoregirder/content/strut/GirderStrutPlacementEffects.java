@@ -96,7 +96,7 @@ public class GirderStrutPlacementEffects {
         final boolean anchorOccupied = GirderStrutBlockEntity.isAnchorAtCapacity(level, fromPos)
                 || GirderStrutBlockEntity.isAnchorAtCapacity(level, targetPos);
 
-        final int cost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
+        final int cost = GirderStrutBlockEntity.computeSegmentCost(level, fromPos, fromFace, targetPos, targetFace);
         final int available = countMatchingItems(player, heldItem);
         final boolean strutFulfilled = player.isCreative() || available >= cost;
 

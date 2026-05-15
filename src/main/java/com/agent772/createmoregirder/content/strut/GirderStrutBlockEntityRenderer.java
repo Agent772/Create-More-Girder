@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -118,9 +119,13 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
 
                 final Vec3i relative = pos.subtract(blockEntity.getBlockPos());
                 // Calculate the length of the strut segment based on the distance to the connected block
-                final Vec3 thisAttachment = Vec3.atCenterOf(blockEntity.getBlockPos()).relative(blockEntity.getBlockState().getValue(GirderStrutBlock.FACING), -0.4);
+                final Direction thisFacing = blockEntity.getBlockState().getValue(GirderStrutBlock.FACING);
                 final BlockState otherState = blockEntity.getLevel().getBlockState(pos);
-                final Vec3 otherAttachment = Vec3.atCenterOf(pos).relative(otherState.getValue(GirderStrutBlock.FACING), -0.4);
+                final Direction otherFacing = otherState.getValue(GirderStrutBlock.FACING);
+                final double thisDepth = anchorDepth(blockEntity.getLevel(), blockEntity.getBlockPos(), thisFacing);
+                final double otherDepth = anchorDepth(blockEntity.getLevel(), pos, otherFacing);
+                final Vec3 thisAttachment = Vec3.atCenterOf(blockEntity.getBlockPos()).relative(thisFacing, thisDepth);
+                final Vec3 otherAttachment = Vec3.atCenterOf(pos).relative(otherFacing, otherDepth);
 
                 final double length = thisAttachment.distanceTo(otherAttachment);
                 final int segments = (int) Math.ceil(length);
@@ -135,7 +140,7 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
                 final double xRot = (float) Math.atan2(relativeVec.y(), distHorizontal);
 
                 TransformStack.of(ms)
-                        .translate(Vec3.atLowerCornerOf(blockEntity.getBlockState().getValue(GirderStrutBlock.FACING).getNormal()).scale(-0.4))
+                        .translate(Vec3.atLowerCornerOf(thisFacing.getNormal()).scale(thisDepth))
                         .center()
                         .rotateY((float) yRot)
                         .rotateX(-(float) xRot)
@@ -183,6 +188,20 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
             }
             blockEntity.connectionRenderBufferCache.renderInto(ms, buffer.getBuffer(beamRenderType));
         }
+    }
+
+    /**
+     * Returns the depth (signed length along {@code facing}) at which the
+     * anchor attaches relative to the strut block center. Defaults to
+     * {@code -0.4}, shifted outward by 1 px when the supporting neighbor is the
+     * long side of a horizontal girder.
+     */
+    private static double anchorDepth(final Level level, final BlockPos pos, final Direction facing) {
+        double depth = -0.4;
+        if (level != null && GirderStrutAnchorOffset.shouldOffset(level, pos, facing)) {
+            depth -= GirderStrutAnchorOffset.OFFSET_BLOCKS;
+        }
+        return depth;
     }
 
     protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int fallbackLight, final Level level, final Vec3 segmentStart, final Vec3 segmentDir, final CopycatStrutTextureRemapper.FaceData[] faceData, final int lightEmission, final RenderType renderType) {

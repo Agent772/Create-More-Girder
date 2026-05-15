@@ -47,10 +47,20 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
         super(type, pos, state);
     }
 
-    public static int computeSegmentCost(BlockPos a, Direction faceA, BlockPos b, Direction faceB) {
-        Vec3 aAttach = Vec3.atCenterOf(a).relative(faceA, -0.4);
-        Vec3 bAttach = Vec3.atCenterOf(b).relative(faceB, -0.4);
+    public static int computeSegmentCost(BlockGetter level, BlockPos a, Direction faceA, BlockPos b, Direction faceB) {
+        double aDepth = anchorDepth(level, a, faceA);
+        double bDepth = anchorDepth(level, b, faceB);
+        Vec3 aAttach = Vec3.atCenterOf(a).relative(faceA, aDepth);
+        Vec3 bAttach = Vec3.atCenterOf(b).relative(faceB, bDepth);
         return Math.max(1, (int) Math.ceil(aAttach.distanceTo(bAttach)));
+    }
+
+    private static double anchorDepth(BlockGetter level, BlockPos pos, Direction facing) {
+        double depth = -0.4;
+        if (level != null && GirderStrutAnchorOffset.shouldOffset(level, pos, facing)) {
+            depth -= GirderStrutAnchorOffset.OFFSET_BLOCKS;
+        }
+        return depth;
     }
 
     public void addConnection(BlockPos other, int cost) {
@@ -83,7 +93,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
         } else {
             otherFace = myFace.getOpposite();
         }
-        return computeSegmentCost(getBlockPos(), myFace, otherAbsolute, otherFace);
+        return computeSegmentCost(level, getBlockPos(), myFace, otherAbsolute, otherFace);
     }
 
     public void removeConnection(BlockPos pos) {

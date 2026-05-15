@@ -207,7 +207,7 @@ public class GirderStrutBlockItem extends BlockItem {
             return ConnectionResult.ANCHOR_OCCUPIED;
         }
 
-        final int segmentCost = GirderStrutBlockEntity.computeSegmentCost(fromPos, fromFace, targetPos, targetFace);
+        final int segmentCost = GirderStrutBlockEntity.computeSegmentCost(level, fromPos, fromFace, targetPos, targetFace);
 
         if (fromNeedsPlacement && !canOccupy(level, fromPos)) {
             return ConnectionResult.INVALID;
