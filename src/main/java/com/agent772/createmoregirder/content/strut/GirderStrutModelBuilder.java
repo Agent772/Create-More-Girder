@@ -1,5 +1,7 @@
 package com.agent772.createmoregirder.content.strut;
 
+import com.simibubi.create.foundation.model.BakedQuadHelper;
+
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -20,8 +22,9 @@ import java.util.List;
 
 public class GirderStrutModelBuilder extends BakedModelWrapper<BakedModel> {
 
-    private static final ModelProperty<GirderStrutModelData> GIRDER_PROPERTY = new ModelProperty<>();
+    public static final ModelProperty<Boolean> ANCHOR_OFFSET_PROPERTY = new ModelProperty<>();
     private static final double SURFACE_OFFSET = (6 / 16f) + 1e-3;
+    private static final double FACE_OFFSET = (10 / 16f) + 1e-3;
 
     public GirderStrutModelBuilder(BakedModel originalModel) {
         super(originalModel);
@@ -29,36 +32,44 @@ public class GirderStrutModelBuilder extends BakedModelWrapper<BakedModel> {
 
     @Override
     public @NotNull ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData blockEntityData) {
-        if (!(level.getBlockEntity(pos) instanceof GirderStrutBlockEntity blockEntity)) {
-            return ModelData.EMPTY;
+        boolean shouldOffset = state.getBlock() instanceof GirderStrutBlock
+                && GirderStrutAnchorOffset.shouldOffset(level, pos, state.getValue(GirderStrutBlock.FACING));
+
+        if (level.getBlockEntity(pos) instanceof GirderStrutBlockEntity blockEntity) {
+            blockEntity.connectionRenderBufferCache = null; // Invalidate cache on model data request
         }
-        blockEntity.connectionRenderBufferCache = null; // Invalidate cache on model data request
-//        GirderStrutModelData data = GirderStrutModelData.collect(level, pos, state, blockEntity);
+
         return ModelData.builder()
-//            .with(GIRDER_PROPERTY, data)
-            .build();
+                .with(ANCHOR_OFFSET_PROPERTY, shouldOffset)
+                .build();
     }
 
     @Override
     public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand, ModelData data, RenderType renderType) {
-        List<BakedQuad> base = new ArrayList<>(super.getQuads(state, side, rand, data, renderType));
-//        if (renderType != null && renderType != RenderType.solid()) {
-//            return base;
-//        }
-//        if (sideFactor != null) { //Fuck this shit took me way to long to figure out
-//            return base;
-//        }
-//        if (!data.has(GIRDER_PROPERTY)) {
-//            return base;
-//        }
-//        GirderStrutModelData girderData = data.get(GIRDER_PROPERTY);
-//        if (girderData == null || girderData.connections().isEmpty()) {
-//            return base;
-//        }
-//        for (GirderConnection connection : girderData.connections()) {
-//            base.addAll(GirderStrutModelManipulator.bakeConnection(connection));
-//        }
-        return base;
+        List<BakedQuad> base = super.getQuads(state, side, rand, data, renderType);
+        if (data == null || !(state.getBlock() instanceof GirderStrutBlock)) {
+            return base;
+        }
+        Boolean offsetFlag = data.get(ANCHOR_OFFSET_PROPERTY);
+        if (!Boolean.TRUE.equals(offsetFlag) || base.isEmpty()) {
+            return base;
+        }
+        Direction facing = state.getValue(GirderStrutBlock.FACING);
+        Vec3 offset = Vec3.atLowerCornerOf(facing.getNormal()).scale(-GirderStrutAnchorOffset.OFFSET_BLOCKS);
+        List<BakedQuad> translated = new ArrayList<>(base.size());
+        for (BakedQuad quad : base) {
+            translated.add(translateQuad(quad, offset));
+        }
+        return translated;
+    }
+
+    private static BakedQuad translateQuad(BakedQuad quad, Vec3 offset) {
+        int[] vertices = quad.getVertices().clone();
+        for (int v = 0; v < 4; v++) {
+            Vec3 xyz = BakedQuadHelper.getXYZ(vertices, v);
+            BakedQuadHelper.setXYZ(vertices, v, xyz.add(offset));
+        }
+        return new BakedQuad(vertices, quad.getTintIndex(), quad.getDirection(), quad.getSprite(), quad.isShade());
     }
 
     @Override
@@ -103,9 +114,11 @@ public class GirderStrutModelBuilder extends BakedModelWrapper<BakedModel> {
                 return new GirderStrutModelData(List.of(), pos);
             }
             Direction facing = state.getValue(GirderStrutBlock.FACING);
+            boolean thisOffset = GirderStrutAnchorOffset.shouldOffset(level, pos, facing);
+            double thisExtra = thisOffset ? GirderStrutAnchorOffset.OFFSET_BLOCKS : 0;
             Vec3 blockOrigin = Vec3.atLowerCornerOf(pos);
-            Vec3 facePoint = Vec3.atCenterOf(pos).relative(facing, -10 / 16f - 1e-3);
-            Vec3 thisSurface = Vec3.atCenterOf(pos).relative(facing, -SURFACE_OFFSET);
+            Vec3 facePoint = Vec3.atCenterOf(pos).relative(facing, -(FACE_OFFSET + thisExtra));
+            Vec3 thisSurface = Vec3.atCenterOf(pos).relative(facing, -(SURFACE_OFFSET + thisExtra));
 
             List<GirderConnection> connections = new ArrayList<>();
 
@@ -116,7 +129,9 @@ public class GirderStrutModelBuilder extends BakedModelWrapper<BakedModel> {
                     continue;
                 }
                 Direction otherFacing = otherState.getValue(GirderStrutBlock.FACING);
-                Vec3 otherSurface = Vec3.atCenterOf(otherPos).relative(otherFacing, -SURFACE_OFFSET);
+                boolean otherOffset = GirderStrutAnchorOffset.shouldOffset(level, otherPos, otherFacing);
+                double otherExtra = otherOffset ? GirderStrutAnchorOffset.OFFSET_BLOCKS : 0;
+                Vec3 otherSurface = Vec3.atCenterOf(otherPos).relative(otherFacing, -(SURFACE_OFFSET + otherExtra));
                 Vec3 span = otherSurface.subtract(thisSurface);
                 if (span.lengthSqr() < 1.0e-4) {
                     continue;

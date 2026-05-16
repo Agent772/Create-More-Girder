@@ -1,7 +1,0 @@
-{
-	"credit": "Copied from Create Diesel Generators",
-	"parent": "createmoregirder:block/andesite_girder/block_x",
-	"textures": {
-		"0": "createmoregirder:block/oxidized_copper_girder"
-	}
-}

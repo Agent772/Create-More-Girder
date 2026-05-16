@@ -1,0 +1,7 @@
+{
+	"parent": "createmoregirder:block/andesite_beam/bracket_west",
+	"textures": {
+		"particle": "createmoregirder:block/weathered_iron_beam",
+		"0": "createmoregirder:block/weathered_iron_beam"
+	}
+}

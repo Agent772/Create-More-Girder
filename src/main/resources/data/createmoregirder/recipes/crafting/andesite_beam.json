@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "create:andesite_alloy"
+    },
+    "P": {
+      "item": "minecraft:andesite"
+    }
+  },
+  "result": {
+    "item": "createmoregirder:andesite_beam",
+    "count": 8
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "createmoregirder:oxidized_copper_beam"
+    },
+    {
+      "item": "minecraft:honeycomb"
+    }
+  ],
+  "result": {
+    "item": "createmoregirder:waxed_oxidized_copper_beam",
+    "count": 1
+  }
+}

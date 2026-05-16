@@ -65,7 +65,7 @@ public class ConnectedGirderModel extends BakedModelWrapper<BakedModel> {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
                                     ModelData data, @Nullable RenderType renderType) {
-        List<BakedQuad> quads = super.getQuads(state, side, rand, data, renderType);
+        List<BakedQuad> quads = getBaseQuads(state, side, rand, data, renderType);
 
         if (side != null || !data.has(CONNECTION_PROPERTY)) {
             return quads;
@@ -84,6 +84,16 @@ public class ConnectedGirderModel extends BakedModelWrapper<BakedModel> {
             }
         }
         return result;
+    }
+
+    /**
+     * Returns the base (non-bracket) pole quads for this girder. Subclasses override to substitute
+     * variant-specific pole geometry (e.g. connected-texture poles) while still letting
+     * {@link #getQuads} append the shared horizontal-bracket quads.
+     */
+    protected List<BakedQuad> getBaseQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
+                                           ModelData data, @Nullable RenderType renderType) {
+        return super.getQuads(state, side, rand, data, renderType);
     }
 
     private static class ConnectionData {

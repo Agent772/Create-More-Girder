@@ -1,0 +1,7 @@
+{
+	"parent": "createmoregirder:block/andesite_beam/segment_middle_alt",
+	"textures": {
+		"particle": "createmoregirder:block/copper_beam",
+		"0": "createmoregirder:block/copper_beam"
+	}
+}

@@ -30,7 +30,11 @@ import java.util.List;
 public class CopycatGirderStrutBlock extends GirderStrutBlock {
 
     public CopycatGirderStrutBlock(Properties properties) {
-        super(properties, StrutModelType.COPYCAT);
+        this(properties, StrutModelType.COPYCAT);
+    }
+
+    protected CopycatGirderStrutBlock(Properties properties, StrutModelType modelType) {
+        super(properties, modelType);
     }
 
     @Override

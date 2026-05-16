@@ -32,11 +32,14 @@ import java.util.List;
 public class AndesiteGirderWrenchBehaviour {
 
     private static boolean isSupportedGirder(BlockState state) {
-        return CMGBlocks.ANDESITE_GIRDER.has(state) || CMGBlocks.COPYCAT_GIRDER.has(state);
+        return CMGBlocks.ANDESITE_GIRDER.has(state)
+                || CMGBlocks.COPYCAT_GIRDER.has(state)
+                || CMGBlocks.COPYCAT_METAL_GIRDER.has(state);
     }
 
     private static boolean isSupportedEncasedShaft(BlockState state) {
-        return CMGBlocks.COPYCAT_GIRDER_ENCASED_SHAFT.has(state);
+        return CMGBlocks.COPYCAT_GIRDER_ENCASED_SHAFT.has(state)
+                || CMGBlocks.COPYCAT_METAL_GIRDER_ENCASED_SHAFT.has(state);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -116,7 +119,8 @@ public class AndesiteGirderWrenchBehaviour {
         BlockState hovered = world.getBlockState(pos);
         List<Pair<Direction, Action>> reachable;
         if (isSupportedEncasedShaft(hovered)
-                || CMGBlocks.COPYCAT_GIRDER.has(hovered)) {
+                || CMGBlocks.COPYCAT_GIRDER.has(hovered)
+                || CMGBlocks.COPYCAT_METAL_GIRDER.has(hovered)) {
             double hitY = result.getLocation().y - pos.getY();
             reachable = validDirections.stream()
                     .filter(pair -> {

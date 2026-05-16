@@ -76,7 +76,7 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
                                     ModelData data, RenderType renderType) {
-        List<BakedQuad> base = super.getQuads(state, side, rand, data, renderType);
+        List<BakedQuad> base = getBaseQuads(state, side, rand, data, renderType);
 
         // Append bracket arm quads for connected directions
         EnumSet<Direction> connected = data.get(CONNECTED_DIRECTIONS);
@@ -118,6 +118,16 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
             }
         }
         return out;
+    }
+
+    /**
+     * Returns the base (non-bracket, non-mimic-remapped) pole quads for this girder. Subclasses
+     * override to substitute variant-specific pole geometry while still letting {@link #getQuads}
+     * append the shared bracket quads and apply mimic UV remapping.
+     */
+    protected List<BakedQuad> getBaseQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
+                                           ModelData data, RenderType renderType) {
+        return super.getQuads(state, side, rand, data, renderType);
     }
 
     @Override

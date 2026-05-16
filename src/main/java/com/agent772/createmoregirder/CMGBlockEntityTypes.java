@@ -95,31 +95,118 @@ public class CMGBlockEntityTypes {
                 .visual(() -> ShaftVisual::new, false)
                 .validBlocks(CMGBlocks.WEATHERED_IRON_GIRDER_ENCASED_SHAFT)
                 .renderer(() -> ShaftRenderer::new)
-                .register(); 
+                .register();
 
-        // Copycat Girder Block Entity
+        // Plate Girder (metal_girder) encased shafts
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_ANDESITE_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_andesite_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.ANDESITE_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_BRASS_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_brass_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.BRASS_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_COPPER_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_copper_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.COPPER_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_EXPOSED_COPPER_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_exposed_copper_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.EXPOSED_COPPER_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_WEATHERED_COPPER_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_weathered_copper_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.WEATHERED_COPPER_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_OXIDIZED_COPPER_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_oxidized_copper_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.OXIDIZED_COPPER_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_WAXED_COPPER_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_waxed_copper_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.WAXED_COPPER_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_WAXED_EXPOSED_COPPER_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_waxed_exposed_copper_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.WAXED_EXPOSED_COPPER_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_WAXED_WEATHERED_COPPER_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_waxed_weathered_copper_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.WAXED_WEATHERED_COPPER_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_WAXED_OXIDIZED_COPPER_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_waxed_oxidized_copper_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.WAXED_OXIDIZED_COPPER_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_WEATHERED_IRON_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_weathered_iron_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.WEATHERED_IRON_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        // Copycat Girder Block Entity (shared by the copycat and copycat-metal variants)
         public static final BlockEntityEntry<CopycatGirderBlockEntity> COPYCAT_GIRDER = REGISTRATE
                 .blockEntity("copycat_girder", CopycatGirderBlockEntity::new)
-                .validBlocks(CMGBlocks.COPYCAT_GIRDER)
+                .validBlocks(CMGBlocks.COPYCAT_GIRDER, CMGBlocks.COPYCAT_METAL_GIRDER)
                 .register();
 
         public static final BlockEntityEntry<CopycatGirderEncasedShaftBlockEntity> ENCASED_COPYCAT_GIRDER = REGISTRATE
                 .blockEntity("encased_copycat_girder", CopycatGirderEncasedShaftBlockEntity::new)
                 .visual(() -> ShaftVisual::new, false)
-                .validBlocks(CMGBlocks.COPYCAT_GIRDER_ENCASED_SHAFT)
+                .validBlocks(CMGBlocks.COPYCAT_GIRDER_ENCASED_SHAFT, CMGBlocks.COPYCAT_METAL_GIRDER_ENCASED_SHAFT)
                 .renderer(() -> ShaftRenderer::new)
                 .register();
 
-        // Copycat Girder Strut Block Entity
+        // Copycat Girder Strut Block Entity (shared by the copycat and copycat-metal variants)
         public static final BlockEntityEntry<CopycatGirderStrutBlockEntity> COPYCAT_GIRDER_STRUT = REGISTRATE
                 .blockEntity("copycat_girder_strut", CopycatGirderStrutBlockEntity::new)
-                .validBlocks(CMGBlocks.COPYCAT_GIRDER_STRUT)
+                .validBlocks(CMGBlocks.COPYCAT_GIRDER_STRUT, CMGBlocks.COPYCAT_METAL_GIRDER_STRUT)
                 .renderer(() -> GirderStrutBlockEntityRenderer::new)
                 .register();
 
         // Girder Strut Block Entity
        public static final BlockEntityEntry<GirderStrutBlockEntity> GIRDER_STRUT = REGISTRATE.blockEntity("girder_strut", GirderStrutBlockEntity::new)
-            .validBlocks(CMGBlocks.ANDESITE_GIRDER_STRUT, CMGBlocks.BRASS_GIRDER_STRUT, CMGBlocks.WAXED_COPPER_GIRDER_STRUT, CMGBlocks.WAXED_EXPOSED_COPPER_GIRDER_STRUT, CMGBlocks.WAXED_WEATHERED_COPPER_GIRDER_STRUT, CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER_STRUT, CMGBlocks.INDUSTRIAL_IRON_GIRDER_STRUT, CMGBlocks.WEATHERED_IRON_GIRDER_STRUT)
+            .validBlocks(
+                CMGBlocks.ANDESITE_GIRDER_STRUT, CMGBlocks.BRASS_GIRDER_STRUT, CMGBlocks.WAXED_COPPER_GIRDER_STRUT,
+                CMGBlocks.WAXED_EXPOSED_COPPER_GIRDER_STRUT, CMGBlocks.WAXED_WEATHERED_COPPER_GIRDER_STRUT,
+                CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER_STRUT, CMGBlocks.INDUSTRIAL_IRON_GIRDER_STRUT,
+                CMGBlocks.WEATHERED_IRON_GIRDER_STRUT,
+                CMGBlocks.ANDESITE_METAL_GIRDER_STRUT, CMGBlocks.BRASS_METAL_GIRDER_STRUT,
+                CMGBlocks.WAXED_COPPER_METAL_GIRDER_STRUT, CMGBlocks.WAXED_EXPOSED_COPPER_METAL_GIRDER_STRUT,
+                CMGBlocks.WAXED_WEATHERED_COPPER_METAL_GIRDER_STRUT, CMGBlocks.WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT,
+                CMGBlocks.WEATHERED_IRON_METAL_GIRDER_STRUT,
+                CMGBlocks.CREATE_METAL_GIRDER_STRUT)
             .renderer(() -> GirderStrutBlockEntityRenderer::new)
             .register();
 

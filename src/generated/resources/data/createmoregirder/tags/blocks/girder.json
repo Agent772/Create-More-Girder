@@ -1,0 +1,29 @@
+{
+  "values": [
+    "createmoregirder:andesite_truss",
+    "createmoregirder:brass_truss",
+    "createmoregirder:copper_truss",
+    "createmoregirder:exposed_copper_truss",
+    "createmoregirder:weathered_copper_truss",
+    "createmoregirder:oxidized_copper_truss",
+    "createmoregirder:waxed_copper_truss",
+    "createmoregirder:waxed_exposed_copper_truss",
+    "createmoregirder:waxed_weathered_copper_truss",
+    "createmoregirder:waxed_oxidized_copper_truss",
+    "createmoregirder:industrial_iron_truss",
+    "createmoregirder:weathered_iron_truss",
+    "createmoregirder:copycat_truss",
+    "createmoregirder:andesite_beam",
+    "createmoregirder:brass_beam",
+    "createmoregirder:copper_beam",
+    "createmoregirder:exposed_copper_beam",
+    "createmoregirder:weathered_copper_beam",
+    "createmoregirder:oxidized_copper_beam",
+    "createmoregirder:waxed_copper_beam",
+    "createmoregirder:waxed_exposed_copper_beam",
+    "createmoregirder:waxed_weathered_copper_beam",
+    "createmoregirder:waxed_oxidized_copper_beam",
+    "createmoregirder:weathered_iron_beam",
+    "createmoregirder:copycat_beam"
+  ]
+}

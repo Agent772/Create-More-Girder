@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "create:brass_ingot"
+    },
+    "P": {
+      "item": "create:brass_sheet"
+    }
+  },
+  "result": {
+    "item": "createmoregirder:brass_beam",
+    "count": 8
+  }
+}

@@ -2,12 +2,14 @@ package com.agent772.createmoregirder;
 
 import com.agent772.createmoregirder.config.CMGServerConfig;
 import com.agent772.createmoregirder.content.strut.GirderStrutMovementBehaviour;
+import com.agent772.createmoregirder.foundation.CMGMissingMappings;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -31,6 +33,11 @@ public class CreateMoreGirder {
         REGISTRATE.defaultCreativeTab((ResourceKey<CreativeModeTab>) null);
         REGISTRATE.registerEventListeners(modEventBus);
 
+        // World-save migration for renamed block/item ids (issue #113).
+        // MissingMappingsEvent fires on the Forge event bus and the listener
+        // wires itself up there directly.
+        CMGMissingMappings.register();
+
         // Register blocks and block entities
         CMGBlocks.register();
         CMGBlockEntityTypes.register();
@@ -51,16 +58,12 @@ public class CreateMoreGirder {
     private void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             GirderStrutMovementBehaviour behaviour = new GirderStrutMovementBehaviour();
-            // Register for all strut block variants
-            MovementBehaviour.REGISTRY.register(CMGBlocks.ANDESITE_GIRDER_STRUT.get(), behaviour);
-            MovementBehaviour.REGISTRY.register(CMGBlocks.BRASS_GIRDER_STRUT.get(), behaviour);
-            MovementBehaviour.REGISTRY.register(CMGBlocks.WAXED_COPPER_GIRDER_STRUT.get(), behaviour);
-            MovementBehaviour.REGISTRY.register(CMGBlocks.WAXED_EXPOSED_COPPER_GIRDER_STRUT.get(), behaviour);
-            MovementBehaviour.REGISTRY.register(CMGBlocks.WAXED_WEATHERED_COPPER_GIRDER_STRUT.get(), behaviour);
-            MovementBehaviour.REGISTRY.register(CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER_STRUT.get(), behaviour);
-            MovementBehaviour.REGISTRY.register(CMGBlocks.INDUSTRIAL_IRON_GIRDER_STRUT.get(), behaviour);
-            MovementBehaviour.REGISTRY.register(CMGBlocks.WEATHERED_IRON_GIRDER_STRUT.get(), behaviour);
-            MovementBehaviour.REGISTRY.register(CMGBlocks.COPYCAT_GIRDER_STRUT.get(), behaviour);
+            for (Block block : CMGBlockEntityTypes.GIRDER_STRUT.get().validBlocks) {
+                MovementBehaviour.REGISTRY.register(block, behaviour);
+            }
+            for (Block block : CMGBlockEntityTypes.COPYCAT_GIRDER_STRUT.get().validBlocks) {
+                MovementBehaviour.REGISTRY.register(block, behaviour);
+            }
         });
     }
 

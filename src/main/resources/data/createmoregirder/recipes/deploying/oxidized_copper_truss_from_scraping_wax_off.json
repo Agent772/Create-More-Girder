@@ -1,0 +1,17 @@
+{
+  "type": "create:deploying",
+  "ingredients": [
+    {
+      "item": "createmoregirder:waxed_oxidized_copper_truss"
+    },
+    {
+      "tag": "minecraft:axes"
+    }
+  ],
+  "keep_held_item": true,
+  "results": [
+    {
+      "item": "createmoregirder:oxidized_copper_truss"
+    }
+  ]
+}

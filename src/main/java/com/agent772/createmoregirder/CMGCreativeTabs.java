@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -39,6 +40,29 @@ public class CMGCreativeTabs {
                 output.accept(CMGBlocks.WEATHERED_IRON_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.COPYCAT_GIRDER.get());
                 output.accept(CMGBlocks.COPYCAT_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.ANDESITE_METAL_GIRDER.get());
+                output.accept(CMGBlocks.ANDESITE_METAL_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.BRASS_METAL_GIRDER.get());
+                output.accept(CMGBlocks.BRASS_METAL_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.COPPER_METAL_GIRDER.get());
+                output.accept(CMGBlocks.EXPOSED_COPPER_METAL_GIRDER.get());
+                output.accept(CMGBlocks.WEATHERED_COPPER_METAL_GIRDER.get());
+                output.accept(CMGBlocks.OXIDIZED_COPPER_METAL_GIRDER.get());
+                output.accept(CMGBlocks.WAXED_COPPER_METAL_GIRDER.get());
+                output.accept(CMGBlocks.WAXED_COPPER_METAL_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.WAXED_EXPOSED_COPPER_METAL_GIRDER.get());
+                output.accept(CMGBlocks.WAXED_EXPOSED_COPPER_METAL_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.WAXED_WEATHERED_COPPER_METAL_GIRDER.get());
+                output.accept(CMGBlocks.WAXED_WEATHERED_COPPER_METAL_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.WAXED_OXIDIZED_COPPER_METAL_GIRDER.get());
+                output.accept(CMGBlocks.WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.WEATHERED_IRON_METAL_GIRDER.get());
+                output.accept(CMGBlocks.WEATHERED_IRON_METAL_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.COPYCAT_METAL_GIRDER.get());
+                output.accept(CMGBlocks.COPYCAT_METAL_GIRDER_STRUT.get());
+                if (!ModList.get().isLoaded("bits_n_bobs")) {
+                    output.accept(CMGBlocks.CREATE_METAL_GIRDER_STRUT.get());
+                }
             })
             .build()
             

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "P": {
+      "item": "create:copper_sheet"
+    }
+  },
+  "result": {
+    "item": "createmoregirder:copper_beam",
+    "count": 8
+  }
+}

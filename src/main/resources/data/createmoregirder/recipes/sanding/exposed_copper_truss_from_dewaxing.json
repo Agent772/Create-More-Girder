@@ -1,0 +1,13 @@
+{
+  "type": "create:sandpaper_polishing",
+  "ingredients": [
+    {
+      "item": "createmoregirder:waxed_exposed_copper_truss"
+    }
+  ],
+  "results": [
+    {
+      "item": "createmoregirder:exposed_copper_truss"
+    }
+  ]
+}

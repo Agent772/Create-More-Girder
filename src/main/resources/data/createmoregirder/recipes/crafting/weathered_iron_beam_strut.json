@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A  ",
+    "GGG",
+    "  A"
+  ],
+  "key": {
+    "A": {
+      "item": "create:weathered_iron_block"
+    },
+    "G": {
+      "item": "createmoregirder:weathered_iron_beam"
+    }
+  },
+  "result": {
+    "item": "createmoregirder:weathered_iron_beam_strut",
+    "count": 6
+  }
+}

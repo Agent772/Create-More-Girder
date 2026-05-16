@@ -24,15 +24,24 @@ import java.util.Map;
  */
 public class CMGPartialModels {
 
-    public static final PartialModel ANDESITE_GIRDER_STRUT = block("andesite_girder_strut/strut");
-    public static final PartialModel BRASS_GIRDER_STRUT = block("brass_girder_strut/strut");
-    public static final PartialModel WAXED_COPPER_GIRDER_STRUT = block("waxed_copper_girder_strut/strut");
-    public static final PartialModel WAXED_EXPOSED_COPPER_GIRDER_STRUT = block("waxed_exposed_copper_girder_strut/strut");
-    public static final PartialModel WAXED_WEATHERED_COPPER_GIRDER_STRUT = block("waxed_weathered_copper_girder_strut/strut");
-    public static final PartialModel WAXED_OXIDIZED_COPPER_GIRDER_STRUT = block("waxed_oxidized_copper_girder_strut/strut");
-    public static final PartialModel INDUSTRIAL_IRON_GIRDER_STRUT = block("industrial_iron_girder_strut/strut");
-    public static final PartialModel WEATHERED_IRON_GIRDER_STRUT = block("weathered_iron_girder_strut/strut");
-    public static final PartialModel COPYCAT_GIRDER_STRUT = block("copycat_girder_strut/strut");
+    public static final PartialModel ANDESITE_GIRDER_STRUT = block("andesite_truss_strut/strut");
+    public static final PartialModel BRASS_GIRDER_STRUT = block("brass_truss_strut/strut");
+    public static final PartialModel WAXED_COPPER_GIRDER_STRUT = block("waxed_copper_truss_strut/strut");
+    public static final PartialModel WAXED_EXPOSED_COPPER_GIRDER_STRUT = block("waxed_exposed_copper_truss_strut/strut");
+    public static final PartialModel WAXED_WEATHERED_COPPER_GIRDER_STRUT = block("waxed_weathered_copper_truss_strut/strut");
+    public static final PartialModel WAXED_OXIDIZED_COPPER_GIRDER_STRUT = block("waxed_oxidized_copper_truss_strut/strut");
+    public static final PartialModel INDUSTRIAL_IRON_GIRDER_STRUT = block("industrial_iron_truss_strut/strut");
+    public static final PartialModel WEATHERED_IRON_GIRDER_STRUT = block("weathered_iron_truss_strut/strut");
+    public static final PartialModel COPYCAT_GIRDER_STRUT = block("copycat_truss_strut/strut");
+    public static final PartialModel ANDESITE_METAL_GIRDER_STRUT = block("andesite_beam_strut/strut");
+    public static final PartialModel BRASS_METAL_GIRDER_STRUT = block("brass_beam_strut/strut");
+    public static final PartialModel WAXED_COPPER_METAL_GIRDER_STRUT = block("waxed_copper_beam_strut/strut");
+    public static final PartialModel WAXED_EXPOSED_COPPER_METAL_GIRDER_STRUT = block("waxed_exposed_copper_beam_strut/strut");
+    public static final PartialModel WAXED_WEATHERED_COPPER_METAL_GIRDER_STRUT = block("waxed_weathered_copper_beam_strut/strut");
+    public static final PartialModel WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT = block("waxed_oxidized_copper_beam_strut/strut");
+    public static final PartialModel WEATHERED_IRON_METAL_GIRDER_STRUT = block("weathered_iron_beam_strut/strut");
+    public static final PartialModel COPYCAT_METAL_GIRDER_STRUT = block("copycat_beam_strut/strut");
+    public static final PartialModel CREATE_METAL_GIRDER_STRUT = block("create_metal_girder_strut/strut");
 
     private static final Map<String, PartialModel[]> SEGMENT_MODELS = new HashMap<>();
     private static final Map<String, EnumMap<Direction, PartialModel>> BRACKET_MODELS = new HashMap<>();
@@ -41,19 +50,19 @@ public class CMGPartialModels {
     private static volatile Map<Block, EnumMap<Direction, PartialModel>> BRACKET_MODELS_BY_BLOCK;
 
     private static final String[] GIRDER_VARIANTS = {
-        "andesite_girder",
-        "brass_girder",
-        "copper_girder",
-        "exposed_copper_girder",
-        "weathered_copper_girder",
-        "oxidized_copper_girder",
-        "waxed_copper_girder",
-        "waxed_exposed_copper_girder",
-        "waxed_weathered_copper_girder",
-        "waxed_oxidized_copper_girder",
-        "industrial_iron_girder",
-        "weathered_iron_girder",
-        "copycat_girder"
+        "andesite_truss",
+        "brass_truss",
+        "copper_truss",
+        "exposed_copper_truss",
+        "weathered_copper_truss",
+        "oxidized_copper_truss",
+        "waxed_copper_truss",
+        "waxed_exposed_copper_truss",
+        "waxed_weathered_copper_truss",
+        "waxed_oxidized_copper_truss",
+        "industrial_iron_truss",
+        "weathered_iron_truss",
+        "copycat_truss"
     };
 
     static {
@@ -72,6 +81,46 @@ public class CMGPartialModels {
             brackets.put(Direction.SOUTH, block(variant + "/bracket_south"));
             BRACKET_MODELS.put(variant, brackets);
         }
+    }
+
+    private static final String[] METAL_GIRDER_VARIANTS = {
+        "andesite_beam",
+        "brass_beam",
+        "copper_beam",
+        "exposed_copper_beam",
+        "weathered_copper_beam",
+        "oxidized_copper_beam",
+        "waxed_copper_beam",
+        "waxed_exposed_copper_beam",
+        "waxed_weathered_copper_beam",
+        "waxed_oxidized_copper_beam",
+        "weathered_iron_beam",
+        "copycat_beam"
+    };
+
+    private static final Map<String, Map<String, PartialModel>> METAL_GIRDER_CT_POLES = new HashMap<>();
+    private static volatile Map<Block, Map<String, PartialModel>> METAL_GIRDER_CT_POLES_BY_BLOCK;
+
+    static {
+        for (String variant : METAL_GIRDER_VARIANTS) {
+            Map<String, PartialModel> poles = new HashMap<>();
+            poles.put("top", block(variant + "/block_pole_top"));
+            poles.put("middle", block(variant + "/block_pole_middle"));
+            poles.put("bottom", block(variant + "/block_pole_bottom"));
+            METAL_GIRDER_CT_POLES.put(variant, poles);
+        }
+    }
+
+    @Nullable
+    public static PartialModel getMetalGirderConnectedPole(Block girderBlock, String key) {
+        Map<Block, Map<String, PartialModel>> result = METAL_GIRDER_CT_POLES_BY_BLOCK;
+        if (result == null) {
+            result = buildBlockMap(METAL_GIRDER_CT_POLES);
+            METAL_GIRDER_CT_POLES_BY_BLOCK = result;
+        }
+        Map<String, PartialModel> poles = result.get(girderBlock);
+        if (poles == null) return null;
+        return poles.get(key);
     }
 
     private static Map<Block, PartialModel[]> segmentModelsByBlock() {
