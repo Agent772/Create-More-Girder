@@ -12,6 +12,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.BakedModelWrapper;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,12 +67,42 @@ public class CopycatGirderStrutBakedModel extends BakedModelWrapper<BakedModel> 
     }
 
     @Override
+    public @NotNull ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand,
+                                                     @NotNull ModelData data) {
+        ChunkRenderTypeSet baseTypes = super.getRenderTypes(state, rand, data);
+        BlockState mimicked = data.get(MIMICKED_STATE);
+        if (mimicked == null || mimicked.isAir()) {
+            return baseTypes;
+        }
+        ChunkRenderTypeSet mimicTypes = mimicRenderTypes(mimicked, rand);
+        if (mimicTypes == null) {
+            return baseTypes;
+        }
+        return ChunkRenderTypeSet.union(baseTypes, mimicTypes);
+    }
+
+    @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
                                     ModelData data, RenderType renderType) {
-        List<BakedQuad> base = super.getQuads(state, side, rand, data, renderType);
-
         BlockState mimicked = data.get(MIMICKED_STATE);
-        if (mimicked == null || mimicked.isAir() || base.isEmpty()) {
+        boolean hasMimic = mimicked != null && !mimicked.isAir();
+
+        if (!hasMimic) {
+            return super.getQuads(state, side, rand, data, renderType);
+        }
+
+        ChunkRenderTypeSet mimicTypes = mimicRenderTypes(mimicked, rand);
+        if (mimicTypes == null) {
+            return super.getQuads(state, side, rand, data, renderType);
+        }
+        if (renderType != null && state != null && !mimicTypes.contains(renderType)) {
+            return Collections.emptyList();
+        }
+
+        // Pass renderType=null so the underlying JSON-declared filter doesn't strip
+        // quads when we're routing them onto the mimic's render layer (e.g. translucent).
+        List<BakedQuad> base = super.getQuads(state, side, rand, data, null);
+        if (base.isEmpty()) {
             return base;
         }
         Integer rot = data.get(FACE_ROTATION);
@@ -122,6 +154,16 @@ public class CopycatGirderStrutBakedModel extends BakedModelWrapper<BakedModel> 
     @Override
     public boolean usesBlockLight() {
         return true;
+    }
+
+    @Nullable
+    private static ChunkRenderTypeSet mimicRenderTypes(BlockState mimicked, RandomSource rand) {
+        try {
+            BakedModel mimicModel = Minecraft.getInstance().getBlockRenderer().getBlockModel(mimicked);
+            return mimicModel.getRenderTypes(mimicked, rand, ModelData.EMPTY);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private record FaceData(TextureAtlasSprite sprite, int lightmap, boolean shade) {}

@@ -1,3 +1,8 @@
+## Unreleased
+
+### Fixed
+- Copycat Truss and Copycat Beam blocks (and their strut anchors / encased shaft variants) now render correctly with translucent mimic materials such as stained glass
+
 ## Version 2.0.0
 
 ### Added

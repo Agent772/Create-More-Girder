@@ -1,5 +1,6 @@
 package com.agent772.createmoregirder.content.strut;
 
+import com.agent772.createmoregirder.CMGBlocks;
 import com.agent772.createmoregirder.content.copycat_strut.CopycatGirderStrutBlockEntity;
 import com.agent772.createmoregirder.content.copycat_strut.CopycatStrutTextureRemapper;
 import com.mojang.blaze3d.vertex.*;
@@ -14,7 +15,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +30,9 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -149,7 +154,10 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
                 ms.translate(0, 0, lengthOffset + 0.5); // Adjust the translation based on segment length
                 if (getRenderPriority(relative) > getRenderPriority(relative.multiply(-1))) {
                     final Vec3 segDir = relativeVec.normalize();
-                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, onContraption ? null : blockEntity.getLevel(), thisAttachment, segDir, copycatFaceData, copycatLightEmission, beamRenderType);
+                    final List<BakedQuad> remappedQuads = copycatFaceData == null
+                            ? null
+                            : buildRemappedSegmentQuads(modelType.getPartialModel(), copycatFaceData);
+                    renderSegments(state, modelType.getPartialModel(), ms, segments, buffer, light, onContraption ? null : blockEntity.getLevel(), thisAttachment, segDir, remappedQuads, copycatLightEmission, beamRenderType);
                 }
                 ms.popPose();
             }
@@ -204,7 +212,7 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
         return depth;
     }
 
-    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int fallbackLight, final Level level, final Vec3 segmentStart, final Vec3 segmentDir, final CopycatStrutTextureRemapper.FaceData[] faceData, final int lightEmission, final RenderType renderType) {
+    protected void renderSegments(final BlockState state, final PartialModel model, final PoseStack ms, final int length, final MultiBufferSource buffer, final int fallbackLight, final Level level, final Vec3 segmentStart, final Vec3 segmentDir, @Nullable final List<BakedQuad> remappedQuads, final int lightEmission, final RenderType renderType) {
         for (int i = 0; i < length; i++) {
             ms.pushPose();
             ms.translate(0, 0, i);
@@ -219,17 +227,70 @@ public class GirderStrutBlockEntityRenderer extends SmartBlockEntityRenderer<Gir
                 int emissionLight = net.minecraft.client.renderer.LightTexture.pack(lightEmission, 0);
                 segLight = IBlockEntityRelighter.maximizeLight(segLight, emissionLight);
             }
-            CachedBuffers.partial(model, state)
-                    .light(segLight)
-                    .renderInto(ms, buffer.getBuffer(renderType));
+            if (remappedQuads != null) {
+                final VertexConsumer consumer = buffer.getBuffer(renderType);
+                final PoseStack.Pose pose = ms.last();
+                for (final BakedQuad quad : remappedQuads) {
+                    consumer.putBulkData(pose, quad, 1f, 1f, 1f, 1f, segLight, OverlayTexture.NO_OVERLAY);
+                }
+            } else {
+                CachedBuffers.partial(model, state)
+                        .light(segLight)
+                        .renderInto(ms, buffer.getBuffer(renderType));
+            }
             ms.popPose();
         }
     }
 
+    /**
+     * Builds the strut segment quads remapped to the mimicked block's textures, used by
+     * the Fast/contraption render path which otherwise plays back the original (non-mimic)
+     * partial model. The Fabulous path goes through {@link GirderStrutModelManipulator}
+     * which does its own remap during mesh baking.
+     */
+    private static List<BakedQuad> buildRemappedSegmentQuads(final PartialModel partial, final CopycatStrutTextureRemapper.FaceData[] faceData) {
+        final BakedModel model = partial.get();
+        // strut.json places all its quads under side=null (no cullface in the JSON), so a
+        // single side=null query yields every quad we need.
+        final List<BakedQuad> source = model.getQuads(
+                CMGBlocks.ANDESITE_GIRDER_STRUT.get().defaultBlockState(),
+                null,
+                RandomSource.create(0L),
+                ModelData.EMPTY,
+                null
+        );
+        final List<BakedQuad> remapped = new ArrayList<>(source.size());
+        for (final BakedQuad quad : source) {
+            final Direction face = quad.getDirection();
+            final CopycatStrutTextureRemapper.FaceData fd = face != null
+                    ? faceData[face.get3DDataValue()]
+                    : faceData[Direction.UP.get3DDataValue()];
+            if (fd != null && fd.sprite() != null) {
+                remapped.add(CopycatStrutTextureRemapper.remapQuadUVs(quad, fd.sprite()));
+            } else {
+                remapped.add(quad);
+            }
+        }
+        return remapped;
+    }
+
+    /**
+     * Picks the {@link RenderType} the beam segments should render onto. With no mimic, segments
+     * use {@link RenderType#cutout()} as before. With a mimic, we route segments onto the most
+     * specific layer the mimicked block declares. Translucent mimics map to
+     * {@link RenderType#translucentMovingBlock()} rather than {@link RenderType#translucent()},
+     * because in Fabulous graphics the latter is reserved for chunk geometry routed through the
+     * OIT compositing pass — BE-rendered geometry on that layer ends up invisible. The
+     * moving-block translucent variant is the BE-safe equivalent (used by vanilla pistons).
+     */
     private static RenderType resolveBeamRenderType(final BlockState mimicked) {
         try {
             final BakedModel srcModel = Minecraft.getInstance().getBlockRenderer().getBlockModel(mimicked);
             final ChunkRenderTypeSet srcTypes = srcModel.getRenderTypes(mimicked, RandomSource.create(0L), ModelData.EMPTY);
+            if (srcTypes.contains(RenderType.translucent())) return RenderType.translucentMovingBlock();
+            if (srcTypes.contains(RenderType.cutoutMipped())) return RenderType.cutoutMipped();
+            if (srcTypes.contains(RenderType.cutout())) return RenderType.cutout();
+            if (srcTypes.contains(RenderType.solid())) return RenderType.solid();
             final List<RenderType> typeList = srcTypes.asList();
             if (!typeList.isEmpty()) {
                 return typeList.get(0);

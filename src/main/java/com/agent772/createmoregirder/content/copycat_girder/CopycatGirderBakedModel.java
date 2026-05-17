@@ -15,6 +15,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import net.neoforged.neoforge.client.model.BakedModelWrapper;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -90,50 +92,110 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
     }
 
     @Override
+    public @NotNull ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand,
+                                                     @NotNull ModelData data) {
+        ChunkRenderTypeSet baseTypes = super.getRenderTypes(state, rand, data);
+        BlockState mimicked = data.get(MIMICKED_STATE);
+        if (mimicked == null || mimicked.isAir()) {
+            return baseTypes;
+        }
+        ChunkRenderTypeSet mimicTypes = mimicRenderTypes(mimicked, rand);
+        if (mimicTypes == null) {
+            return baseTypes;
+        }
+        return ChunkRenderTypeSet.union(baseTypes, mimicTypes);
+    }
+
+    @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
                                     ModelData data, RenderType renderType) {
-        List<BakedQuad> base = super.getQuads(state, side, rand, data, renderType);
-
-        // Append bracket arm quads for connected directions
+        BlockState mimicked = data.get(MIMICKED_STATE);
+        boolean hasMimic = mimicked != null && !mimicked.isAir();
         EnumSet<Direction> connected = data.get(CONNECTED_DIRECTIONS);
-        if (side == null && state != null && connected != null && !connected.isEmpty()) {
-            base = new ArrayList<>(base);
-            for (Direction direction : connected) {
-                PartialModel partial = CMGPartialModels.getBracketModel(state.getBlock(), direction);
-                if (partial != null) {
-                    base.addAll(partial.get().getQuads(state, null, rand, data, renderType));
+
+        ChunkRenderTypeSet mimicTypes = hasMimic ? mimicRenderTypes(mimicked, rand) : null;
+        if (mimicTypes == null) {
+            hasMimic = false;
+        }
+
+        boolean rendersOnBase;
+        boolean rendersOnMimic;
+        if (renderType == null || state == null) {
+            rendersOnBase = true;
+            rendersOnMimic = hasMimic;
+        } else {
+            ChunkRenderTypeSet baseTypes = super.getRenderTypes(state, rand, data);
+            rendersOnBase = baseTypes.contains(renderType);
+            rendersOnMimic = hasMimic && mimicTypes.contains(renderType);
+        }
+
+        if (!rendersOnBase && !rendersOnMimic) {
+            return Collections.emptyList();
+        }
+
+        List<BakedQuad> result = new ArrayList<>();
+
+        if (rendersOnBase) {
+            if (side == null && state != null && connected != null && !connected.isEmpty()) {
+                for (Direction direction : connected) {
+                    PartialModel partial = CMGPartialModels.getBracketModel(state.getBlock(), direction);
+                    if (partial != null) {
+                        result.addAll(partial.get().getQuads(state, null, rand, data, renderType));
+                    }
                 }
             }
         }
 
-        BlockState mimicked = data.get(MIMICKED_STATE);
-        if (mimicked == null || mimicked.isAir() || base.isEmpty()) {
-            return base;
+        // Pole quads: fetched with renderType=null so the underlying JSON-declared
+        // filter doesn't strip them when we route the remapped copies onto the
+        // mimic's render layer (e.g. translucent).
+        List<BakedQuad> poleQuads = super.getQuads(state, side, rand, data, null);
+
+        if (!hasMimic) {
+            if (rendersOnBase) {
+                if (renderType == null) {
+                    result.addAll(poleQuads);
+                } else {
+                    // Re-run with the actual renderType so the underlying model
+                    // can filter to the requested layer.
+                    result.addAll(super.getQuads(state, side, rand, data, renderType));
+                }
+            }
+            return result;
         }
+
         Integer rot = data.get(FACE_ROTATION);
         int orientation = rot == null ? 0 : Math.floorMod(rot, ORIENTATION_COUNT);
-
         FaceData[] faceData = resolveFaceData(mimicked, orientation);
-        if (faceData == null) {
-            return base;
-        }
 
-        List<BakedQuad> out = new ArrayList<>(base.size());
-        for (BakedQuad quad : base) {
+        for (BakedQuad quad : poleQuads) {
             String spriteName = quad.getSprite().contents().name().getPath();
             if (spriteName.endsWith("bearing_hole_fixed")) {
-                out.add(quad);
+                if (rendersOnBase) {
+                    result.add(quad);
+                }
+                continue;
+            }
+            if (!rendersOnMimic) {
                 continue;
             }
             Direction face = quad.getDirection();
-            FaceData fd = face != null ? faceData[face.get3DDataValue()] : faceData[0];
+            FaceData fd = faceData == null ? null : (face != null ? faceData[face.get3DDataValue()] : faceData[0]);
             if (fd != null && fd.sprite != null) {
-                out.add(remapQuadUVs(quad, fd.sprite, fd.lightmap, fd.shade));
-            } else {
-                out.add(quad);
+                result.add(remapQuadUVs(quad, fd.sprite, fd.lightmap, fd.shade));
             }
         }
-        return out;
+        return result;
+    }
+
+    @Nullable
+    private static ChunkRenderTypeSet mimicRenderTypes(BlockState mimicked, RandomSource rand) {
+        try {
+            BakedModel mimicModel = Minecraft.getInstance().getBlockRenderer().getBlockModel(mimicked);
+            return mimicModel.getRenderTypes(mimicked, rand, ModelData.EMPTY);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
