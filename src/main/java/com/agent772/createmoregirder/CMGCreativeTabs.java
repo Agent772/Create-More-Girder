@@ -67,6 +67,15 @@ public class CMGCreativeTabs {
                 output.accept(CMGBlocks.COPYCAT_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.COPYCAT_METAL_GIRDER.get());
                 output.accept(CMGBlocks.COPYCAT_METAL_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.ANDESITE_BRACKET.get());
+                output.accept(CMGBlocks.BRASS_BRACKET.get());
+                output.accept(CMGBlocks.IRON_BRACKET.get());
+                output.accept(CMGBlocks.WEATHERED_IRON_BRACKET.get());
+                output.accept(CMGBlocks.COPYCAT_BRACKET.get());
+                output.accept(CMGBlocks.WAXED_COPPER_BRACKET.get());
+                output.accept(CMGBlocks.WAXED_EXPOSED_COPPER_BRACKET.get());
+                output.accept(CMGBlocks.WAXED_WEATHERED_COPPER_BRACKET.get());
+                output.accept(CMGBlocks.WAXED_OXIDIZED_COPPER_BRACKET.get());
             })
             .build()
             

@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/bracket/pipe/ground",
+  "textures": {
+    "bracket": "createmoregirder:block/brackets/bracket_brass",
+    "plate": "createmoregirder:block/brackets/bracket_plate_brass"
+  }
+}

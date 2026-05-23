@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/bracket/item",
+  "textures": {
+    "bracket": "createmoregirder:block/brackets/bracket_exposed_copper",
+    "plate": "createmoregirder:block/brackets/bracket_plate_exposed_copper"
+  }
+}

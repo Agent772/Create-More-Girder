@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/bracket/item",
+  "textures": {
+    "bracket": "createmoregirder:block/brackets/bracket_zinc",
+    "plate": "createmoregirder:block/brackets/bracket_plate_zinc"
+  }
+}

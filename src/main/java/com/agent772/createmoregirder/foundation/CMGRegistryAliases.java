@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * World-save migration for the issue #97 and issue #118 block id renames.
+ * World-save migration for the issue #97, #118, and #144 block id renames.
  *
  * <p>Issue #97 renamed {@code *_girder -> *_strut_girder} and
  * {@code *_metal_girder -> *_plate_girder}.<br>
  * Issue #118 then renamed {@code *_strut_girder -> *_truss} and
- * {@code *_plate_girder -> *_beam}.
+ * {@code *_plate_girder -> *_beam}.<br>
+ * Issue #144 renamed {@code zinc_bracket -> copycat_bracket} when the zinc
+ * bracket was converted into a copycat bracket.
  *
  * <p>Block and item ids are stored as strings in chunk NBT, so without a remap every
  * renamed block already placed in an existing world would load as air. Registry
@@ -67,6 +69,12 @@ public final class CMGRegistryAliases {
         // guard documents the exclusion and protects against accidental future matches.
         if (newPath.contains("create_metal_girder_strut")) {
             return List.of();
+        }
+        // Issue #144: the zinc bracket was converted into a copycat bracket and
+        // renamed. Worlds and schematics with the old id need to resolve to the
+        // new block; the recipe + tags + lang were updated alongside.
+        if ("copycat_bracket".equals(newPath)) {
+            return List.of("zinc_bracket");
         }
         List<String> result = new ArrayList<>(2);
         if (newPath.contains("truss")) {

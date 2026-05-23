@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "PCP"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:nuggets/brass"
+    },
+    "P": {
+      "tag": "c:ingots/brass"
+    },
+    "C": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "result": {
+    "id": "createmoregirder:brass_bracket",
+    "count": 4
+  }
+}

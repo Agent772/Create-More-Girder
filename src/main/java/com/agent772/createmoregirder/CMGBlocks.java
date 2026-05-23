@@ -65,9 +65,14 @@ import com.agent772.createmoregirder.content.copper_girder.WaxedCopperGirderEnca
 import com.agent772.createmoregirder.content.copper_girder.WaxedExposedCopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.WaxedWeatheredCopperGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.copper_girder.WaxedOxidizedCopperGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.bracket.CMGBracketGenerator;
+import com.agent772.createmoregirder.content.bracket.CopycatBracketBakedModel;
+import com.agent772.createmoregirder.content.bracket.CopycatBracketBlockItem;
 import com.agent772.createmoregirder.content.girder.ConnectedGirderModel;
 import com.agent772.createmoregirder.content.girder.GenericGirderGenerator;
 import com.simibubi.create.AllTags;
+import com.simibubi.create.content.decoration.bracket.BracketBlock;
+import com.simibubi.create.content.decoration.bracket.BracketBlockItem;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.data.SharedProperties;
@@ -1196,6 +1201,117 @@ public class CMGBlocks {
                                 p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/weathered_iron_truss_strut/item"))
                         )
                         .build()
+                        .register();
+
+        // Brackets — share Create's BracketBlock + BracketBlockItem, only swap textures
+        public static final BlockEntry<BracketBlock> ANDESITE_BRACKET =
+                REGISTRATE.block("andesite_bracket", BracketBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(new CMGBracketGenerator("andesite", "andesite")::generate)
+                        .tag(CMGTags.BRACKET_BLOCK)
+                        .item(BracketBlockItem::new)
+                        .tag(CMGTags.BRACKET_ITEM)
+                        .transform(CMGBracketGenerator.itemModel("andesite"))
+                        .register();
+
+        public static final BlockEntry<BracketBlock> BRASS_BRACKET =
+                REGISTRATE.block("brass_bracket", BracketBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(new CMGBracketGenerator("brass", "brass")::generate)
+                        .tag(CMGTags.BRACKET_BLOCK)
+                        .item(BracketBlockItem::new)
+                        .tag(CMGTags.BRACKET_ITEM)
+                        .transform(CMGBracketGenerator.itemModel("brass"))
+                        .register();
+
+        public static final BlockEntry<BracketBlock> IRON_BRACKET =
+                REGISTRATE.block("iron_bracket", BracketBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(new CMGBracketGenerator("iron", "iron")::generate)
+                        .tag(CMGTags.BRACKET_BLOCK)
+                        .item(BracketBlockItem::new)
+                        .tag(CMGTags.BRACKET_ITEM)
+                        .transform(CMGBracketGenerator.itemModel("iron"))
+                        .register();
+
+        public static final BlockEntry<BracketBlock> WEATHERED_IRON_BRACKET =
+                REGISTRATE.block("weathered_iron_bracket", BracketBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(new CMGBracketGenerator("weathered_iron", "weathered_iron")::generate)
+                        .tag(CMGTags.BRACKET_BLOCK)
+                        .item(BracketBlockItem::new)
+                        .tag(CMGTags.BRACKET_ITEM)
+                        .transform(CMGBracketGenerator.itemModel("weathered_iron"))
+                        .register();
+
+        public static final BlockEntry<BracketBlock> COPYCAT_BRACKET =
+                REGISTRATE.block("copycat_bracket", BracketBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(new CMGBracketGenerator("zinc", "zinc")::generate)
+                        .onRegister(CreateRegistrate.blockModel(() -> CopycatBracketBakedModel::new))
+                        .tag(CMGTags.BRACKET_BLOCK, CMGTags.COPYCAT_BRACKET_BLOCK)
+                        .item(CopycatBracketBlockItem::new)
+                        .tag(CMGTags.BRACKET_ITEM, CMGTags.COPYCAT_BRACKET_ITEM)
+                        .transform(CMGBracketGenerator.itemModel("zinc"))
+                        .register();
+
+        // Waxed copper brackets only (no unwaxed copper bracket variants in-game)
+        public static final BlockEntry<BracketBlock> WAXED_COPPER_BRACKET =
+                REGISTRATE.block("waxed_copper_bracket", BracketBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(new CMGBracketGenerator("waxed_copper", "copper")::generate)
+                        .tag(CMGTags.BRACKET_BLOCK)
+                        .item(BracketBlockItem::new)
+                        .tag(CMGTags.BRACKET_ITEM)
+                        .transform(CMGBracketGenerator.itemModel("copper"))
+                        .register();
+
+        public static final BlockEntry<BracketBlock> WAXED_EXPOSED_COPPER_BRACKET =
+                REGISTRATE.block("waxed_exposed_copper_bracket", BracketBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(new CMGBracketGenerator("waxed_exposed_copper", "exposed_copper")::generate)
+                        .tag(CMGTags.BRACKET_BLOCK)
+                        .item(BracketBlockItem::new)
+                        .tag(CMGTags.BRACKET_ITEM)
+                        .transform(CMGBracketGenerator.itemModel("exposed_copper"))
+                        .register();
+
+        public static final BlockEntry<BracketBlock> WAXED_WEATHERED_COPPER_BRACKET =
+                REGISTRATE.block("waxed_weathered_copper_bracket", BracketBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(new CMGBracketGenerator("waxed_weathered_copper", "weathered_copper")::generate)
+                        .tag(CMGTags.BRACKET_BLOCK)
+                        .item(BracketBlockItem::new)
+                        .tag(CMGTags.BRACKET_ITEM)
+                        .transform(CMGBracketGenerator.itemModel("weathered_copper"))
+                        .register();
+
+        public static final BlockEntry<BracketBlock> WAXED_OXIDIZED_COPPER_BRACKET =
+                REGISTRATE.block("waxed_oxidized_copper_bracket", BracketBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .blockstate(new CMGBracketGenerator("waxed_oxidized_copper", "oxidized_copper")::generate)
+                        .tag(CMGTags.BRACKET_BLOCK)
+                        .item(BracketBlockItem::new)
+                        .tag(CMGTags.BRACKET_ITEM)
+                        .transform(CMGBracketGenerator.itemModel("oxidized_copper"))
                         .register();
 
         // Copycat Girder Strut

@@ -84,6 +84,16 @@
   "block.createmoregirder.copycat_beam_encased_shaft": "Copycat Beam Encased Shaft",
   "block.createmoregirder.copycat_beam_strut": "Copycat Beam Strut",
 
+  "block.createmoregirder.andesite_bracket": "Andesite Bracket",
+  "block.createmoregirder.brass_bracket": "Brass Bracket",
+  "block.createmoregirder.iron_bracket": "Iron Bracket",
+  "block.createmoregirder.weathered_iron_bracket": "Weathered Iron Bracket",
+  "block.createmoregirder.copycat_bracket": "Copycat Bracket",
+  "block.createmoregirder.waxed_copper_bracket": "Waxed Copper Bracket",
+  "block.createmoregirder.waxed_exposed_copper_bracket": "Waxed Exposed Copper Bracket",
+  "block.createmoregirder.waxed_weathered_copper_bracket": "Waxed Weathered Copper Bracket",
+  "block.createmoregirder.waxed_oxidized_copper_bracket": "Waxed Oxidized Copper Bracket",
+
   "message.createmoregirder.missing_girder_struts": "Not enough Girder Struts! Need %s more.",
   "message.createmoregirder.missing_texture_blocks": "Not enough Texture Blocks! Need %s more.",
   "message.createmoregirder.strut_valid_connection": "Can Connect",
@@ -93,5 +103,10 @@
 
   "tooltip.createmoregirder.copycat_strut.placement": "Hold a block in your Offhand during both anchor placements to set texture",
   "tooltip.createmoregirder.copycat_strut.hold_shift": "Hold [Shift] for more",
-  "tooltip.createmoregirder.copycat_strut.cycle_detail": "Right-click an anchor with the same block to cycle the texture"
+  "tooltip.createmoregirder.copycat_strut.cycle_detail": "Right-click an anchor with the same block to cycle the texture",
+
+  "tooltip.createmoregirder.copycat_bracket.placement": "Hold a block in your Offhand when attaching to set the bracket's texture",
+  "tooltip.createmoregirder.copycat_bracket.hold_shift": "Hold [Shift] for more",
+  "tooltip.createmoregirder.copycat_bracket.cycle_detail": "Right-click the host with the same block in your Offhand to cycle the texture",
+  "tooltip.createmoregirder.copycat_bracket.clear_detail": "Sneak + right-click the host with the bracket to remove the texture"
 }
