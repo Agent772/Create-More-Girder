@@ -39,6 +39,10 @@ import com.agent772.createmoregirder.content.copper_metal_girder.WaxedWeatheredC
 import com.agent772.createmoregirder.content.copper_girder.CopperGirderBlock;
 import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIronGirderBlock;
 import com.agent772.createmoregirder.content.industrial_iron_girder.IndustrialIronGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.iron_girder.IronGirderBlock;
+import com.agent772.createmoregirder.content.iron_girder.IronGirderEncasedShaftBlock;
+import com.agent772.createmoregirder.content.iron_metal_girder.IronMetalGirderBlock;
+import com.agent772.createmoregirder.content.iron_metal_girder.IronMetalGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.weathered_iron_girder.WeatheredIronGirderBlock;
 import com.agent772.createmoregirder.content.weathered_iron_girder.WeatheredIronGirderEncasedShaftBlock;
 import com.agent772.createmoregirder.content.weathered_iron_metal_girder.WeatheredIronMetalGirderBlock;
@@ -962,6 +966,110 @@ public class CMGBlocks {
                         .build()
                         .register();
 
+        // Iron Girder
+        public static final BlockEntry<IronGirderBlock> IRON_GIRDER =
+                REGISTRATE.block("iron_truss", IronGirderBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.METAL).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> ConnectedGirderModel::new))
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
+                        .blockstate(GenericGirderGenerator::blockState)
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
+                        .register();
+
+        public static final BlockEntry<IronGirderEncasedShaftBlock> IRON_GIRDER_ENCASED_SHAFT =
+                REGISTRATE.block("iron_truss_encased_shaft", IronGirderEncasedShaftBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
+                        .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(IRON_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .register();
+
+        // Iron Metal Girder (OG metal_girder silhouette, iron palette)
+        public static final BlockEntry<IronMetalGirderBlock> IRON_METAL_GIRDER =
+                REGISTRATE.block("iron_beam", IronMetalGirderBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.METAL).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .onRegister(CreateRegistrate.blockModel(() -> com.agent772.createmoregirder.content.andesite_metal_girder.AndesiteMetalGirderConnectedModel::new))
+                        .tag(CMGTags.GIRDER_BLOCK, CMGTags.PAVING_GIRDER)
+                        .blockstate(GenericGirderGenerator::blockState)
+                        .item().tag(CMGTags.GIRDER_ITEM).model(GenericGirderGenerator::itemModel).build()
+                        .register();
+
+        public static final BlockEntry<IronMetalGirderEncasedShaftBlock> IRON_METAL_GIRDER_ENCASED_SHAFT =
+                REGISTRATE.block("iron_beam_encased_shaft", IronMetalGirderEncasedShaftBlock::new)
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
+                        .transform(pickaxeOnly())
+                        .tag(CMGTags.GIRDER_ENCASED_SHAFT_BLOCK)
+                        .blockstate(GenericGirderGenerator::blockStateWithShaft)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(IRON_METAL_GIRDER.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(AllBlocks.SHAFT.get()))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .register();
+
+        // Iron Truss Strut
+        public static final BlockEntry<GirderStrutBlock> IRON_GIRDER_STRUT =
+                REGISTRATE.block("iron_truss_strut", GirderStrutBlock.iron())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/iron_truss_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
+                        .tag(CMGTags.STRUT_BLOCK, AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/iron_truss_strut/item"))
+                        )
+                        .build()
+                        .register();
+
+        // Iron Beam Strut
+        public static final BlockEntry<GirderStrutBlock> IRON_METAL_GIRDER_STRUT =
+                REGISTRATE.block("iron_beam_strut", GirderStrutBlock.iron_metal())
+                        .initialProperties(SharedProperties::softMetal)
+                        .properties(p -> p.destroyTime(0.3f).noOcclusion())
+                        .transform(pickaxeOnly())
+                        .blockstate((c, p) -> p.directionalBlock(c.get(),
+                                (state) -> p.models().getExistingFile(CreateMoreGirder.asResource(
+                                        "block/iron_beam_strut/attachment")
+                                )))
+                        .onRegister(CreateRegistrate.blockModel(() -> GirderStrutModelBuilder::new))
+                        .tag(CMGTags.STRUT_BLOCK, AllTags.AllBlockTags.SAFE_NBT.tag)
+                        .loot((lt, block) -> lt.add(block, LootTable.lootTable()
+                                .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
+                                        .add(LootItem.lootTableItem(block))
+                                        .when(ExplosionCondition.survivesExplosion()))))
+                        .item(GirderStrutBlockItem::new)
+                        .tag(CMGTags.STRUT_ITEM)
+                        .model((c, p) ->
+                                p.withExistingParent(c.getName(), CreateMoreGirder.asResource("block/iron_beam_strut/item"))
+                        )
+                        .build()
+                        .register();
+
         // Weathered Iron Girder
         public static final BlockEntry<WeatheredIronGirderBlock> WEATHERED_IRON_GIRDER =
                 REGISTRATE.block("weathered_iron_truss", WeatheredIronGirderBlock::new)
@@ -1224,6 +1332,8 @@ public class CMGBlocks {
                     WAXED_WEATHERED_COPPER_METAL_GIRDER.get(),
                     WAXED_OXIDIZED_COPPER_METAL_GIRDER.get(),
                     INDUSTRIAL_IRON_GIRDER.get(),
+                    IRON_GIRDER.get(),
+                    IRON_METAL_GIRDER.get(),
                     WEATHERED_IRON_GIRDER.get(),
                     WEATHERED_IRON_METAL_GIRDER.get(),
                     COPYCAT_GIRDER.get(),
@@ -1259,6 +1369,8 @@ public class CMGBlocks {
                     WAXED_WEATHERED_COPPER_METAL_GIRDER_ENCASED_SHAFT.get(),
                     WAXED_OXIDIZED_COPPER_METAL_GIRDER_ENCASED_SHAFT.get(),
                     INDUSTRIAL_IRON_GIRDER_ENCASED_SHAFT.get(),
+                    IRON_GIRDER_ENCASED_SHAFT.get(),
+                    IRON_METAL_GIRDER_ENCASED_SHAFT.get(),
                     WEATHERED_IRON_GIRDER_ENCASED_SHAFT.get(),
                     WEATHERED_IRON_METAL_GIRDER_ENCASED_SHAFT.get(),
                     COPYCAT_GIRDER_ENCASED_SHAFT.get(),

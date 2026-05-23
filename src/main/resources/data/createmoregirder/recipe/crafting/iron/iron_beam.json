@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "building",
+    "key": {
+        "C": {
+        "item": "minecraft:iron_block"
+        },
+        "P": {
+        "tag": "c:plates/iron"
+        }
+    },
+    "pattern": [
+        "PPP",
+        "CCC"
+    ],
+    "result": {
+        "count": 8,
+        "id": "createmoregirder:iron_beam"
+    }
+}

@@ -300,6 +300,10 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
         return properties -> new GirderStrutBlock(properties, StrutModelType.INDUSTRIAL_IRON);
     }
 
+    public static NonNullFunction<Properties, GirderStrutBlock> iron() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.IRON);
+    }
+
     public static NonNullFunction<Properties, GirderStrutBlock> weathered_iron() {
         return properties -> new GirderStrutBlock(properties, StrutModelType.WEATHERED_IRON);
     }
@@ -326,6 +330,10 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     public static NonNullFunction<Properties, GirderStrutBlock> waxed_oxidized_copper_metal() {
         return properties -> new GirderStrutBlock(properties, StrutModelType.WAXED_OXIDIZED_COPPER_METAL);
+    }
+
+    public static NonNullFunction<Properties, GirderStrutBlock> iron_metal() {
+        return properties -> new GirderStrutBlock(properties, StrutModelType.IRON_METAL);
     }
 
     public static NonNullFunction<Properties, GirderStrutBlock> weathered_iron_metal() {

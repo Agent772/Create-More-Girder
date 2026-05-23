@@ -52,6 +52,10 @@ public class CMGCreativeTabs {
                 output.accept(CMGBlocks.WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.INDUSTRIAL_IRON_GIRDER.get());
                 output.accept(CMGBlocks.INDUSTRIAL_IRON_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.IRON_GIRDER.get());
+                output.accept(CMGBlocks.IRON_GIRDER_STRUT.get());
+                output.accept(CMGBlocks.IRON_METAL_GIRDER.get());
+                output.accept(CMGBlocks.IRON_METAL_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.WEATHERED_IRON_GIRDER.get());
                 output.accept(CMGBlocks.WEATHERED_IRON_GIRDER_STRUT.get());
                 output.accept(CMGBlocks.WEATHERED_IRON_METAL_GIRDER.get());

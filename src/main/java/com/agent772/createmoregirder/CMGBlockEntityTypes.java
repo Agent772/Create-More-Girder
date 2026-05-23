@@ -160,6 +160,20 @@ public class CMGBlockEntityTypes {
                 .renderer(() -> ShaftRenderer::new)
                 .register();
 
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_IRON_GIRDER = REGISTRATE
+                .blockEntity("encased_iron_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.IRON_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
+        public static final BlockEntityEntry<KineticBlockEntity> ENCASED_IRON_METAL_GIRDER = REGISTRATE
+                .blockEntity("encased_iron_metal_girder", KineticBlockEntity::new)
+                .visual(() -> ShaftVisual::new, false)
+                .validBlocks(CMGBlocks.IRON_METAL_GIRDER_ENCASED_SHAFT)
+                .renderer(() -> ShaftRenderer::new)
+                .register();
+
         public static final BlockEntityEntry<KineticBlockEntity> ENCASED_WEATHERED_IRON_GIRDER = REGISTRATE
                 .blockEntity("encased_weathered_iron_girder", KineticBlockEntity::new)
                 .visual(() -> ShaftVisual::new, false)
@@ -204,6 +218,7 @@ public class CMGBlockEntityTypes {
                 CMGBlocks.WAXED_WEATHERED_COPPER_GIRDER_STRUT,
                 CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER_STRUT,
                 CMGBlocks.INDUSTRIAL_IRON_GIRDER_STRUT,
+                CMGBlocks.IRON_GIRDER_STRUT,
                 CMGBlocks.WEATHERED_IRON_GIRDER_STRUT,
                 CMGBlocks.ANDESITE_METAL_GIRDER_STRUT,
                 CMGBlocks.BRASS_METAL_GIRDER_STRUT,
@@ -211,6 +226,7 @@ public class CMGBlockEntityTypes {
                 CMGBlocks.WAXED_EXPOSED_COPPER_METAL_GIRDER_STRUT,
                 CMGBlocks.WAXED_WEATHERED_COPPER_METAL_GIRDER_STRUT,
                 CMGBlocks.WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT,
+                CMGBlocks.IRON_METAL_GIRDER_STRUT,
                 CMGBlocks.WEATHERED_IRON_METAL_GIRDER_STRUT,
                 CMGBlocks.CREATE_METAL_GIRDER_STRUT
             )

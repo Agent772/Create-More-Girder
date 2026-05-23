@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    " I ",
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "tag": "c:plates/iron"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "id": "createmoregirder:iron_truss",
+    "count": 6
+  }
+}

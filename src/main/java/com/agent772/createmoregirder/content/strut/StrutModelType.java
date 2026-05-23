@@ -13,6 +13,7 @@ public enum StrutModelType {
     WAXED_WEATHERED_COPPER(CMGPartialModels.WAXED_WEATHERED_COPPER_GIRDER_STRUT, CreateMoreGirder.asResource("block/weathered_copper_truss")),
     WAXED_OXIDIZED_COPPER(CMGPartialModels.WAXED_OXIDIZED_COPPER_GIRDER_STRUT, CreateMoreGirder.asResource("block/oxidized_copper_truss")),
     INDUSTRIAL_IRON(CMGPartialModels.INDUSTRIAL_IRON_GIRDER_STRUT, CreateMoreGirder.asResource("block/industrial_iron_truss")),
+    IRON(CMGPartialModels.IRON_GIRDER_STRUT, CreateMoreGirder.asResource("block/iron_truss")),
     WEATHERED_IRON(CMGPartialModels.WEATHERED_IRON_GIRDER_STRUT, CreateMoreGirder.asResource("block/weathered_iron_truss")),
     COPYCAT(CMGPartialModels.COPYCAT_GIRDER_STRUT, CreateMoreGirder.asResource("block/copycat_truss")),
     COPYCAT_METAL(CMGPartialModels.COPYCAT_METAL_GIRDER_STRUT, CreateMoreGirder.asResource("block/copycat_beam")),
@@ -22,6 +23,7 @@ public enum StrutModelType {
     WAXED_EXPOSED_COPPER_METAL(CMGPartialModels.WAXED_EXPOSED_COPPER_METAL_GIRDER_STRUT, CreateMoreGirder.asResource("block/exposed_copper_beam")),
     WAXED_WEATHERED_COPPER_METAL(CMGPartialModels.WAXED_WEATHERED_COPPER_METAL_GIRDER_STRUT, CreateMoreGirder.asResource("block/weathered_copper_beam")),
     WAXED_OXIDIZED_COPPER_METAL(CMGPartialModels.WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT, CreateMoreGirder.asResource("block/oxidized_copper_beam")),
+    IRON_METAL(CMGPartialModels.IRON_METAL_GIRDER_STRUT, CreateMoreGirder.asResource("block/iron_beam")),
     WEATHERED_IRON_METAL(CMGPartialModels.WEATHERED_IRON_METAL_GIRDER_STRUT, CreateMoreGirder.asResource("block/weathered_iron_beam")),
     CREATE_METAL(CMGPartialModels.CREATE_METAL_GIRDER_STRUT, ResourceLocation.fromNamespaceAndPath("create", "block/girder"));
 
