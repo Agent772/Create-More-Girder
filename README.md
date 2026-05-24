@@ -21,40 +21,25 @@
 
 **Create: More Girder** revolutionizes your structural building possibilities by adding **two full girder families — Trusses and Beams, totalling 17 unique variants** — and a full **girder strut system** to complement the Create mod ecosystem. Each girder type offers distinctive aesthetics while maintaining full compatibility with Create's mechanical systems.
 
-### 🎨 **Trusses**
+![Girder Variants](src/main/resources/GirderTypesV2.1.0.png)
 
-The original CMG girder silhouette. **9 variants**, each with encased shaft and strut forms.
+### 🎨 **Trusses** & 🧱 **Beams** & 🏗️ **Struts** & **Brackets**
 
-![Girder Variants](src/main/resources/GirderTypes.png)
+2 girder families: The OG loved **Beams** from Create, the inspiration from Diesel Generators: **Truss**.
+Thanks to Bits n Bobs all with **Struts** and now with **Brackets** too.
 
-> *Note: this render predates the Beam family and shows the Trusses only.*
-
-| Truss Type | Description | Special Properties |
-|-------------|-------------|-------------------|
-| 🗿 **Andesite Truss** | The foundation variant from Create: Diesel Generators | Classic industrial look |
-| 🥉 **Brass Truss** | Elegant brass construction | Premium mechanical aesthetics |
-| 🟠 **Copper Truss** | Fresh copper with natural shine | Weathers over time |
-| 🟤 **Exposed Copper Truss** | Slightly weathered copper | Natural aging process |
-| 🟫 **Weathered Copper Truss** | Well-aged copper patina | Advanced weathering stage |
-| 🟢 **Oxidized Copper Truss** | Fully oxidized copper | Final weathering stage |
-| ⚙️ **Industrial Iron Truss** | Heavy-duty iron construction | Maximum durability |
-| 🔶 **Weathered Iron Truss** | Time-worn iron girders | Rustic industrial charm |
-| 🎭 **Copycat Truss** | Mimics any block's texture | Blends into any build style |
-
-### 🧱 **Beams**
-
-A second girder family built on Create's own `metal_girder` silhouette. **8 variants**, each with encased shaft and strut forms, matching the Trusses in scope. Note there is **no Industrial Iron Beam** — Industrial Iron is exclusive to the Truss family.
-
-| Beam Type | Description | Special Properties |
-|-------------|-------------|-------------------|
-| 🗿 **Andesite Beam** | Plate-style andesite girder | Classic industrial look |
-| 🥉 **Brass Beam** | Plate-style brass construction | Premium mechanical aesthetics |
-| 🟠 **Copper Beam** | Fresh copper with natural shine | Weathers over time |
-| 🟤 **Exposed Copper Beam** | Slightly weathered copper | Natural aging process |
-| 🟫 **Weathered Copper Beam** | Well-aged copper patina | Advanced weathering stage |
-| 🟢 **Oxidized Copper Beam** | Fully oxidized copper | Final weathering stage |
-| 🔶 **Weathered Iron Beam** | Time-worn iron girders | Rustic industrial charm |
-| 🎭 **Copycat Beam** | Mimics any block's texture | Blends into any build style |
+| Type | Description | Truss | Beam | Strut | Bracket |
+|-------------|-------------|-------------|-------------|-------------|
+| 🗿 **Andesite** | The foundation variant from Create: Diesel Generators | ✅ | ✅ | ✅ ✅ | ✅ |
+| 🥉 **Brass** | Elegant brass construction | ✅ | ✅ | ✅ ✅ | ✅ |
+| 🟠 **Copper** | Fresh copper with natural shine | ✅ | ✅ | ✅ ✅ | ✅ |
+| 🟤 **Exposed Copper** | Slightly weathered copper | ✅ | ✅ | ✅ ✅ | ✅ |
+| 🟫 **Weathered Copper** | Well-aged copper patina | ✅ | ✅ | ✅ ✅ | ✅ |
+| 🟢 **Oxidized Copper** | Fully oxidized copper | ✅ | ✅ | ✅ ✅ | ✅ |
+| ⚙️ **Industrial Iron** | Heavy-duty iron construction | ✅ | ✅ | ✅ ✅ | ✅ |
+| 🔶 **Weathered Iron** | Time-worn iron girders | ✅ | ✅ | ✅ ✅ | ✅ |
+| ⬜ **Iron** | The girder in factory new Iron | ✅ | ✅ | ✅ ✅ | ✅ |
+| 🎭 **Copycat** | Mimics any block's texture | ✅ | ✅ | ✅ ✅ | ✅ |
 
 ### 🏗️ **Girder Strut System**
 
@@ -81,6 +66,7 @@ Bridge the gap between girder columns with structural struts that span up to **3
 - **🔄 Natural Weathering**: Copper girders age realistically over time
 - **⚡ Axe Interaction**: Scrape copper girders to reverse weathering
 - **🎯 Smart Placement**: Context-aware girder placement system
+- **Mod Compat for Brackets**: Tested with TFMG & DG. All other should work too
 
 ---
 
@@ -117,6 +103,7 @@ Create: More Girder seamlessly integrates into your Create builds. Simply craft 
 - ✅ **Create** and all official Create addons
 - ✅ **Create: Diesel Generators** (shares andesite girder foundation)
 - ✅ **Create: Enchantment Industry**
+- ✅ **TFMG** and general Mod support for Brackets
 
 ---
 

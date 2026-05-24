@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/bracket/pipe/wall",
+  "textures": {
+    "bracket": "createmoregirder:block/brackets/bracket_oxidized_copper",
+    "plate": "createmoregirder:block/brackets/bracket_plate_oxidized_copper"
+  }
+}

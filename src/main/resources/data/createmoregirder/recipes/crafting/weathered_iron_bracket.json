@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "PCP"
+  ],
+  "key": {
+    "S": {
+      "tag": "forge:nuggets/iron"
+    },
+    "P": {
+      "item": "create:weathered_iron_block"
+    },
+    "C": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "result": {
+    "item": "createmoregirder:weathered_iron_bracket",
+    "count": 4
+  }
+}

@@ -31,6 +31,7 @@ public class CMGPartialModels {
     public static final PartialModel WAXED_WEATHERED_COPPER_GIRDER_STRUT = block("waxed_weathered_copper_truss_strut/strut");
     public static final PartialModel WAXED_OXIDIZED_COPPER_GIRDER_STRUT = block("waxed_oxidized_copper_truss_strut/strut");
     public static final PartialModel INDUSTRIAL_IRON_GIRDER_STRUT = block("industrial_iron_truss_strut/strut");
+    public static final PartialModel IRON_GIRDER_STRUT = block("iron_truss_strut/strut");
     public static final PartialModel WEATHERED_IRON_GIRDER_STRUT = block("weathered_iron_truss_strut/strut");
     public static final PartialModel COPYCAT_GIRDER_STRUT = block("copycat_truss_strut/strut");
     public static final PartialModel ANDESITE_METAL_GIRDER_STRUT = block("andesite_beam_strut/strut");
@@ -39,6 +40,7 @@ public class CMGPartialModels {
     public static final PartialModel WAXED_EXPOSED_COPPER_METAL_GIRDER_STRUT = block("waxed_exposed_copper_beam_strut/strut");
     public static final PartialModel WAXED_WEATHERED_COPPER_METAL_GIRDER_STRUT = block("waxed_weathered_copper_beam_strut/strut");
     public static final PartialModel WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT = block("waxed_oxidized_copper_beam_strut/strut");
+    public static final PartialModel IRON_METAL_GIRDER_STRUT = block("iron_beam_strut/strut");
     public static final PartialModel WEATHERED_IRON_METAL_GIRDER_STRUT = block("weathered_iron_beam_strut/strut");
     public static final PartialModel COPYCAT_METAL_GIRDER_STRUT = block("copycat_beam_strut/strut");
     public static final PartialModel CREATE_METAL_GIRDER_STRUT = block("create_metal_girder_strut/strut");
@@ -51,7 +53,9 @@ public class CMGPartialModels {
 
     private static final String[] GIRDER_VARIANTS = {
         "andesite_truss",
+        "andesite_beam",
         "brass_truss",
+        "brass_beam",
         "copper_truss",
         "exposed_copper_truss",
         "weathered_copper_truss",
@@ -60,9 +64,21 @@ public class CMGPartialModels {
         "waxed_exposed_copper_truss",
         "waxed_weathered_copper_truss",
         "waxed_oxidized_copper_truss",
+        "copper_beam",
+        "exposed_copper_beam",
+        "weathered_copper_beam",
+        "oxidized_copper_beam",
+        "waxed_copper_beam",
+        "waxed_exposed_copper_beam",
+        "waxed_weathered_copper_beam",
+        "waxed_oxidized_copper_beam",
         "industrial_iron_truss",
+        "iron_truss",
+        "iron_beam",
         "weathered_iron_truss",
-        "copycat_truss"
+        "weathered_iron_beam",
+        "copycat_truss",
+        "copycat_beam"
     };
 
     static {
@@ -94,6 +110,7 @@ public class CMGPartialModels {
         "waxed_exposed_copper_beam",
         "waxed_weathered_copper_beam",
         "waxed_oxidized_copper_beam",
+        "iron_beam",
         "weathered_iron_beam",
         "copycat_beam"
     };

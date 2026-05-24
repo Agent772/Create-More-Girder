@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "PCP"
+  ],
+  "key": {
+    "S": {
+      "item": "create:andesite_alloy"
+    },
+    "P": {
+      "item": "minecraft:andesite"
+    },
+    "C": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "result": {
+    "item": "createmoregirder:andesite_bracket",
+    "count": 4
+  }
+}

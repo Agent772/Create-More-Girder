@@ -119,12 +119,36 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
 
         List<BakedQuad> result = new ArrayList<>();
 
-        if (rendersOnBase) {
-            if (side == null && state != null && connected != null && !connected.isEmpty()) {
-                for (Direction direction : connected) {
-                    PartialModel partial = CMGPartialModels.getBracketModel(state.getBlock(), direction);
-                    if (partial != null) {
+        // Face data is shared between the bracket and pole loops on the mimic path.
+        FaceData[] faceData = null;
+        if (hasMimic) {
+            Integer rot = data.get(FACE_ROTATION);
+            int orientation = rot == null ? 0 : Math.floorMod(rot, ORIENTATION_COUNT);
+            faceData = resolveFaceData(mimicked, orientation);
+        }
+
+        if (side == null && state != null && connected != null && !connected.isEmpty()) {
+            for (Direction direction : connected) {
+                PartialModel partial = CMGPartialModels.getBracketModel(state.getBlock(), direction);
+                if (partial == null) continue;
+                if (!hasMimic) {
+                    if (rendersOnBase) {
                         result.addAll(partial.get().getQuads(state, null, rand, data, renderType));
+                    }
+                    continue;
+                }
+                if (!rendersOnMimic || faceData == null) {
+                    continue;
+                }
+                // Mimic path: fetch with renderType=null so the bracket JSON's
+                // declared layer doesn't strip the quads before we route them
+                // onto the mimic's render layer.
+                List<BakedQuad> bracketQuads = partial.get().getQuads(state, null, rand, data, null);
+                for (BakedQuad quad : bracketQuads) {
+                    Direction face = quad.getDirection();
+                    FaceData fd = face != null ? faceData[face.get3DDataValue()] : faceData[0];
+                    if (fd != null && fd.sprite != null) {
+                        result.add(remapQuadUVs(quad, fd.sprite, fd.lightmap, fd.shade));
                     }
                 }
             }
@@ -149,10 +173,6 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
             }
             return result;
         }
-
-        Integer rot = data.get(FACE_ROTATION);
-        int orientation = rot == null ? 0 : Math.floorMod(rot, ORIENTATION_COUNT);
-        FaceData[] faceData = resolveFaceData(mimicked, orientation);
 
         for (BakedQuad quad : poleQuads) {
             String spriteName = quad.getSprite().contents().name().getPath();

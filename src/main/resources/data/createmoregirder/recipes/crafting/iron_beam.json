@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "create:iron_sheet"
+    }
+  },
+  "result": {
+    "item": "createmoregirder:iron_beam",
+    "count": 8
+  }
+}

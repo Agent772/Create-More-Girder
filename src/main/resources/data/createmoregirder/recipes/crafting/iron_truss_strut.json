@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A  ",
+    "GGG",
+    "  A"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "createmoregirder:iron_truss"
+    }
+  },
+  "result": {
+    "item": "createmoregirder:iron_truss_strut",
+    "count": 6
+  }
+}

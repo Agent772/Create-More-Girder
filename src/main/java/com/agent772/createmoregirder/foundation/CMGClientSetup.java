@@ -29,6 +29,7 @@ public class CMGClientSetup {
             ItemBlockRenderTypes.setRenderLayer(CMGBlocks.WAXED_WEATHERED_COPPER_GIRDER.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(CMGBlocks.WAXED_OXIDIZED_COPPER_GIRDER.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(CMGBlocks.INDUSTRIAL_IRON_GIRDER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(CMGBlocks.IRON_GIRDER.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(CMGBlocks.WEATHERED_IRON_GIRDER.get(), RenderType.cutout());
         });
     }

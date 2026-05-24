@@ -11,6 +11,7 @@
     "createmoregirder:waxed_weathered_copper_truss",
     "createmoregirder:waxed_oxidized_copper_truss",
     "createmoregirder:industrial_iron_truss",
+    "createmoregirder:iron_truss",
     "createmoregirder:weathered_iron_truss",
     "createmoregirder:andesite_beam",
     "createmoregirder:brass_beam",
@@ -22,6 +23,7 @@
     "createmoregirder:waxed_exposed_copper_beam",
     "createmoregirder:waxed_weathered_copper_beam",
     "createmoregirder:waxed_oxidized_copper_beam",
+    "createmoregirder:iron_beam",
     "createmoregirder:weathered_iron_beam"
   ]
 }

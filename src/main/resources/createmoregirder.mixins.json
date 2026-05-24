@@ -7,13 +7,20 @@
   "mixins": [
     "BezierConnectionDropMixin",
     "BezierConnectionMixin",
+    "BlockBracketDropMixin",
+    "BracketBlockItemMixin",
+    "BracketBlockMixin",
+    "BracketedBlockEntityBehaviourMixin",
     "PlacementInfoAccessor",
     "SchematicExportMixin",
     "TrackBlockItemMixin",
     "TrackPaverMixin",
-    "TrackPlacementMixin"
+    "TrackPlacementMixin",
+    "WrenchItemMixin"
   ],
   "client": [
+    "BakedModelWrapperWithDataMixin",
+    "BracketedKineticBlockModelMixin",
     "GirderVisualMixin",
     "TrackRendererMixin"
   ],

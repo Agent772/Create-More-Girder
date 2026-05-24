@@ -1,0 +1,154 @@
+{
+  "variants": {
+    "axis_along_first=false,facing=down,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/ground_waxed_exposed_copper",
+      "x": 180
+    },
+    "axis_along_first=false,facing=down,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/ground_waxed_exposed_copper",
+      "x": 180
+    },
+    "axis_along_first=false,facing=down,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/ground_waxed_exposed_copper",
+      "x": 180
+    },
+    "axis_along_first=false,facing=east,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/wall_waxed_exposed_copper"
+    },
+    "axis_along_first=false,facing=east,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/wall_waxed_exposed_copper"
+    },
+    "axis_along_first=false,facing=east,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/wall_waxed_exposed_copper"
+    },
+    "axis_along_first=false,facing=north,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/wall_waxed_exposed_copper",
+      "x": 90,
+      "y": 270
+    },
+    "axis_along_first=false,facing=north,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/wall_waxed_exposed_copper",
+      "x": 90,
+      "y": 270
+    },
+    "axis_along_first=false,facing=north,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/wall_waxed_exposed_copper",
+      "x": 90,
+      "y": 270
+    },
+    "axis_along_first=false,facing=south,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/wall_waxed_exposed_copper",
+      "x": 90,
+      "y": 90
+    },
+    "axis_along_first=false,facing=south,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/wall_waxed_exposed_copper",
+      "x": 90,
+      "y": 90
+    },
+    "axis_along_first=false,facing=south,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/wall_waxed_exposed_copper",
+      "x": 90,
+      "y": 90
+    },
+    "axis_along_first=false,facing=up,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/ground_waxed_exposed_copper"
+    },
+    "axis_along_first=false,facing=up,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/ground_waxed_exposed_copper"
+    },
+    "axis_along_first=false,facing=up,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/ground_waxed_exposed_copper"
+    },
+    "axis_along_first=false,facing=west,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/wall_waxed_exposed_copper",
+      "y": 180
+    },
+    "axis_along_first=false,facing=west,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/wall_waxed_exposed_copper",
+      "y": 180
+    },
+    "axis_along_first=false,facing=west,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/wall_waxed_exposed_copper",
+      "y": 180
+    },
+    "axis_along_first=true,facing=down,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/ground_waxed_exposed_copper",
+      "x": 180,
+      "y": 90
+    },
+    "axis_along_first=true,facing=down,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/ground_waxed_exposed_copper",
+      "x": 180,
+      "y": 90
+    },
+    "axis_along_first=true,facing=down,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/ground_waxed_exposed_copper",
+      "x": 180,
+      "y": 90
+    },
+    "axis_along_first=true,facing=east,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/wall_waxed_exposed_copper",
+      "x": 90
+    },
+    "axis_along_first=true,facing=east,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/wall_waxed_exposed_copper",
+      "x": 90
+    },
+    "axis_along_first=true,facing=east,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/wall_waxed_exposed_copper",
+      "x": 90
+    },
+    "axis_along_first=true,facing=north,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/wall_waxed_exposed_copper",
+      "y": 270
+    },
+    "axis_along_first=true,facing=north,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/wall_waxed_exposed_copper",
+      "y": 270
+    },
+    "axis_along_first=true,facing=north,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/wall_waxed_exposed_copper",
+      "y": 270
+    },
+    "axis_along_first=true,facing=south,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/wall_waxed_exposed_copper",
+      "y": 90
+    },
+    "axis_along_first=true,facing=south,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/wall_waxed_exposed_copper",
+      "y": 90
+    },
+    "axis_along_first=true,facing=south,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/wall_waxed_exposed_copper",
+      "y": 90
+    },
+    "axis_along_first=true,facing=up,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/ground_waxed_exposed_copper",
+      "y": 90
+    },
+    "axis_along_first=true,facing=up,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/ground_waxed_exposed_copper",
+      "y": 90
+    },
+    "axis_along_first=true,facing=up,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/ground_waxed_exposed_copper",
+      "y": 90
+    },
+    "axis_along_first=true,facing=west,type=cog": {
+      "model": "createmoregirder:block/bracket/cog/wall_waxed_exposed_copper",
+      "x": 90,
+      "y": 180
+    },
+    "axis_along_first=true,facing=west,type=pipe": {
+      "model": "createmoregirder:block/bracket/pipe/wall_waxed_exposed_copper",
+      "x": 90,
+      "y": 180
+    },
+    "axis_along_first=true,facing=west,type=shaft": {
+      "model": "createmoregirder:block/bracket/shaft/wall_waxed_exposed_copper",
+      "x": 90,
+      "y": 180
+    }
+  }
+}

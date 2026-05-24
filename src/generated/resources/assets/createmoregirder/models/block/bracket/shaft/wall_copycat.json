@@ -1,0 +1,7 @@
+{
+  "parent": "create:block/bracket/shaft/wall",
+  "textures": {
+    "bracket": "createmoregirder:block/brackets/bracket_copycat",
+    "plate": "createmoregirder:block/brackets/bracket_plate_copycat"
+  }
+}

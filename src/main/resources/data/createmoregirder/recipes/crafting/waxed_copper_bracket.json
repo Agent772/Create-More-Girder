@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NBN",
+    "PCP"
+  ],
+  "key": {
+    "N": {
+      "tag": "forge:nuggets/copper"
+    },
+    "B": {
+      "item": "minecraft:waxed_copper_block"
+    },
+    "P": {
+      "item": "create:copper_sheet"
+    },
+    "C": {
+      "item": "create:andesite_alloy"
+    }
+  },
+  "result": {
+    "item": "createmoregirder:waxed_copper_bracket",
+    "count": 4
+  }
+}
