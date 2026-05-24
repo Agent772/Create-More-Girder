@@ -3,6 +3,7 @@
 ### Fixed
 - Fixed shaft / cog / fluid-pipe brackets dropping on the ground when their host is broken in **creative** — brackets and any copycat mimic are now discarded with the rest of the block (survival pickaxe / hand breaks still pop bracket and mimic on the ground as before)
 - Fixed sneak-wrenching (pickup) a shaft / cog / fluid-pipe with a non-copycat bracket popping the bracket on the ground — the bracket now follows the host into the player's inventory in survival (overflow to the ground if full) and is discarded in creative, matching the existing copycat-bracket pickup behaviour
+- Fixed track paving with **Iron Truss** and **Iron Beam** doing nothing — the legacy hand-written `paving_girder` / `girder` tag JSONs in `src/main/resources` were shadowing the data-generated tags and missing the new iron entries, so the paver could not recognise iron girders. The stale tag files are now removed; the Registrate-generated tag set under `src/generated/resources` is the single source of truth
 
 ## Version 2.1.0
 
