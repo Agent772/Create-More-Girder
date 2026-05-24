@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+- Fixed shaft / cog / fluid-pipe brackets dropping on the ground when their host is broken in **creative** — brackets and any copycat mimic are now discarded with the rest of the block (survival pickaxe / hand breaks still pop bracket and mimic on the ground as before)
+- Fixed sneak-wrenching (pickup) a shaft / cog / fluid-pipe with a non-copycat bracket popping the bracket on the ground — the bracket now follows the host into the player's inventory in survival (overflow to the ground if full) and is discarded in creative, matching the existing copycat-bracket pickup behaviour
+
 ## Version 2.1.0
 
 ### Added
