@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * reach {@code playerWillDestroy} either, so it also keeps Create's vanilla
  * ground-pop behaviour.
  */
-@Mixin(value = Block.class, remap = false)
+@Mixin(Block.class)
 public abstract class BlockBracketDropMixin {
 
     @Inject(

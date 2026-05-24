@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Non-sneak wrench taps fall through untouched. The pickaxe / hand path is
  * handled separately by {@link BlockBracketDropMixin}.
  */
-@Mixin(value = WrenchItem.class, remap = false)
+@Mixin(WrenchItem.class)
 public abstract class WrenchItemMixin {
 
     @Inject(method = "useOn", at = @At("HEAD"))
