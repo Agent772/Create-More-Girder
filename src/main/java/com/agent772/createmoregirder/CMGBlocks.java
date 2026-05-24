@@ -1257,12 +1257,12 @@ public class CMGBlocks {
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
-                        .blockstate(new CMGBracketGenerator("zinc", "zinc")::generate)
+                        .blockstate(new CMGBracketGenerator("copycat", "copycat")::generate)
                         .onRegister(CreateRegistrate.blockModel(() -> CopycatBracketBakedModel::new))
                         .tag(CMGTags.BRACKET_BLOCK, CMGTags.COPYCAT_BRACKET_BLOCK)
                         .item(CopycatBracketBlockItem::new)
                         .tag(CMGTags.BRACKET_ITEM, CMGTags.COPYCAT_BRACKET_ITEM)
-                        .transform(CMGBracketGenerator.itemModel("zinc"))
+                        .transform(CMGBracketGenerator.itemModel("copycat"))
                         .register();
 
         // Waxed copper brackets only (no unwaxed copper bracket variants in-game)

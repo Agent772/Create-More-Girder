@@ -1,7 +1,0 @@
-{
-  "parent": "create:block/bracket/cog/wall",
-  "textures": {
-    "bracket": "createmoregirder:block/brackets/bracket_zinc",
-    "plate": "createmoregirder:block/brackets/bracket_plate_zinc"
-  }
-}

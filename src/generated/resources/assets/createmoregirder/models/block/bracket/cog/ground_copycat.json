@@ -1,5 +1,5 @@
 {
-  "parent": "create:block/bracket/item",
+  "parent": "create:block/bracket/cog/ground",
   "textures": {
     "bracket": "createmoregirder:block/brackets/bracket_copycat",
     "plate": "createmoregirder:block/brackets/bracket_plate_copycat"
