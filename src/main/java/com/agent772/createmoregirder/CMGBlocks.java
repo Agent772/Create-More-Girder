@@ -688,6 +688,7 @@ public class CMGBlocks {
         // Andesite Metal Girder - visual base for the _metal_girder family
         public static final BlockEntry<AndesiteMetalGirderBlock> ANDESITE_METAL_GIRDER =
                 REGISTRATE.block("andesite_beam", AndesiteMetalGirderBlock::new)
+                        .lang("Andesite Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -699,6 +700,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<AndesiteMetalGirderEncasedShaftBlock> ANDESITE_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("andesite_beam_encased_shaft", AndesiteMetalGirderEncasedShaftBlock::new)
+                        .lang("Andesite Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -715,6 +717,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<GirderStrutBlock> ANDESITE_METAL_GIRDER_STRUT =
                 REGISTRATE.block("andesite_beam_strut", GirderStrutBlock.andesite_metal())
+                        .lang("Andesite Girder Strut")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
@@ -736,6 +739,7 @@ public class CMGBlocks {
         // Brass Metal Girder
         public static final BlockEntry<BrassMetalGirderBlock> BRASS_METAL_GIRDER =
                 REGISTRATE.block("brass_beam", BrassMetalGirderBlock::new)
+                        .lang("Brass Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -747,6 +751,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<BrassMetalGirderEncasedShaftBlock> BRASS_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("brass_beam_encased_shaft", BrassMetalGirderEncasedShaftBlock::new)
+                        .lang("Brass Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -763,6 +768,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<GirderStrutBlock> BRASS_METAL_GIRDER_STRUT =
                 REGISTRATE.block("brass_beam_strut", GirderStrutBlock.brass_metal())
+                        .lang("Brass Girder Strut")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
@@ -784,6 +790,7 @@ public class CMGBlocks {
         // Copper Metal Girder + weathering chain
         public static final BlockEntry<CopperMetalGirderBlock> COPPER_METAL_GIRDER =
                 REGISTRATE.block("copper_beam", CopperMetalGirderBlock::new)
+                        .lang("Copper Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
@@ -795,6 +802,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<CopperMetalGirderEncasedShaftBlock> COPPER_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("copper_beam_encased_shaft", CopperMetalGirderEncasedShaftBlock::new)
+                        .lang("Copper Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
@@ -811,6 +819,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<ExposedCopperMetalGirderBlock> EXPOSED_COPPER_METAL_GIRDER =
                 REGISTRATE.block("exposed_copper_beam", ExposedCopperMetalGirderBlock::new)
+                        .lang("Exposed Copper Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
@@ -822,6 +831,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<ExposedCopperMetalGirderEncasedShaftBlock> EXPOSED_COPPER_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("exposed_copper_beam_encased_shaft", ExposedCopperMetalGirderEncasedShaftBlock::new)
+                        .lang("Exposed Copper Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
@@ -838,6 +848,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WeatheredCopperMetalGirderBlock> WEATHERED_COPPER_METAL_GIRDER =
                 REGISTRATE.block("weathered_copper_beam", WeatheredCopperMetalGirderBlock::new)
+                        .lang("Weathered Copper Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.WARPED_STEM).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
@@ -849,6 +860,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WeatheredCopperMetalGirderEncasedShaftBlock> WEATHERED_COPPER_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("weathered_copper_beam_encased_shaft", WeatheredCopperMetalGirderEncasedShaftBlock::new)
+                        .lang("Weathered Copper Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
@@ -865,6 +877,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<OxidizedCopperMetalGirderBlock> OXIDIZED_COPPER_METAL_GIRDER =
                 REGISTRATE.block("oxidized_copper_beam", OxidizedCopperMetalGirderBlock::new)
+                        .lang("Oxidized Copper Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.WARPED_NYLIUM).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
@@ -876,6 +889,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<OxidizedCopperMetalGirderEncasedShaftBlock> OXIDIZED_COPPER_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("oxidized_copper_beam_encased_shaft", OxidizedCopperMetalGirderEncasedShaftBlock::new)
+                        .lang("Oxidized Copper Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK).randomTicks())
                         .transform(pickaxeOnly())
@@ -892,6 +906,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WaxedCopperMetalGirderBlock> WAXED_COPPER_METAL_GIRDER =
                 REGISTRATE.block("waxed_copper_beam", WaxedCopperMetalGirderBlock::new)
+                        .lang("Waxed Copper Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_ORANGE).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -903,6 +918,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WaxedCopperMetalGirderEncasedShaftBlock> WAXED_COPPER_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("waxed_copper_beam_encased_shaft", WaxedCopperMetalGirderEncasedShaftBlock::new)
+                        .lang("Waxed Copper Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -919,6 +935,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<GirderStrutBlock> WAXED_COPPER_METAL_GIRDER_STRUT =
                 REGISTRATE.block("waxed_copper_beam_strut", GirderStrutBlock.waxed_copper_metal())
+                        .lang("Waxed Copper Girder Strut")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
@@ -939,6 +956,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WaxedExposedCopperMetalGirderBlock> WAXED_EXPOSED_COPPER_METAL_GIRDER =
                 REGISTRATE.block("waxed_exposed_copper_beam", WaxedExposedCopperMetalGirderBlock::new)
+                        .lang("Waxed Exposed Copper Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.TERRACOTTA_LIGHT_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -950,6 +968,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WaxedExposedCopperMetalGirderEncasedShaftBlock> WAXED_EXPOSED_COPPER_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("waxed_exposed_copper_beam_encased_shaft", WaxedExposedCopperMetalGirderEncasedShaftBlock::new)
+                        .lang("Waxed Exposed Copper Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -966,6 +985,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<GirderStrutBlock> WAXED_EXPOSED_COPPER_METAL_GIRDER_STRUT =
                 REGISTRATE.block("waxed_exposed_copper_beam_strut", GirderStrutBlock.waxed_exposed_copper_metal())
+                        .lang("Waxed Exposed Copper Girder Strut")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
@@ -986,6 +1006,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WaxedWeatheredCopperMetalGirderBlock> WAXED_WEATHERED_COPPER_METAL_GIRDER =
                 REGISTRATE.block("waxed_weathered_copper_beam", WaxedWeatheredCopperMetalGirderBlock::new)
+                        .lang("Waxed Weathered Copper Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.WARPED_STEM).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -997,6 +1018,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WaxedWeatheredCopperMetalGirderEncasedShaftBlock> WAXED_WEATHERED_COPPER_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("waxed_weathered_copper_beam_encased_shaft", WaxedWeatheredCopperMetalGirderEncasedShaftBlock::new)
+                        .lang("Waxed Weathered Copper Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -1013,6 +1035,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<GirderStrutBlock> WAXED_WEATHERED_COPPER_METAL_GIRDER_STRUT =
                 REGISTRATE.block("waxed_weathered_copper_beam_strut", GirderStrutBlock.waxed_weathered_copper_metal())
+                        .lang("Waxed Weathered Copper Girder Strut")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
@@ -1033,6 +1056,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WaxedOxidizedCopperMetalGirderBlock> WAXED_OXIDIZED_COPPER_METAL_GIRDER =
                 REGISTRATE.block("waxed_oxidized_copper_beam", WaxedOxidizedCopperMetalGirderBlock::new)
+                        .lang("Waxed Oxidized Copper Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.WARPED_NYLIUM).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -1044,6 +1068,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WaxedOxidizedCopperMetalGirderEncasedShaftBlock> WAXED_OXIDIZED_COPPER_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("waxed_oxidized_copper_beam_encased_shaft", WaxedOxidizedCopperMetalGirderEncasedShaftBlock::new)
+                        .lang("Waxed Oxidized Copper Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -1060,6 +1085,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<GirderStrutBlock> WAXED_OXIDIZED_COPPER_METAL_GIRDER_STRUT =
                 REGISTRATE.block("waxed_oxidized_copper_beam_strut", GirderStrutBlock.waxed_oxidized_copper_metal())
+                        .lang("Waxed Oxidized Copper Girder Strut")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
@@ -1081,6 +1107,7 @@ public class CMGBlocks {
         // Iron Metal Girder
         public static final BlockEntry<IronMetalGirderBlock> IRON_METAL_GIRDER =
                 REGISTRATE.block("iron_beam", IronMetalGirderBlock::new)
+                        .lang("Iron Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.METAL).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -1092,6 +1119,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<IronMetalGirderEncasedShaftBlock> IRON_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("iron_beam_encased_shaft", IronMetalGirderEncasedShaftBlock::new)
+                        .lang("Iron Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.METAL).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -1108,6 +1136,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<GirderStrutBlock> IRON_METAL_GIRDER_STRUT =
                 REGISTRATE.block("iron_beam_strut", GirderStrutBlock.iron_metal())
+                        .lang("Iron Girder Strut")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
@@ -1129,6 +1158,7 @@ public class CMGBlocks {
         // Weathered Iron Metal Girder
         public static final BlockEntry<WeatheredIronMetalGirderBlock> WEATHERED_IRON_METAL_GIRDER =
                 REGISTRATE.block("weathered_iron_beam", WeatheredIronMetalGirderBlock::new)
+                        .lang("Weathered Iron Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_YELLOW).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -1140,6 +1170,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<WeatheredIronMetalGirderEncasedShaftBlock> WEATHERED_IRON_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("weathered_iron_beam_encased_shaft", WeatheredIronMetalGirderEncasedShaftBlock::new)
+                        .lang("Weathered Iron Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.COLOR_GRAY).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
@@ -1156,6 +1187,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<GirderStrutBlock> WEATHERED_IRON_METAL_GIRDER_STRUT =
                 REGISTRATE.block("weathered_iron_beam_strut", GirderStrutBlock.weathered_iron_metal())
+                        .lang("Weathered Iron Girder Strut")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
@@ -1177,6 +1209,7 @@ public class CMGBlocks {
         // Copycat Metal Girder
         public static final BlockEntry<CopycatMetalGirderStrutBlock> COPYCAT_METAL_GIRDER_STRUT =
                 REGISTRATE.block("copycat_beam_strut", CopycatMetalGirderStrutBlock::new)
+                        .lang("Copycat Girder Strut")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.destroyTime(0.3f).noOcclusion())
                         .transform(pickaxeOnly())
@@ -1218,6 +1251,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<CopycatMetalGirderBlock> COPYCAT_METAL_GIRDER =
                 REGISTRATE.block("copycat_beam", CopycatMetalGirderBlock::new)
+                        .lang("Copycat Girder")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.STONE).sound(SoundType.NETHERITE_BLOCK).noOcclusion())
                         .transform(pickaxeOnly())
@@ -1229,6 +1263,7 @@ public class CMGBlocks {
 
         public static final BlockEntry<CopycatMetalGirderEncasedShaftBlock> COPYCAT_METAL_GIRDER_ENCASED_SHAFT =
                 REGISTRATE.block("copycat_beam_encased_shaft", CopycatMetalGirderEncasedShaftBlock::new)
+                        .lang("Copycat Girder Encased Shaft")
                         .initialProperties(SharedProperties::softMetal)
                         .properties(p -> p.mapColor(MapColor.STONE).sound(SoundType.NETHERITE_BLOCK))
                         .transform(pickaxeOnly())
