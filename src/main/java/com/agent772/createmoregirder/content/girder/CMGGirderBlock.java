@@ -1,5 +1,6 @@
 package com.agent772.createmoregirder.content.girder;
 
+import com.agent772.createmoregirder.config.CMGServerConfig;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
@@ -29,11 +30,19 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  * <p>Overrides {@link GirderBlock#updateShape} so that TOP and BOTTOM bracket
  * connectors on horizontal girders are <em>sticky</em>: once enabled they are
  * never cleared by neighbor updates. A connector is enabled when a non-air
- * block appears above (TOP) or below (BOTTOM).
+ * block appears above (TOP) or below (BOTTOM). The same override also keeps a
+ * horizontal beam from collapsing back into a pole when it loses its
+ * connections.
  *
  * <p>This prevents the neighbor cascade triggered by {@code TrackPaver} from
  * undoing the {@code TOP=true} set by the paving mixin, and also ensures that
  * placing a block above a girder always shows the bracket cap.
+ *
+ * <p>This CMG-specific behavior is gated behind
+ * {@link CMGServerConfig#createGirderPlacementSystem()}: when the Create
+ * placement system is active (the default), both overrides delegate straight to
+ * {@link GirderBlock} so the girders behave exactly like base Create's metal
+ * girder.
  */
 public class CMGGirderBlock extends GirderBlock {
 
@@ -46,6 +55,10 @@ public class CMGGirderBlock extends GirderBlock {
         BlockState state = super.getStateForPlacement(context);
         if (state == null)
             return null;
+
+        // When the Create placement system is active, behave exactly like base Create.
+        if (CMGServerConfig.createGirderPlacementSystem())
+            return state;
 
         if (state.getValue(X) ^ state.getValue(Z)) {
             BlockPos pos = context.getClickedPos();
@@ -61,6 +74,11 @@ public class CMGGirderBlock extends GirderBlock {
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
                                   LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
+        // When the Create placement system is active, defer entirely to base Create:
+        // this restores both base connector rules and beam<->pole collapse behavior.
+        if (CMGServerConfig.createGirderPlacementSystem())
+            return super.updateShape(state, direction, neighbourState, world, pos, neighbourPos);
+
         boolean prevX = state.getValue(X);
         boolean prevZ = state.getValue(Z);
         boolean wasHorizontal = prevX ^ prevZ;

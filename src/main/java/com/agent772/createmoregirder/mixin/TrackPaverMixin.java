@@ -1,6 +1,7 @@
 package com.agent772.createmoregirder.mixin;
 
 import com.agent772.createmoregirder.CMGTags;
+import com.agent772.createmoregirder.config.CMGServerConfig;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import com.simibubi.create.content.trains.track.TrackPaver;
@@ -47,8 +48,11 @@ public abstract class TrackPaverMixin {
 
     /**
      * Sets TOP bracket for CMG girders during straight track paving.
-     * The base class {@code CMGGirderBlock.updateShape} preserves TOP once set,
-     * so the neighbor cascade from placement cannot undo this.
+     * Only active when the CMG placement system is selected
+     * ({@code createGirderPlacementSystem=false}); with the Create system the
+     * injection is skipped and base rules apply. In CMG mode
+     * {@code CMGGirderBlock.updateShape} preserves TOP once set, so the neighbor
+     * cascade from placement cannot undo this.
      */
     @ModifyArg(
         method = "paveStraight",
@@ -57,7 +61,7 @@ public abstract class TrackPaverMixin {
         remap = false
     )
     private static BlockState cmg$setTopBracketForPaving(BlockState state) {
-        if (state.is(CMGTags.GIRDER_BLOCK)) {
+        if (!CMGServerConfig.createGirderPlacementSystem() && state.is(CMGTags.GIRDER_BLOCK)) {
             return state.setValue(GirderBlock.TOP, true);
         }
         return state;
@@ -74,7 +78,7 @@ public abstract class TrackPaverMixin {
         remap = false
     )
     private static BlockState cmg$setTopBracketForCurvePaving(BlockState state) {
-        if (state.is(CMGTags.GIRDER_BLOCK)) {
+        if (!CMGServerConfig.createGirderPlacementSystem() && state.is(CMGTags.GIRDER_BLOCK)) {
             return state.setValue(GirderBlock.TOP, true);
         }
         return state;
