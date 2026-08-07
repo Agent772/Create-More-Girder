@@ -19,16 +19,16 @@
 
 ## ✨ **Features**
 
-**Create: More Girder** revolutionizes your structural building possibilities by adding **two full girder families — Trusses and Beams, totalling 17 unique variants** — and a full **girder strut system** to complement the Create mod ecosystem. Each girder type offers distinctive aesthetics while maintaining full compatibility with Create's mechanical systems.
+**Create: More Girder** revolutionizes your structural building possibilities by adding **two full girder families — Trusses and Girders, totalling 17 unique variants** — and a full **girder strut system** to complement the Create mod ecosystem. Each girder type offers distinctive aesthetics while maintaining full compatibility with Create's mechanical systems.
 
 ![Girder Variants](src/main/resources/GirderTypesV2.1.0.png)
 
-### 🎨 **Trusses** & 🧱 **Beams** & 🏗️ **Struts** & **Brackets**
+### 🎨 **Trusses** & 🧱 **Girders** & 🏗️ **Struts** & **Brackets**
 
-2 girder families: The OG loved **Beams** from Create, the inspiration from Diesel Generators: **Truss**.
+2 girder families: The OG loved **Girders** from Create, the inspiration from Diesel Generators: **Truss**.
 Thanks to Bits n Bobs all with **Struts** and now with **Brackets** too.
 
-| Type | Description | Truss | Beam | Strut | Bracket |
+| Type | Description | Truss | Girder | Strut | Bracket |
 |-------------|-------------|-------------|-------------|-------------|
 | 🗿 **Andesite** | The foundation variant from Create: Diesel Generators | ✅ | ✅ | ✅ ✅ | ✅ |
 | 🥉 **Brass** | Elegant brass construction | ✅ | ✅ | ✅ ✅ | ✅ |
@@ -45,7 +45,7 @@ Thanks to Bits n Bobs all with **Struts** and now with **Brackets** too.
 
 Bridge the gap between girder columns with structural struts that span up to **30 blocks**:
 
-- **Girder Struts**: Connect two girder anchors with a dynamic beam — material cost scales with length. Available for both the Truss and Beam families
+- **Girder Struts**: Connect two girder anchors with a dynamic beam — material cost scales with length. Available for both the Truss and Girder families
 - **Copycat Struts**: Same functionality as regular struts but mimic any block's texture for seamless integration
 - **Metal Girder Strut**: A dedicated strut that bridges Create's own vanilla `create:metal_girder` blocks
 - **Contraption Compatible**: Struts assemble onto Create contraptions (bearings, pistons, cart assemblers) and move with the structure
