@@ -42,7 +42,26 @@ public class GirderStrutModelManipulator {
         return bakeConnectionToConsumer(connection, modelType, lightFunction, null);
     }
 
+    /**
+     * Bakes the connection mesh with the mimicked block's <em>base</em> layer (or the
+     * strut's own textures when {@code copycatFaceData} is {@code null}), including the
+     * end caps.
+     */
     static List<Consumer<BufferBuilder>> bakeConnectionToConsumer(final GirderStrutModelBuilder.GirderConnection connection, final StrutModelType modelType, final Function<Vector3f, Integer> lightFunction, @org.jetbrains.annotations.Nullable final CopycatStrutTextureRemapper.FaceData[] copycatFaceData) {
+        return bake(connection, modelType, lightFunction, copycatFaceData, false);
+    }
+
+    /**
+     * Bakes one overlay depth of a mimicking connection (e.g. a translucent glow shell):
+     * only faces with a layer at this depth emit quads, and no end caps are generated —
+     * caps belong to the base pass. Rendered on the translucent pass, alpha-blended over
+     * the base mesh, reproducing the copycat girder's layer compositing.
+     */
+    static List<Consumer<BufferBuilder>> bakeConnectionOverlayToConsumer(final GirderStrutModelBuilder.GirderConnection connection, final StrutModelType modelType, final Function<Vector3f, Integer> lightFunction, final CopycatStrutTextureRemapper.FaceData[] overlayFaceData) {
+        return bake(connection, modelType, lightFunction, overlayFaceData, true);
+    }
+
+    private static List<Consumer<BufferBuilder>> bake(final GirderStrutModelBuilder.GirderConnection connection, final StrutModelType modelType, final Function<Vector3f, Integer> lightFunction, @org.jetbrains.annotations.Nullable final CopycatStrutTextureRemapper.FaceData[] copycatFaceData, final boolean overlayPass) {
         if (connection.renderLength() <= GirderGeometry.EPSILON) {
             return List.of();
         }
@@ -74,18 +93,27 @@ public class GirderStrutModelManipulator {
         // For copycat struts, use the mimicked block's texture for caps
         ResourceLocation capTexture = modelType.getCapTexture();
         if (copycatFaceData != null) {
-            TextureAtlasSprite capSprite = copycatFaceData[Direction.DOWN.get3DDataValue()].sprite();
+            CopycatStrutTextureRemapper.FaceData capFd = copycatFaceData[Direction.DOWN.get3DDataValue()];
+            TextureAtlasSprite capSprite = capFd != null ? capFd.sprite() : null;
             if (capSprite != null) {
                 capTexture = capSprite.contents().name();
             }
         }
 
         final List<Consumer<BufferBuilder>> quadConsumer = new ArrayList<>();
-        final GirderCapAccumulator capAccumulator = new GirderCapAccumulator(capTexture);
+        final GirderCapAccumulator capAccumulator = overlayPass ? null : new GirderCapAccumulator(capTexture);
         for (final GirderMeshQuad quad : quads) {
-            quad.transformAndEmitToConsumer(pose, normalMatrix, planePoint, planeNormal, capAccumulator, quadConsumer, lightFunction, copycatFaceData);
+            quad.transformAndEmitToConsumer(pose, normalMatrix, planePoint, planeNormal, capAccumulator, quadConsumer, lightFunction, copycatFaceData, overlayPass);
         }
-        capAccumulator.emitCapsToConsumer(planeNormal, quadConsumer, lightFunction);
+        if (capAccumulator != null) {
+            // Caps take the base (core) layer's texture; shade them like the girder's
+            // shaded faces when the sampled layer is shaded, full-bright otherwise.
+            final CopycatStrutTextureRemapper.FaceData capFace = copycatFaceData != null
+                    ? copycatFaceData[Direction.DOWN.get3DDataValue()]
+                    : null;
+            final boolean capBakeDiffuse = capFace != null && capFace.shade();
+            capAccumulator.emitCapsToConsumer(planeNormal, quadConsumer, lightFunction, capBakeDiffuse);
+        }
         return quadConsumer;
     }
 

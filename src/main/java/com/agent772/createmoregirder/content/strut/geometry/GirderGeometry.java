@@ -1,5 +1,6 @@
 package com.agent772.createmoregirder.content.strut.geometry;
 
+import com.agent772.createmoregirder.content.strut.IBlockEntityRelighter;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.simibubi.create.foundation.model.BakedQuadHelper;
 import net.minecraft.client.renderer.LightTexture;
@@ -35,6 +36,28 @@ public final class GirderGeometry {
     public static final float EPSILON = 1.0e-4f;
     public static final int DEFAULT_COLOR = 0xFFFFFFFF;
     public static final int DEFAULT_LIGHT = LightTexture.pack(15, 15);
+
+    /**
+     * Vanilla's directional diffuse factor ({@code x²·0.6 + y²·(3+y)/4 + z²·0.8},
+     * clamped to 1). For axis-aligned normals this evaluates to exactly the chunk
+     * renderer's per-face shade constants (0.5 down, 0.6 east/west, 0.8 north/south,
+     * 1.0 up). Mimicking beams bake this into their vertex colours for layers whose
+     * source quad is shaded (and leave unshaded layers white) so the BE-rendered beam
+     * shades each face exactly like the chunk-rendered copycat girder, instead of
+     * using {@code SuperByteBuffer}'s slightly different all-or-nothing diffuse.
+     */
+    public static float diffuse(final float nx, final float ny, final float nz) {
+        return Math.min(nx * nx * 0.6f + ny * ny * ((3f + ny) / 4f) + nz * nz * 0.8f, 1f);
+    }
+
+    public static int diffuseColor(final Vector3f normal) {
+        float f = diffuse(normal.x, normal.y, normal.z);
+        if (!Float.isFinite(f)) {
+            return DEFAULT_COLOR;
+        }
+        final int c = (int) Mth.clamp(255f * f + 0.5f, 0f, 255f);
+        return 0xFF000000 | (c << 16) | (c << 8) | c;
+    }
 
     public static float signedDistance(final Vector3f point, final Vector3f planeNormal, final Vector3f planePoint) {
         return new Vector3f(point).sub(planePoint).dot(planeNormal);
@@ -195,20 +218,49 @@ public final class GirderGeometry {
     }
 
     public static void emitPolygonToConsumer(
-            List<GirderVertex> verticesToTestRelight,
+            final List<GirderVertex> verticesToTestRelight,
             final List<Consumer<BufferBuilder>> consumer,
             final Function<Vector3f, Integer> lightFunction) {
+        emitPolygonToConsumer(verticesToTestRelight, consumer, lightFunction, 0, false);
+    }
+
+    /**
+     * Emits the polygon with per-vertex world light from {@code lightFunction}, combined
+     * with {@code faceLightmap} when non-zero. The face lightmap carries the mimicked
+     * block's sampled emissive lightmap (baked into the source model quad, see
+     * {@code MimicFaceSampler#toLayer}); combining it via
+     * {@link IBlockEntityRelighter#maximizeLight} makes copycat strut beams glow at the
+     * same brightness as copycat girders, rather than falling back to dull world light
+     * when the mimicked block emits through a baked lightmap instead of block light.
+     *
+     * <p>When {@code bakeDiffuse} is set (mimicking beams render with
+     * {@code SuperByteBuffer}'s diffuse disabled and reproduce the chunk renderer's
+     * per-quad shade instead), the polygon's vertex colour carries {@link #diffuseColor}
+     * so shaded layers darken exactly like the girder's, while unshaded (glow) layers
+     * pass {@code false} and stay full-bright white.
+     */
+    public static void emitPolygonToConsumer(
+            List<GirderVertex> verticesToTestRelight,
+            final List<Consumer<BufferBuilder>> consumer,
+            final Function<Vector3f, Integer> lightFunction,
+            final int faceLightmap,
+            final boolean bakeDiffuse) {
         verticesToTestRelight = dedupeLoopVertices(verticesToTestRelight);
         final Vector3f normal = GirderGeometry.computePolygonNormal(verticesToTestRelight);
+        final int color = bakeDiffuse ? diffuseColor(normal) : DEFAULT_COLOR;
         final List<GirderVertex> vertices = new ArrayList<>();
 
         for (final GirderVertex v : verticesToTestRelight) {
+            int light = lightFunction.apply(v.position());
+            if (faceLightmap != 0) {
+                light = IBlockEntityRelighter.maximizeLight(light, faceLightmap);
+            }
             vertices.add(new GirderVertex(
                     v.position(),
                     normal,
                     v.u(),
                     v.v(),
-                    DEFAULT_COLOR, lightFunction.apply(v.position())
+                    color, light
             ));
         }
         if (vertices.size() == 4) {

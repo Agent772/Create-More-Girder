@@ -40,6 +40,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
     private boolean needsCostMigration;
     private transient int cachedDropCost = -1;
     public @Nullable SuperByteBuffer connectionRenderBufferCache;
+    public @Nullable SuperByteBuffer connectionOverlayRenderBufferCache;
 
     public GirderStrutBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -270,6 +271,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
             }
         }
         connectionRenderBufferCache = null;
+        connectionOverlayRenderBufferCache = null;
         if (!connections.isEmpty() && tag.contains("StoredFacing")) {
             Direction storedFacing = Direction.from3DDataValue(tag.getInt("StoredFacing"));
             Direction currentFacing = getBlockState().getValue(GirderStrutBlock.FACING);
@@ -334,6 +336,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
 
     private void notifyModelChange() {
         connectionRenderBufferCache = null;
+        connectionOverlayRenderBufferCache = null;
         if (level != null) {
             if (level.isClientSide) {
                 requestModelDataUpdate();

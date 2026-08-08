@@ -237,17 +237,39 @@ public final class GirderMeshQuad {
     }
 
     public void transformAndEmitToConsumer(Matrix4f pose, Matrix3f normalMatrix, Vector3f planePoint, Vector3f planeNormal, GirderCapAccumulator capAccumulator, List<Consumer<BufferBuilder>> bufferConsumer, Function<Vector3f, Integer> lightFunction) {
-        transformAndEmitToConsumer(pose, normalMatrix, planePoint, planeNormal, capAccumulator, bufferConsumer, lightFunction, null);
+        transformAndEmitToConsumer(pose, normalMatrix, planePoint, planeNormal, capAccumulator, bufferConsumer, lightFunction, null, false);
     }
 
-    public void transformAndEmitToConsumer(Matrix4f pose, Matrix3f normalMatrix, Vector3f planePoint, Vector3f planeNormal, GirderCapAccumulator capAccumulator, List<Consumer<BufferBuilder>> bufferConsumer, Function<Vector3f, Integer> lightFunction, @Nullable CopycatStrutTextureRemapper.FaceData[] copycatFaceData) {
-        // Resolve copycat sprite for this quad's face direction
+    /**
+     * Bakes this mesh quad into buffer consumers. When {@code copycatFaceData} is set the
+     * quad is remapped onto the mimicked block's sprite for its face, carries that layer's
+     * emissive lightmap, and — because mimicking buffers render with
+     * {@code SuperByteBuffer} diffuse disabled — bakes the vanilla per-face diffuse into
+     * the vertex colour when the source layer is shaded, exactly matching how the chunk
+     * renderer shades the copycat girder.
+     *
+     * <p>{@code overlayPass} bakes one overlay depth (glow shells etc.): faces without a
+     * layer at this depth emit nothing, and no cap geometry is accumulated
+     * ({@code capAccumulator} may be {@code null}).
+     */
+    public void transformAndEmitToConsumer(Matrix4f pose, Matrix3f normalMatrix, Vector3f planePoint, Vector3f planeNormal, @Nullable GirderCapAccumulator capAccumulator, List<Consumer<BufferBuilder>> bufferConsumer, Function<Vector3f, Integer> lightFunction, @Nullable CopycatStrutTextureRemapper.FaceData[] copycatFaceData, boolean overlayPass) {
+        // Resolve copycat sprite, emissive lightmap and shade for this quad's face direction
         TextureAtlasSprite effectiveSprite = sprite;
+        int faceLightmap = 0;
+        boolean bakeDiffuse = false;
         if (copycatFaceData != null && nominalFace != null) {
             CopycatStrutTextureRemapper.FaceData fd = copycatFaceData[nominalFace.get3DDataValue()];
-            if (fd != null && fd.sprite() != null) {
+            if (fd == null || fd.sprite() == null) {
+                if (overlayPass) {
+                    return; // this face has no layer at this overlay depth
+                }
+            } else {
                 effectiveSprite = fd.sprite();
+                faceLightmap = fd.lightmap();
+                bakeDiffuse = fd.shade();
             }
+        } else if (overlayPass) {
+            return;
         }
 
         List<GirderVertex> transformed = new ArrayList<>(vertices.length);
@@ -280,10 +302,10 @@ public final class GirderMeshQuad {
         ClipResult clipResult = clipAgainstPlane(transformed, planePoint, planeNormal);
         List<GirderVertex> clipped = clipResult.polygon();
         if (clipped.size() >= 3) {
-            GirderGeometry.emitPolygonToConsumer(clipped, bufferConsumer, lightFunction);
+            GirderGeometry.emitPolygonToConsumer(clipped, bufferConsumer, lightFunction, faceLightmap, bakeDiffuse);
         }
 
-        if (clipResult.clipped() && planeNormal.lengthSquared() > GirderGeometry.EPSILON) {
+        if (capAccumulator != null && clipResult.clipped() && planeNormal.lengthSquared() > GirderGeometry.EPSILON) {
             capAccumulator.addSegments(effectiveSprite, tintIndex, shade, clipResult.segments());
         }
     }

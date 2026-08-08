@@ -4,7 +4,6 @@ import com.agent772.createmoregirder.CMGPartialModels;
 import com.simibubi.create.content.decoration.girder.GirderBlock;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -27,26 +26,13 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-import static net.minecraft.core.Direction.*;
-
 public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
 
     public static final ModelProperty<BlockState> MIMICKED_STATE = new ModelProperty<>();
     public static final ModelProperty<Integer> FACE_ROTATION = new ModelProperty<>();
     public static final ModelProperty<EnumSet<Direction>> CONNECTED_DIRECTIONS = new ModelProperty<>();
 
-    public static final int ORIENTATION_COUNT = 6;
-
-    private static final long QUAD_SAMPLING_SEED = 42L;
-
-    private static final Direction[][] FACE_MAPPINGS = {
-        { DOWN,  UP,   NORTH, SOUTH, WEST, EAST },
-        { UP,    DOWN, NORTH, SOUTH, EAST, WEST },
-        { NORTH, SOUTH, UP,   DOWN,  WEST, EAST },
-        { SOUTH, NORTH, DOWN, UP,    WEST, EAST },
-        { EAST,  WEST,  NORTH, SOUTH, DOWN, UP  },
-        { WEST,  EAST,  NORTH, SOUTH, UP,  DOWN },
-    };
+    public static final int ORIENTATION_COUNT = MimicFaceSampler.ORIENTATION_COUNT;
 
     public CopycatGirderBakedModel(BakedModel originalModel) {
         super(originalModel);
@@ -119,12 +105,24 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
 
         List<BakedQuad> result = new ArrayList<>();
 
-        // Face data is shared between the bracket and pole loops on the mimic path.
-        FaceData[] faceData = null;
-        if (hasMimic) {
+        // Per-face texture layers, shared between the bracket and pole loops on the
+        // mimic path. Sampled per render type so each pass (solid core / translucent
+        // glow shell) contributes only its own layer; the particle fallback is only
+        // emitted on the primary mimic render type to avoid duplicate draws.
+        List<MimicFaceSampler.Layer>[] faceLayers = null;
+        if (hasMimic && rendersOnMimic) {
             Integer rot = data.get(FACE_ROTATION);
             int orientation = rot == null ? 0 : Math.floorMod(rot, ORIENTATION_COUNT);
-            faceData = resolveFaceData(mimicked, orientation);
+            RenderType sampleType;
+            boolean includeFallback;
+            if (renderType == null || state == null) {
+                sampleType = null;
+                includeFallback = true;
+            } else {
+                sampleType = renderType;
+                includeFallback = renderType.equals(MimicFaceSampler.primaryRenderType(mimicTypes));
+            }
+            faceLayers = MimicFaceSampler.sampleLayers(mimicked, orientation, sampleType, includeFallback);
         }
 
         if (side == null && state != null && connected != null && !connected.isEmpty()) {
@@ -137,7 +135,7 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
                     }
                     continue;
                 }
-                if (!rendersOnMimic || faceData == null) {
+                if (!rendersOnMimic || faceLayers == null) {
                     continue;
                 }
                 // Mimic path: fetch with renderType=null so the bracket JSON's
@@ -145,11 +143,7 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
                 // onto the mimic's render layer.
                 List<BakedQuad> bracketQuads = partial.get().getQuads(state, null, rand, data, null);
                 for (BakedQuad quad : bracketQuads) {
-                    Direction face = quad.getDirection();
-                    FaceData fd = face != null ? faceData[face.get3DDataValue()] : faceData[0];
-                    if (fd != null && fd.sprite != null) {
-                        result.add(remapQuadUVs(quad, fd.sprite, fd.lightmap, fd.shade));
-                    }
+                    MimicFaceSampler.emitLayers(result, quad, faceLayers);
                 }
             }
         }
@@ -182,14 +176,10 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
                 }
                 continue;
             }
-            if (!rendersOnMimic) {
+            if (!rendersOnMimic || faceLayers == null) {
                 continue;
             }
-            Direction face = quad.getDirection();
-            FaceData fd = faceData == null ? null : (face != null ? faceData[face.get3DDataValue()] : faceData[0]);
-            if (fd != null && fd.sprite != null) {
-                result.add(remapQuadUVs(quad, fd.sprite, fd.lightmap, fd.shade));
-            }
+            MimicFaceSampler.emitLayers(result, quad, faceLayers);
         }
         return result;
     }
@@ -233,75 +223,5 @@ public class CopycatGirderBakedModel extends BakedModelWrapper<BakedModel> {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    private record FaceData(TextureAtlasSprite sprite, int lightmap, boolean shade) {}
-
-    @Nullable
-    private FaceData[] resolveFaceData(BlockState mimicked, int orientation) {
-        try {
-            BakedModel srcModel = Minecraft.getInstance().getBlockRenderer().getBlockModel(mimicked);
-            TextureAtlasSprite fallback = srcModel.getParticleIcon(ModelData.EMPTY);
-            FaceData[] faces = new FaceData[6];
-            Direction[] mapping = FACE_MAPPINGS[orientation];
-            int emission = mimicked.getLightEmission();
-            boolean srcUsesAO = srcModel.useAmbientOcclusion();
-
-            for (Direction dir : Direction.values()) {
-                Direction sourceFace = mapping[dir.get3DDataValue()];
-                List<BakedQuad> quads = srcModel.getQuads(mimicked, sourceFace,
-                    RandomSource.create(QUAD_SAMPLING_SEED), ModelData.EMPTY, null);
-                if (!quads.isEmpty()) {
-                    BakedQuad srcQuad = quads.get(0);
-                    int[] verts = srcQuad.getVertices();
-                    int vertexSize = verts.length / 4;
-                    int lightmap = vertexSize > 6 ? verts[6] : 0;
-                    boolean shade = srcQuad.isShade() && srcUsesAO;
-                    if (emission > 0) {
-                        lightmap = LightTexture.FULL_BRIGHT;
-                        shade = false;
-                    }
-                    faces[dir.get3DDataValue()] = new FaceData(srcQuad.getSprite(), lightmap, shade);
-                } else {
-                    boolean shade = emission <= 0 && srcUsesAO;
-                    int lightmap = emission > 0 ? LightTexture.FULL_BRIGHT : 0;
-                    faces[dir.get3DDataValue()] = new FaceData(fallback, lightmap, shade);
-                }
-            }
-            return faces;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private BakedQuad remapQuadUVs(BakedQuad orig, TextureAtlasSprite sourceSprite, int sourceLightmap, boolean shade) {
-        TextureAtlasSprite girderSprite = orig.getSprite();
-        int[] src = orig.getVertices();
-        int[] dst = src.clone();
-        int vertexSize = dst.length / 4;
-        float gU0 = girderSprite.getU0();
-        float gV0 = girderSprite.getV0();
-        float gUSpan = girderSprite.getU1() - gU0;
-        float gVSpan = girderSprite.getV1() - gV0;
-        if (gUSpan == 0f || gVSpan == 0f) {
-            return orig;
-        }
-        float sU0 = sourceSprite.getU0();
-        float sV0 = sourceSprite.getV0();
-        float sUSpan = sourceSprite.getU1() - sU0;
-        float sVSpan = sourceSprite.getV1() - sV0;
-        for (int v = 0; v < 4; v++) {
-            int off = v * vertexSize;
-            float u = Float.intBitsToFloat(dst[off + 4]);
-            float vv = Float.intBitsToFloat(dst[off + 5]);
-            float fu = (u - gU0) / gUSpan;
-            float fv = (vv - gV0) / gVSpan;
-            dst[off + 4] = Float.floatToRawIntBits(sU0 + fu * sUSpan);
-            dst[off + 5] = Float.floatToRawIntBits(sV0 + fv * sVSpan);
-            if (sourceLightmap != 0 && vertexSize > 6) {
-                dst[off + 6] = sourceLightmap;
-            }
-        }
-        return new BakedQuad(dst, orig.getTintIndex(), orig.getDirection(), sourceSprite, shade);
     }
 }

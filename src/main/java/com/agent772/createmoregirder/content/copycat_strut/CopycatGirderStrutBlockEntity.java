@@ -75,6 +75,7 @@ public class CopycatGirderStrutBlockEntity extends GirderStrutBlockEntity implem
 
     private void notifyCopycatModelChange() {
         connectionRenderBufferCache = null;
+        connectionOverlayRenderBufferCache = null;
         if (level != null) {
             if (level.isClientSide) {
                 requestModelDataUpdate();

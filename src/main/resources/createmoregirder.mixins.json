@@ -22,6 +22,7 @@
     "BakedModelWrapperWithDataMixin",
     "BracketedKineticBlockModelMixin",
     "GirderVisualMixin",
+    "PipeAttachmentModelMixin",
     "TrackRendererMixin"
   ],
   "injectors": {

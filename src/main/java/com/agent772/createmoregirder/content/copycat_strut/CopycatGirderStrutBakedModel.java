@@ -1,5 +1,6 @@
 package com.agent772.createmoregirder.content.copycat_strut;
 
+import com.agent772.createmoregirder.content.copycat_girder.MimicFaceSampler;
 import com.agent772.createmoregirder.content.strut.GirderStrutBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -28,17 +29,6 @@ public class CopycatGirderStrutBakedModel extends BakedModelWrapper<BakedModel> 
     public static final ModelProperty<BlockState> MIMICKED_STATE = new ModelProperty<>();
     public static final ModelProperty<Integer> FACE_ROTATION = new ModelProperty<>();
 
-    private static final long QUAD_SAMPLING_SEED = 42L;
-
-    private static final Direction[][] FACE_MAPPINGS = {
-        { Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST },
-        { Direction.UP, Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST },
-        { Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST },
-        { Direction.SOUTH, Direction.NORTH, Direction.DOWN, Direction.UP, Direction.WEST, Direction.EAST },
-        { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH, Direction.DOWN, Direction.UP },
-        { Direction.WEST, Direction.EAST, Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.DOWN },
-    };
-
     public CopycatGirderStrutBakedModel(BakedModel originalModel) {
         super(originalModel);
     }
@@ -47,7 +37,9 @@ public class CopycatGirderStrutBakedModel extends BakedModelWrapper<BakedModel> 
     public @NotNull ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData blockEntityData) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof CopycatGirderStrutBlockEntity copycatBe && copycatBe.hasMimickedState()) {
+            // Also invalidate the render caches so beams re-render with new texture
             copycatBe.connectionRenderBufferCache = null;
+            copycatBe.connectionOverlayRenderBufferCache = null;
             return ModelData.builder()
                     .with(MIMICKED_STATE, copycatBe.getMimickedState())
                     .with(FACE_ROTATION, copycatBe.getFaceRotation())
@@ -55,6 +47,7 @@ public class CopycatGirderStrutBakedModel extends BakedModelWrapper<BakedModel> 
         }
         if (be instanceof GirderStrutBlockEntity strutBe) {
             strutBe.connectionRenderBufferCache = null;
+            strutBe.connectionOverlayRenderBufferCache = null;
         }
         return ModelData.EMPTY;
     }
@@ -99,21 +92,36 @@ public class CopycatGirderStrutBakedModel extends BakedModelWrapper<BakedModel> 
             return base;
         }
         Integer rot = data.get(FACE_ROTATION);
-        int orientation = rot == null ? 0 : Math.floorMod(rot, 6);
+        int orientation = rot == null ? 0 : Math.floorMod(rot, MimicFaceSampler.ORIENTATION_COUNT);
 
-        FaceData[] faceData = resolveFaceData(mimicked, orientation);
-        if (faceData == null) {
+        RenderType sampleType;
+        boolean includeFallback;
+        if (renderType == null || state == null) {
+            sampleType = null;
+            includeFallback = true;
+        } else {
+            sampleType = renderType;
+            includeFallback = renderType.equals(MimicFaceSampler.primaryRenderType(mimicTypes));
+        }
+        List<MimicFaceSampler.Layer>[] faceLayers =
+                MimicFaceSampler.sampleLayers(mimicked, orientation, sampleType, includeFallback);
+        if (faceLayers == null) {
             return base;
         }
 
         List<BakedQuad> out = new ArrayList<>(base.size());
         for (BakedQuad quad : base) {
             Direction face = quad.getDirection();
-            FaceData fd = face != null ? faceData[face.get3DDataValue()] : faceData[0];
-            if (fd != null && fd.sprite != null) {
-                out.add(remapQuadUVs(quad, fd.sprite, fd.shade));
-            } else {
+            List<MimicFaceSampler.Layer> layers = face != null ? faceLayers[face.get3DDataValue()] : faceLayers[0];
+            if (layers == null || layers.isEmpty()) {
                 out.add(quad);
+                continue;
+            }
+            for (MimicFaceSampler.Layer layer : layers) {
+                BakedQuad remapped = MimicFaceSampler.remapLayerQuad(quad, layer);
+                if (remapped != null) {
+                    out.add(remapped);
+                }
             }
         }
         return out;
@@ -152,65 +160,5 @@ public class CopycatGirderStrutBakedModel extends BakedModelWrapper<BakedModel> 
         } catch (Exception e) {
             return null;
         }
-    }
-
-    private record FaceData(TextureAtlasSprite sprite, int lightmap, boolean shade) {}
-
-    @Nullable
-    private FaceData[] resolveFaceData(BlockState mimicked, int orientation) {
-        try {
-            BakedModel srcModel = Minecraft.getInstance().getBlockRenderer().getBlockModel(mimicked);
-            TextureAtlasSprite fallback = srcModel.getParticleIcon(ModelData.EMPTY);
-            FaceData[] faces = new FaceData[6];
-            Direction[] mapping = FACE_MAPPINGS[orientation];
-            int emission = mimicked.getLightEmission();
-            boolean srcUsesAO = srcModel.useAmbientOcclusion();
-
-            for (Direction dir : Direction.values()) {
-                Direction sourceFace = mapping[dir.get3DDataValue()];
-                List<BakedQuad> quads = srcModel.getQuads(mimicked, sourceFace,
-                        RandomSource.create(QUAD_SAMPLING_SEED), ModelData.EMPTY, null);
-                if (!quads.isEmpty()) {
-                    BakedQuad srcQuad = quads.get(0);
-                    boolean shade = srcQuad.isShade() && srcUsesAO;
-                    if (emission > 0) shade = false;
-                    faces[dir.get3DDataValue()] = new FaceData(srcQuad.getSprite(), 0, shade);
-                } else {
-                    boolean shade = emission <= 0 && srcUsesAO;
-                    faces[dir.get3DDataValue()] = new FaceData(fallback, 0, shade);
-                }
-            }
-            return faces;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private BakedQuad remapQuadUVs(BakedQuad orig, TextureAtlasSprite sourceSprite, boolean shade) {
-        TextureAtlasSprite girderSprite = orig.getSprite();
-        int[] src = orig.getVertices();
-        int[] dst = src.clone();
-        int vertexSize = dst.length / 4;
-        float gU0 = girderSprite.getU0();
-        float gV0 = girderSprite.getV0();
-        float gUSpan = girderSprite.getU1() - gU0;
-        float gVSpan = girderSprite.getV1() - gV0;
-        if (gUSpan == 0f || gVSpan == 0f) {
-            return orig;
-        }
-        float sU0 = sourceSprite.getU0();
-        float sV0 = sourceSprite.getV0();
-        float sUSpan = sourceSprite.getU1() - sU0;
-        float sVSpan = sourceSprite.getV1() - sV0;
-        for (int v = 0; v < 4; v++) {
-            int off = v * vertexSize;
-            float u = Float.intBitsToFloat(dst[off + 4]);
-            float vv = Float.intBitsToFloat(dst[off + 5]);
-            float fu = (u - gU0) / gUSpan;
-            float fv = (vv - gV0) / gVSpan;
-            dst[off + 4] = Float.floatToRawIntBits(sU0 + fu * sUSpan);
-            dst[off + 5] = Float.floatToRawIntBits(sV0 + fv * sVSpan);
-        }
-        return new BakedQuad(dst, orig.getTintIndex(), orig.getDirection(), sourceSprite, shade);
     }
 }

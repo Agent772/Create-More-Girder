@@ -51,7 +51,7 @@ public final class GirderCapAccumulator {
         }
     }
 
-    public void emitCapsToConsumer(Vector3f planeNormal, List<Consumer<BufferBuilder>> bufferConsumer, Function<Vector3f, Integer> lightFunction) {
+    public void emitCapsToConsumer(Vector3f planeNormal, List<Consumer<BufferBuilder>> bufferConsumer, Function<Vector3f, Integer> lightFunction, boolean bakeDiffuse) {
         if (segments.isEmpty()) {
             return;
         }
@@ -156,7 +156,7 @@ public final class GirderCapAccumulator {
 
                 applyCapUVToVertices(loop, uniqueVertices, normal, capSprite);
 
-                emitLoopToConsumer(loop, uniqueVertices, normal, bufferConsumer, lightFunction);
+                emitLoopToConsumer(loop, uniqueVertices, normal, bufferConsumer, lightFunction, bakeDiffuse);
                 loopCount++;
             }
         }
@@ -164,7 +164,7 @@ public final class GirderCapAccumulator {
         segments.clear();
     }
 
-    private void emitLoopToConsumer(List<Integer> loopIndices, List<CapVertex> vertices, Vector3f normal, List<Consumer<BufferBuilder>> bufferConsumer, Function<Vector3f, Integer> lightFunction) {
+    private void emitLoopToConsumer(List<Integer> loopIndices, List<CapVertex> vertices, Vector3f normal, List<Consumer<BufferBuilder>> bufferConsumer, Function<Vector3f, Integer> lightFunction, boolean bakeDiffuse) {
         // Use the cut-facing normal (flip the supplied plane normal) so the cap
         // quads face into the cut, not towards the surface.
         Vector3f normalizedPlane = new Vector3f(normal);
@@ -186,7 +186,7 @@ public final class GirderCapAccumulator {
             java.util.Collections.reverse(cleaned);
         }
 
-        GirderGeometry.emitPolygonToConsumer(cleaned, bufferConsumer, lightFunction);
+        GirderGeometry.emitPolygonToConsumer(cleaned, bufferConsumer, lightFunction, 0, bakeDiffuse);
     }
 
     public void emitCaps(Vector3f planePoint, Vector3f planeNormal, List<BakedQuad> consumer) {

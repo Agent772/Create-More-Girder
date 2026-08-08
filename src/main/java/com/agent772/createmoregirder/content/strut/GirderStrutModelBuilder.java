@@ -37,6 +37,7 @@ public class GirderStrutModelBuilder extends BakedModelWrapper<BakedModel> {
 
         if (level.getBlockEntity(pos) instanceof GirderStrutBlockEntity blockEntity) {
             blockEntity.connectionRenderBufferCache = null; // Invalidate cache on model data request
+            blockEntity.connectionOverlayRenderBufferCache = null;
         }
 
         return ModelData.builder()

@@ -1,7 +1,7 @@
 package com.agent772.createmoregirder.content.bracket;
 
+import com.agent772.createmoregirder.content.copycat_girder.MimicFaceSampler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,48 +16,53 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import static net.minecraft.core.Direction.DOWN;
-import static net.minecraft.core.Direction.EAST;
-import static net.minecraft.core.Direction.NORTH;
-import static net.minecraft.core.Direction.SOUTH;
-import static net.minecraft.core.Direction.UP;
-import static net.minecraft.core.Direction.WEST;
 
 /**
  * Baked model wrapper for copycat bracket blocks. Reads the mimicked block
  * state from {@link CopycatBracketModelProperties} (populated on the host's
  * {@link ModelData} by {@code BracketedKineticBlockModelMixin}) and remaps
  * the bracket's plate/arm UVs onto the mimicked block's textures.
+ *
+ * <p>Layers are routed per {@link RenderType} exactly like the girder path:
+ * a solid core renders on the mimic's primary pass and a translucent glow
+ * shell blends over it on the translucent pass. The bracket is rendered
+ * through a host model (Create's {@code BracketedKineticBlockModel} or
+ * {@code PipeAttachmentModel}) whose render-type set decides which passes
+ * are iterated, so the host mixins union {@link #unionWithMimicTypes} into it.
  */
 public class CopycatBracketBakedModel extends BakedModelWrapper<BakedModel> {
 
-    private static final int ORIENTATION_COUNT = 6;
-    private static final long QUAD_SAMPLING_SEED = 42L;
-
-    private static final Direction[][] FACE_MAPPINGS = {
-        { DOWN,  UP,   NORTH, SOUTH, WEST, EAST },
-        { UP,    DOWN, NORTH, SOUTH, EAST, WEST },
-        { NORTH, SOUTH, UP,   DOWN,  WEST, EAST },
-        { SOUTH, NORTH, DOWN, UP,    WEST, EAST },
-        { EAST,  WEST,  NORTH, SOUTH, DOWN, UP  },
-        { WEST,  EAST,  NORTH, SOUTH, UP,  DOWN },
-    };
+    private static final int ORIENTATION_COUNT = MimicFaceSampler.ORIENTATION_COUNT;
 
     public CopycatBracketBakedModel(BakedModel originalModel) {
         super(originalModel);
     }
 
+    /**
+     * Unions the mimicked block's render types into {@code base} when the
+     * given {@code data} carries a mimicked state. Host models decide which
+     * render passes get iterated for the bracket's quads, so their
+     * {@code getRenderTypes} must advertise the mimic's passes too — the
+     * host mixins delegate here.
+     */
+    public static ChunkRenderTypeSet unionWithMimicTypes(ChunkRenderTypeSet base, RandomSource rand, ModelData data) {
+        BlockState mimicked = data.get(CopycatBracketModelProperties.MIMICKED_STATE);
+        if (mimicked == null || mimicked.isAir()) {
+            return base;
+        }
+        ChunkRenderTypeSet mimicTypes = mimicRenderTypes(mimicked, rand);
+        if (mimicTypes == null) {
+            return base;
+        }
+        return ChunkRenderTypeSet.union(base, mimicTypes);
+    }
+
     @Override
     public @NotNull ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand,
                                                      @NotNull ModelData data) {
-        ChunkRenderTypeSet baseTypes = super.getRenderTypes(state, rand, data);
-        BlockState mimicked = data.get(CopycatBracketModelProperties.MIMICKED_STATE);
-        if (mimicked == null || mimicked.isAir()) return baseTypes;
-        ChunkRenderTypeSet mimicTypes = mimicRenderTypes(mimicked, rand);
-        if (mimicTypes == null) return baseTypes;
-        return ChunkRenderTypeSet.union(baseTypes, mimicTypes);
+        return unionWithMimicTypes(super.getRenderTypes(state, rand, data), rand, data);
     }
 
     @Override
@@ -70,10 +75,25 @@ public class CopycatBracketBakedModel extends BakedModelWrapper<BakedModel> {
             return super.getQuads(state, side, rand, data, renderType);
         }
 
-        // Render the mimic-skinned quads on whichever render layer the host
-        // iterates. We intentionally do NOT filter by mimicTypes here: the host
-        // (BracketedKineticBlockModel / PipeAttachmentModel) decides which layers
-        // get iterated based on its own model, not on ours.
+        ChunkRenderTypeSet mimicTypes = mimicRenderTypes(mimicked, rand);
+
+        RenderType sampleType;
+        boolean includeFallback;
+        if (renderType == null || mimicTypes == null) {
+            // Item / layer-less query (or lookup failure): emit every layer once.
+            sampleType = null;
+            includeFallback = true;
+        } else if (!mimicTypes.contains(renderType)) {
+            // The host is iterating one of its own passes; our layers render on
+            // the mimic's passes, which the host mixins union into its render types.
+            return Collections.emptyList();
+        } else {
+            sampleType = renderType;
+            includeFallback = renderType.equals(MimicFaceSampler.primaryRenderType(mimicTypes));
+        }
+
+        // Fetch with renderType=null so the bracket JSON's declared layer doesn't
+        // strip the quads before we route them onto the mimic's render layer.
         List<BakedQuad> base = super.getQuads(state, side, rand, data, null);
         if (base.isEmpty()) {
             return base;
@@ -82,33 +102,17 @@ public class CopycatBracketBakedModel extends BakedModelWrapper<BakedModel> {
         Integer rot = data.get(CopycatBracketModelProperties.FACE_ROTATION);
         int orientation = rot == null ? 0 : Math.floorMod(rot, ORIENTATION_COUNT);
 
-        FaceData[] faceData = resolveFaceData(mimicked, orientation);
-        if (faceData == null) return base;
+        List<MimicFaceSampler.Layer>[] faceLayers =
+                MimicFaceSampler.sampleLayers(mimicked, orientation, sampleType, includeFallback);
+        if (faceLayers == null) {
+            return base;
+        }
 
         List<BakedQuad> out = new ArrayList<>(base.size());
         for (BakedQuad quad : base) {
-            Direction face = quad.getDirection();
-            FaceData fd = face != null ? faceData[face.get3DDataValue()] : faceData[0];
-            if (fd != null && fd.sprite != null) {
-                out.add(remapQuadUVs(quad, fd.sprite, fd.lightmap, fd.shade));
-            } else {
-                out.add(quad);
-            }
+            MimicFaceSampler.emitLayers(out, quad, faceLayers);
         }
         return out;
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
-        BlockState mimicked = data.get(CopycatBracketModelProperties.MIMICKED_STATE);
-        if (mimicked != null && !mimicked.isAir()) {
-            try {
-                BakedModel src = Minecraft.getInstance().getBlockRenderer().getBlockModel(mimicked);
-                TextureAtlasSprite particle = src.getParticleIcon(ModelData.EMPTY);
-                if (particle != null) return particle;
-            } catch (Exception ignored) {}
-        }
-        return super.getParticleIcon(data);
     }
 
     @Override
@@ -126,71 +130,16 @@ public class CopycatBracketBakedModel extends BakedModelWrapper<BakedModel> {
         }
     }
 
-    private record FaceData(TextureAtlasSprite sprite, int lightmap, boolean shade) {}
-
-    @Nullable
-    private FaceData[] resolveFaceData(BlockState mimicked, int orientation) {
-        try {
-            BakedModel srcModel = Minecraft.getInstance().getBlockRenderer().getBlockModel(mimicked);
-            TextureAtlasSprite fallback = srcModel.getParticleIcon(ModelData.EMPTY);
-            FaceData[] faces = new FaceData[6];
-            Direction[] mapping = FACE_MAPPINGS[orientation];
-            int emission = mimicked.getLightEmission();
-            boolean srcUsesAO = srcModel.useAmbientOcclusion();
-
-            for (Direction dir : Direction.values()) {
-                Direction sourceFace = mapping[dir.get3DDataValue()];
-                List<BakedQuad> quads = srcModel.getQuads(mimicked, sourceFace,
-                    RandomSource.create(QUAD_SAMPLING_SEED), ModelData.EMPTY, null);
-                if (!quads.isEmpty()) {
-                    BakedQuad srcQuad = quads.get(0);
-                    int[] verts = srcQuad.getVertices();
-                    int vertexSize = verts.length / 4;
-                    int lightmap = vertexSize > 6 ? verts[6] : 0;
-                    boolean shade = srcQuad.isShade() && srcUsesAO;
-                    if (emission > 0) {
-                        lightmap = LightTexture.FULL_BRIGHT;
-                        shade = false;
-                    }
-                    faces[dir.get3DDataValue()] = new FaceData(srcQuad.getSprite(), lightmap, shade);
-                } else {
-                    boolean shade = emission <= 0 && srcUsesAO;
-                    int lightmap = emission > 0 ? LightTexture.FULL_BRIGHT : 0;
-                    faces[dir.get3DDataValue()] = new FaceData(fallback, lightmap, shade);
-                }
-            }
-            return faces;
-        } catch (Exception e) {
-            return null;
+    @Override
+    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
+        BlockState mimicked = data.get(CopycatBracketModelProperties.MIMICKED_STATE);
+        if (mimicked != null && !mimicked.isAir()) {
+            try {
+                BakedModel src = Minecraft.getInstance().getBlockRenderer().getBlockModel(mimicked);
+                TextureAtlasSprite particle = src.getParticleIcon(ModelData.EMPTY);
+                if (particle != null) return particle;
+            } catch (Exception ignored) {}
         }
-    }
-
-    private BakedQuad remapQuadUVs(BakedQuad orig, TextureAtlasSprite sourceSprite, int sourceLightmap, boolean shade) {
-        TextureAtlasSprite bracketSprite = orig.getSprite();
-        int[] src = orig.getVertices();
-        int[] dst = src.clone();
-        int vertexSize = dst.length / 4;
-        float gU0 = bracketSprite.getU0();
-        float gV0 = bracketSprite.getV0();
-        float gUSpan = bracketSprite.getU1() - gU0;
-        float gVSpan = bracketSprite.getV1() - gV0;
-        if (gUSpan == 0f || gVSpan == 0f) return orig;
-        float sU0 = sourceSprite.getU0();
-        float sV0 = sourceSprite.getV0();
-        float sUSpan = sourceSprite.getU1() - sU0;
-        float sVSpan = sourceSprite.getV1() - sV0;
-        for (int v = 0; v < 4; v++) {
-            int off = v * vertexSize;
-            float u = Float.intBitsToFloat(dst[off + 4]);
-            float vv = Float.intBitsToFloat(dst[off + 5]);
-            float fu = (u - gU0) / gUSpan;
-            float fv = (vv - gV0) / gVSpan;
-            dst[off + 4] = Float.floatToRawIntBits(sU0 + fu * sUSpan);
-            dst[off + 5] = Float.floatToRawIntBits(sV0 + fv * sVSpan);
-            if (sourceLightmap != 0 && vertexSize > 6) {
-                dst[off + 6] = sourceLightmap;
-            }
-        }
-        return new BakedQuad(dst, orig.getTintIndex(), orig.getDirection(), sourceSprite, shade);
+        return super.getParticleIcon(data);
     }
 }
