@@ -2,6 +2,7 @@ package com.agent772.createmoregirder.content.strut;
 
 import com.agent772.createmoregirder.CMGBlockEntityTypes;
 import com.agent772.createmoregirder.CMGShapes;
+import com.cake.struts.content.structure.GirderStrutShapedBlock;
 import com.simibubi.create.api.schematic.requirement.SpecialBlockItemRequirement;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +55,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  * - Adapted for Create: More Girder mod structure
  * - Added variant system for different girder types
  */
-public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntity>, SimpleWaterloggedBlock, IWrenchable, SpecialBlockItemRequirement {
+public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntity>, SimpleWaterloggedBlock, IWrenchable, SpecialBlockItemRequirement, GirderStrutShapedBlock {
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final DirectionProperty REFERENCE_FACING = DirectionProperty.create(
@@ -165,7 +167,13 @@ public class GirderStrutBlock extends Block implements IBE<GirderStrutBlockEntit
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return CMGShapes.GIRDER_STRUT.get(state.getValue(FACING));
+        // Beam collision: union the static anchor cuboid with the dynamic strut-span shape that
+        // Strut Your Stuff caches in its level-wide registry (populated from GirderStrutBlockEntity).
+        // Intermediate span positions carry their own collision via the library's invisible
+        // structure blocks; this only adds the near-anchor segment on the anchor itself.
+        final VoxelShape anchor = CMGShapes.GIRDER_STRUT.get(state.getValue(FACING));
+        final VoxelShape strut = getStrutShape(level, pos);
+        return strut.isEmpty() ? anchor : Shapes.or(anchor, strut);
     }
 
     @Override

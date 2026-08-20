@@ -93,3 +93,18 @@ config="${mod_id}.mixins.json"
     versionRange="${create_version_range}"
     ordering="NONE"
     side="BOTH"
+
+# Strut Your Stuff - required girder strut library.
+# Provides the level-wide collision system that gives struts walk-on beam collision.
+# Load after it so its structure block and shape registry are available when struts register connections.
+# mandatory=true is what makes Forge show its clean "missing dependency" screen naming `struts`
+# for end users who forget to install it, instead of a class-loading crash. (Note: in a ForgeGradle
+# dev launch, deliberately removing struts from the runtime classpath crashes in the mixin bootstrap
+# before that screen appears - a dev-only artifact of the exploded sourceSet mod file; the packed jar
+# keeps its mixin config readable, so real installs always reach the graceful screen.)
+[[dependencies.${mod_id}]]
+    modId="struts"
+    mandatory=true
+    versionRange="[1.1.0,)"
+    ordering="AFTER"
+    side="BOTH"

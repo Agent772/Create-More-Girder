@@ -1,6 +1,8 @@
 package com.agent772.createmoregirder.content.strut;
 
 import com.agent772.createmoregirder.config.CMGServerConfig;
+import com.cake.struts.content.structure.ConnectionKey;
+import com.cake.struts.content.structure.GirderStrutStructureShapes;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import net.createmod.catnip.render.SuperByteBuffer;
@@ -20,6 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +40,10 @@ import java.util.Set;
 public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEntityRelighter {
 
     private final Map<BlockPos, Integer> connections = new HashMap<>();
+    /** Relative offsets whose beam-collision shape is currently registered in the level-wide store. */
+    private final Set<BlockPos> registeredShapeOffsets = new HashSet<>();
+    /** Subset of {@link #registeredShapeOffsets} registered with a guessed peer facing (peer was unloaded). */
+    private final Set<BlockPos> guessedFacingOffsets = new HashSet<>();
     private boolean needsCostMigration;
     private transient int cachedDropCost = -1;
     public @Nullable SuperByteBuffer connectionRenderBufferCache;
@@ -71,6 +78,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
             sendData();
             notifyModelChange();
         }
+        registerShape(relative);
     }
 
     public void addConnection(BlockPos other) {
@@ -95,7 +103,9 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
     }
 
     public void removeConnection(BlockPos pos) {
-        if (connections.remove(pos.subtract(getBlockPos())) != null) {
+        BlockPos relative = pos.subtract(getBlockPos());
+        if (connections.remove(relative) != null) {
+            unregisterShape(relative);
             setChanged();
             sendData();
             notifyModelChange();
@@ -167,6 +177,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
     public void rotateConnections(Rotation rotation) {
         if (rotation == Rotation.NONE) return;
         applyRotationInPlace(rotation);
+        resyncShapes();
         setChanged();
         sendData();
         notifyModelChange();
@@ -175,6 +186,7 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
     public void mirrorConnections(Mirror mirror) {
         if (mirror == Mirror.NONE) return;
         applyMirrorInPlace(mirror);
+        resyncShapes();
         setChanged();
         sendData();
         notifyModelChange();
@@ -328,10 +340,110 @@ public class GirderStrutBlockEntity extends SmartBlockEntity implements IBlockEn
             migrateLegacyCosts();
             needsCostMigration = false;
         }
+        // Periodically re-assert beam-collision shapes the level-wide store has silently dropped
+        // (mid-span structure block removed externally, or a peer anchor unloaded while this end stays
+        // loaded). Also corrects connections first registered with a guessed peer facing once the peer
+        // loads. healShapes() only re-registers what is actually missing, so steady state is cheap.
+        if (level != null && !level.isClientSide && !connections.isEmpty()) {
+            healShapes();
+        }
     }
 
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        // Register beam-collision shapes as soon as the BE is added to a level, mirroring the library's
+        // own StrutBlockEntity.onLoad. Runs on connections already populated by read() (load precedes
+        // onLoad); placement adds its connection separately via addConnection.
+        registerAllShapes();
+    }
+
+    @Override
+    public void invalidate() {
+        // Called on both chunk unload and block removal; drop our shapes so the level-wide store
+        // (and the invisible structure blocks it manages) stay in sync. onLoad re-registers.
+        unregisterAllShapes();
+        super.invalidate();
+    }
+
+    private void registerAllShapes() {
+        if (level == null || level.isClientSide) return;
+        for (BlockPos relative : connections.keySet()) {
+            registerShape(relative);
+        }
+    }
+
+    private void unregisterAllShapes() {
+        if (level == null || level.isClientSide || registeredShapeOffsets.isEmpty()) return;
+        for (BlockPos relative : Set.copyOf(registeredShapeOffsets)) {
+            unregisterShape(relative);
+        }
+    }
+
+    private void resyncShapes() {
+        if (level == null || level.isClientSide) return;
+        unregisterAllShapes();
+        registerAllShapes();
+    }
+
+    /**
+     * Re-asserts only the connections the level-wide store has actually dropped, instead of blindly
+     * re-registering everything each lazy tick. Called from {@link #lazyTick()}, so steady state is one
+     * {@link GirderStrutStructureShapes#getConnectionsAt} lookup plus a key check per connection; a
+     * re-register happens only when an entry is genuinely missing.
+     *
+     * <p>Two cases are healed: (1) the library silently drops a connection when a mid-span structure block
+     * is removed externally (its recovery callback only fires for its own {@code StrutBlockEntity}, not
+     * CMG's); and (2) a shared entry vanishes when the peer anchor unloads and unregisters it while this end
+     * is still loaded and rendering the beam. A connection first registered with a guessed peer facing
+     * (peer was unloaded) is also corrected here once the peer loads, since {@code registerConnection}
+     * no-ops on an existing key and would otherwise keep the guessed geometry.
+     */
+    private void healShapes() {
+        Set<ConnectionKey> present = GirderStrutStructureShapes.getConnectionsAt(level, getBlockPos());
+        for (BlockPos relative : connections.keySet()) {
+            BlockPos other = getBlockPos().offset(relative);
+            if (!present.contains(new ConnectionKey(getBlockPos(), other))) {
+                registerShape(relative);
+            } else if (guessedFacingOffsets.contains(relative) && peerFacingResolvable(other)) {
+                unregisterShape(relative);
+                registerShape(relative);
+            }
+        }
+    }
+
+    private void registerShape(BlockPos relative) {
+        if (level == null || level.isClientSide) return;
+        if (!(getBlockState().getBlock() instanceof GirderStrutBlock block)) return;
+        BlockPos other = getBlockPos().offset(relative);
+        Direction myFacing = getBlockState().getValue(GirderStrutBlock.FACING);
+        boolean resolvable = peerFacingResolvable(other);
+        Direction otherFacing = resolvable
+                ? level.getBlockState(other).getValue(GirderStrutBlock.FACING)
+                : myFacing.getOpposite();
+        if (resolvable) {
+            guessedFacingOffsets.remove(relative);
+        } else {
+            guessedFacingOffsets.add(relative);
+        }
+        GirderStrutStructureShapes.registerConnection(
+                level, getBlockPos(), myFacing, other, otherFacing, block.getModelType().toCollisionModelType());
+        registeredShapeOffsets.add(relative);
+    }
+
+    private void unregisterShape(BlockPos relative) {
+        guessedFacingOffsets.remove(relative);
+        if (level == null || level.isClientSide || !registeredShapeOffsets.remove(relative)) return;
+        GirderStrutStructureShapes.unregisterConnection(level, getBlockPos(), getBlockPos().offset(relative));
+    }
+
+    private boolean peerFacingResolvable(BlockPos otherAbsolute) {
+        return level != null && level.isLoaded(otherAbsolute)
+                && level.getBlockState(otherAbsolute).getBlock() instanceof GirderStrutBlock;
     }
 
     private void notifyModelChange() {

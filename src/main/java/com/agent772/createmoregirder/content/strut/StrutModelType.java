@@ -29,10 +29,13 @@ public enum StrutModelType {
 
     private final PartialModel segmentPartial;
     private final ResourceLocation capTexture;
+    /** Built once per constant; the collision descriptor is constant per variant, so it is never rebuilt. */
+    private final com.cake.struts.content.StrutModelType collisionModelType;
 
     StrutModelType(final PartialModel segmentPartial, final ResourceLocation capTexture) {
         this.segmentPartial = segmentPartial;
         this.capTexture = capTexture;
+        this.collisionModelType = new com.cake.struts.content.StrutModelType(capTexture, capTexture, 8, 12);
     }
 
     public PartialModel getPartialModel() {
@@ -41,6 +44,17 @@ public enum StrutModelType {
 
     public ResourceLocation getCapTexture() {
         return capTexture;
+    }
+
+    /**
+     * Builds the collision-geometry descriptor consumed by Strut Your Stuff's
+     * {@link com.cake.struts.content.structure.GirderStrutStructureShapes}. Only the pixel dimensions
+     * are read for collision; the model/cap locations are irrelevant here because CMG keeps its own
+     * renderer. Uses the library's default 8x12 cross-section so the beam collision roughly matches
+     * the rendered girder.
+     */
+    public com.cake.struts.content.StrutModelType toCollisionModelType() {
+        return collisionModelType;
     }
 
 }
